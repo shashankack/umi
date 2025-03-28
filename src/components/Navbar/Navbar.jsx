@@ -9,89 +9,128 @@ const Navbar = () => {
   const logoRef = useRef(null);
   const leftLinksRef = useRef(null);
   const rightLinksRef = useRef(null);
+  const prevScrollY = useRef(window.scrollY);
+  const navVisible = useRef(true);
   const theme = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    // GSAP Animation
-    const tl = gsap.timeline();
+    const introTL = gsap.timeline({ paused: true });
+    const outroTL = gsap.timeline({ paused: true });
 
-    tl.fromTo(
-      logoRef.current,
-      { y: -100, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
-    )
+    const navItems = [
+      ...leftLinksRef.current.children,
+      ...rightLinksRef.current.children,
+    ];
+
+    // Initial state
+    gsap.set(navItems, {
+      opacity: 0,
+      scale: 0.8,
+    });
+    gsap.set(logoRef.current, { y: -100, opacity: 0 });
+
+    // Intro
+    introTL
+      .to(logoRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+      })
+      .add("itemsIn", "-=0.5")
       .fromTo(
         leftLinksRef.current.children,
         { x: 0, opacity: 0 },
         {
           x: "-100px",
+          stagger: 0.2,
           opacity: 1,
           duration: 0.8,
           ease: "power3.out",
         },
-        "-=0.5"
+        "itemsIn"
       )
       .fromTo(
         rightLinksRef.current.children,
         { x: 0, opacity: 0 },
         {
           x: "100px",
+          stagger: { each: 0.2, from: "end" },
           opacity: 1,
           duration: 0.8,
           ease: "power3.out",
         },
-        "-=0.8"
+        "itemsIn"
       );
 
-    // Logo hover animation
-    const logo = logoRef.current;
+    // Outro
+    outroTL
+      .to(leftLinksRef.current.children, {
+        x: 0,
+        opacity: 0,
+        duration: 0.4,
+        stagger: 0.1,
+        ease: "power2.in",
+      })
+      .to(
+        rightLinksRef.current.children,
+        {
+          x: 0,
+          opacity: 0,
+          duration: 0.4,
+          stagger: { each: 0.1, from: "start" },
+          ease: "power2.in",
+        },
+        "<"
+      )
+      .to(
+        logoRef.current,
+        {
+          y: -100,
+          opacity: 0,
+          duration: 0.4,
+          ease: "power3.in",
+        },
+        "+=0.1"
+      );
 
-    const handleMouseEnter = () => {
-      gsap.to(logo, {
-        y: -5,
-        scale: 1.05,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    };
+    const SCROLL_THRESHOLD = 5;
 
-    const handleMouseLeave = () => {
-      gsap.to(logo, {
-        y: 0,
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.inOut",
-      });
-    };
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY + 100;
+      const delta = currentScrollY - prevScrollY.current;
 
-    logo.addEventListener("mouseenter", handleMouseEnter);
-    logo.addEventListener("mouseleave", handleMouseLeave);
-
-    // Scroll detection
-    const onScroll = () => {
-      if (window.scrollY > window.innerHeight) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      if (delta > SCROLL_THRESHOLD && navVisible.current) {
+        // Scrolling down
+        outroTL.restart();
+        navVisible.current = false;
+      } else if (delta < -SCROLL_THRESHOLD && !navVisible.current) {
+        // Scrolling up
+        introTL.restart();
+        navVisible.current = true;
       }
+
+      setIsScrolled(window.scrollY > window.innerHeight);
+
+      prevScrollY.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll);
+
+    introTL.play();
 
     return () => {
-      logo.removeEventListener("mouseenter", handleMouseEnter);
-      logo.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <nav
-      className="navbar"
+      className={`navbar ${isScrolled ? "scrolled" : ""}`}
       style={{
         fontFamily: theme.fonts.text,
-        color: isScrolled ? theme.colors.pink : theme.colors.beige,
+        color: isScrolled ? theme.colors.beige : theme.colors.pink,
       }}
     >
       <div className="nav-links left" ref={leftLinksRef}>
