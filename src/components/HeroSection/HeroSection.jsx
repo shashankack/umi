@@ -29,6 +29,40 @@ const HeroSection = ({ theme }) => {
   const soupBowlRef = useRef(null);
   const whiskRef = useRef(null);
 
+  const getAnimationPositions = () => {
+    const width = window.innerWidth;
+
+    if (width <= 500) {
+      return {
+        leaf1: { from: { x: -50, y: -20 }, to: { x: 0, y: 0 } },
+        leaf2: { from: { x: 50, y: -10 }, to: { x: 0, y: 0 } },
+        leaf3: { from: { x: -40, y: 30 }, to: { x: 0, y: 0 } },
+        leaf4: { from: { x: 40, y: 40 }, to: { x: 0, y: 0 } },
+        soupBowl: { from: { y: 50 }, to: { y: 0 } },
+        whisk: { from: { x: 30, y: 20 }, to: { x: 0, y: 0 } },
+      };
+    } else if (width <= 786) {
+      return {
+        leaf1: { from: { x: -70, y: -30 }, to: { x: 0, y: 0 } },
+        leaf2: { from: { x: 70, y: -20 }, to: { x: 0, y: 0 } },
+        leaf3: { from: { x: -60, y: 40 }, to: { x: 0, y: 0 } },
+        leaf4: { from: { x: 60, y: 50 }, to: { x: 0, y: 0 } },
+        soupBowl: { from: { y: 60 }, to: { y: 0 } },
+        whisk: { from: { x: 40, y: 30 }, to: { x: 0, y: 0 } },
+      };
+    } else {
+      // >= 1024
+      return {
+        leaf1: { from: { x: -100, y: -40 }, to: { x: 0, y: 0 } },
+        leaf2: { from: { x: 100, y: -30 }, to: { x: 0, y: 0 } },
+        leaf3: { from: { x: -80, y: 60 }, to: { x: 0, y: 0 } },
+        leaf4: { from: { x: 80, y: 70 }, to: { x: 0, y: 0 } },
+        soupBowl: { from: { y: 80 }, to: { y: 0 } },
+        whisk: { from: { x: 60, y: 40 }, to: { x: 0, y: 0 } },
+      };
+    }
+  };
+
   homeTextRefs.current = [];
 
   const [products, setProducts] = useState([]);
@@ -44,6 +78,39 @@ const HeroSection = ({ theme }) => {
 
   useEffect(() => {
     if (!products.length) return;
+
+    const positions = getAnimationPositions();
+
+    gsap.fromTo(leaf1Ref.current, positions.leaf1.from, {
+      ...positions.leaf1.to,
+      duration: 1,
+      ease: "power3.out",
+    });
+    gsap.fromTo(leaf2Ref.current, positions.leaf2.from, {
+      ...positions.leaf2.to,
+      duration: 1,
+      ease: "power3.out",
+    });
+    gsap.fromTo(leaf3Ref.current, positions.leaf3.from, {
+      ...positions.leaf3.to,
+      duration: 1,
+      ease: "power3.out",
+    });
+    gsap.fromTo(leaf4Ref.current, positions.leaf4.from, {
+      ...positions.leaf4.to,
+      duration: 1,
+      ease: "power3.out",
+    });
+    gsap.fromTo(soupBowlRef.current, positions.soupBowl.from, {
+      ...positions.soupBowl.to,
+      duration: 1,
+      ease: "power3.out",
+    });
+    gsap.fromTo(whiskRef.current, positions.whisk.from, {
+      ...positions.whisk.to,
+      duration: 1,
+      ease: "power3.out",
+    });
 
     gsap.fromTo(
       homeTextRefs.current,
