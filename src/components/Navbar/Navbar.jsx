@@ -23,14 +23,14 @@ const Navbar = () => {
       ...rightLinksRef.current.children,
     ];
 
-    // Initial state
+    // Initial GSAP setup
     gsap.set(navItems, {
       opacity: 0,
       scale: 0.8,
     });
     gsap.set(logoRef.current, { y: -100, opacity: 0 });
 
-    // Intro
+    // Intro Animation
     introTL
       .to(logoRef.current, {
         y: 0,
@@ -64,7 +64,7 @@ const Navbar = () => {
         "itemsIn"
       );
 
-    // Outro
+    // Outro Animation
     outroTL
       .to(leftLinksRef.current.children, {
         x: 0,
@@ -96,29 +96,40 @@ const Navbar = () => {
       );
 
     const SCROLL_THRESHOLD = 5;
+    const currentScrollY = window.scrollY;
+    prevScrollY.current = currentScrollY;
+
+    if (currentScrollY > window.innerHeight) {
+      // If already scrolled, go straight to outro state
+      gsap.set(logoRef.current, { y: -100, opacity: 0 });
+      gsap.set(leftLinksRef.current.children, { x: 0, opacity: 0 });
+      gsap.set(rightLinksRef.current.children, { x: 0, opacity: 0 });
+      navVisible.current = false;
+      setIsScrolled(true);
+    } else {
+      // At top, play intro normally
+      introTL.play();
+      navVisible.current = true;
+      setIsScrolled(false);
+    }
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY + 100;
-      const delta = currentScrollY - prevScrollY.current;
+      const newY = window.scrollY + 100;
+      const delta = newY - prevScrollY.current;
 
       if (delta > SCROLL_THRESHOLD && navVisible.current) {
-        // Scrolling down
         outroTL.restart();
         navVisible.current = false;
       } else if (delta < -SCROLL_THRESHOLD && !navVisible.current) {
-        // Scrolling up
         introTL.restart();
         navVisible.current = true;
       }
 
       setIsScrolled(window.scrollY > window.innerHeight);
-
-      prevScrollY.current = currentScrollY;
+      prevScrollY.current = newY;
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    introTL.play();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
