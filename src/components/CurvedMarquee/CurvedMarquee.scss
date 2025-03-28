@@ -1,0 +1,63 @@
+.curved-marquee {
+  width: 100%;
+  overflow: hidden;
+  background-color: transparent;
+
+  svg {
+    width: 100%;
+    height: 300px;
+
+    text {
+      fill: #fff1cc;
+      font-size: 30px;
+      font-weight: bold;
+      font-weight: 500;
+      font-family: "Stolzl";
+    }
+  }
+
+  // Tablet (768px)
+  @media (max-width: 1024px) {
+    svg {
+      height: 160px;
+    }
+
+    text {
+      font-size: 32px;
+    }
+
+    use {
+      stroke-width: 45px;
+    }
+  }
+
+  // Small Tablets and Large Phones
+  @media (max-width: 768px) {
+    svg {
+      height: 130px;
+    }
+
+    text {
+      font-size: 26px;
+    }
+
+    use {
+      stroke-width: 38px;
+    }
+  }
+
+  // Mobile (500px)
+  @media (max-width: 500px) {
+    svg {
+      height: 110px;
+    }
+
+    text {
+      font-size: 22px;
+    }
+
+    use {
+      stroke-width: 32px;
+    }
+  }
+}

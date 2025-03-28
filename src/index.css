@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@font-face {
+  font-family: "Gliker";
+  src: url("./assets/fonts/Gliker-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Gliker";
+  src: url("./assets/fonts/Gliker-Bold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Stolzl";
+  src: url("./assets/fonts/Stolzl-Regular.ttf") format("truetype");
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "Stolzl";
+  src: url("./assets/fonts/Stolzl-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Stolzl";
+  src: url("./assets/fonts/Stolzl-Bold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Genty";
+  src: url("./assets/fonts/Genty.ttf") format("truetype");
+}

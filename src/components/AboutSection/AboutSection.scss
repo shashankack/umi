@@ -1,0 +1,130 @@
+.about-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 50px 100px;
+  gap: 15rem;
+
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: justify;
+
+    h2 {
+      font-size: 140px;
+      text-shadow: 0px 5.475px 0px rgba(0, 0, 0, 0.25);
+      font-family: "Genty";
+      font-weight: 400;
+      margin-top: 30px;
+    }
+    p {
+      font-size: 26px;
+      font-weight: 400;
+      font-family: "Stolzl";
+      margin: 30px 0;
+    }
+  }
+
+  .image-slider {
+    width: 100%;
+    height: 600px;
+    position: relative;
+
+    .cloud {
+      position: absolute;
+      top: -45%;
+      left: 50%;
+      transform: translate(-50%, 60%);
+      width: 300px;
+      z-index: 10;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .next-icon,
+    .prev-icon {
+      position: absolute;
+      top: 45%;
+      cursor: pointer;
+      z-index: 10;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .next-icon {
+      right: 20px;
+      transform: rotate(90deg);
+
+      &:hover {
+        transform: scale(0.9) rotate(90deg);
+      }
+
+      &:active {
+        transform: scale(1) rotate(90deg);
+      }
+
+      &::after {
+        transform: scale(1.1) rotate(90deg);
+      }
+    }
+
+    .prev-icon {
+      left: 20px;
+      transform: rotate(-90deg);
+
+      &:hover {
+        transform: scale(0.9) rotate(-90deg);
+      }
+      &:active {
+        transform: scale(1) rotate(-90deg);
+      }
+
+      &::after {
+        transform: scale(1.1) rotate(-90deg);
+      }
+    }
+    .swiper-pagination-bullet {
+      width: 150px;
+      height: 8px;
+      background-color: #f6a09e;
+      opacity: 1;
+      margin: 0 15px;
+      transition: all 0.3s ease;
+      border-radius: 20px;
+    }
+
+    .swiper-pagination-bullet-active {
+      background-color: #b5d782;
+      transform: scale(1.2);
+    }
+  }
+  .text-content {
+    margin-top: -200px;
+    width: 100%;
+
+    p {
+      font-family: "Stolzl";
+      font-size: 26px;
+      margin-top: 30px;
+    }
+  }
+}
