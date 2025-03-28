@@ -13,6 +13,50 @@
     width: 100%;
   }
 
+  .leaf1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 230px;
+  }
+
+  .leaf2 {
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    width: 200px;
+  }
+
+  .leaf3 {
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    width: 300px;
+  }
+
+  .leaf4 {
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 200px;
+    transform: rotate(180deg) rotateY(180deg);
+  }
+
+  .soup-bowl {
+    position: absolute;
+    bottom: -5%;
+    right: 60%;
+    width: 300px;
+  }
+
+  .whisk {
+    position: absolute;
+    bottom: 12%;
+    right: 35%;
+    width: 350px;
+    z-index: 2;
+  }
+
   .hero-content {
     display: flex;
     justify-content: space-around;
@@ -20,13 +64,16 @@
     width: 100%;
 
     .home-text {
-      h2 {
-        font-size: 130px;
-        font-family: "Gliker";
-        text-shadow: 5px 5px 0px #b5d782;
-        font-weight: 900;
-        line-height: 1;
-        margin-left: 140px;
+      .title-wrapper {
+        overflow: hidden;
+        h2 {
+          font-size: 130px;
+          font-family: "Gliker";
+          text-shadow: 5px 5px 0px #b5d782;
+          font-weight: 900;
+          line-height: 1;
+          margin-left: 140px;
+        }
       }
     }
 
@@ -42,6 +89,7 @@
 
       .product-frame {
         position: absolute;
+        
         top: 0;
         left: 0;
         width: 100%;
@@ -53,6 +101,7 @@
 
       .slider {
         position: absolute;
+        overflow: hidden;
         height: 100%;
         display: flex;
         flex-direction: column;

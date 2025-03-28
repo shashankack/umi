@@ -5,11 +5,14 @@ import productWindow from "../../assets/images/vectors/product_window.png";
 import sakura from "../../assets/images/vectors/sakura.png";
 import "./HeroSection.scss";
 import checkered from "../../assets/images/vectors/checkered.png";
-import {
-  fetchShopifyProducts,
-  createShopifyCheckout,
-} from "../../utils/shopify";
+import { fetchShopifyProducts } from "../../utils/shopify";
 import Loading from "../Loading/Loading";
+
+import leaf1 from "../../assets/images/vectors/leaf1.png";
+import leaf2 from "../../assets/images/vectors/leaf2.png";
+import leaf3 from "../../assets/images/vectors/leaf3.png";
+import soupBowl from "../../assets/images/vectors/soup_bowl.png";
+import whisk from "../../assets/images/vectors/whisk.png";
 
 const HeroSection = ({ theme }) => {
   const imageRef = useRef(null);
@@ -17,6 +20,16 @@ const HeroSection = ({ theme }) => {
   const descRef = useRef(null);
   const originRef = useRef(null);
   const sakuraRef = useRef(null);
+  const homeTextRefs = useRef([]);
+
+  const leaf1Ref = useRef(null);
+  const leaf2Ref = useRef(null);
+  const leaf3Ref = useRef(null);
+  const leaf4Ref = useRef(null);
+  const soupBowlRef = useRef(null);
+  const whiskRef = useRef(null);
+
+  homeTextRefs.current = [];
 
   const [products, setProducts] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -32,7 +45,18 @@ const HeroSection = ({ theme }) => {
   useEffect(() => {
     if (!products.length) return;
 
-    // Wait for refs to be attached to DOM
+    gsap.fromTo(
+      homeTextRefs.current,
+      { yPercent: 100, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.3,
+        ease: "power2.out",
+      }
+    );
+
     if (imageRef.current) {
       gsap.to(imageRef.current, {
         y: -10,
@@ -51,6 +75,9 @@ const HeroSection = ({ theme }) => {
   }, [products]);
 
   useEffect(() => {
+    window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+
     const loadProducts = async () => {
       try {
         const data = await fetchShopifyProducts();
@@ -87,7 +114,7 @@ const HeroSection = ({ theme }) => {
     tl.to(
       sakuraRef.current,
       {
-        rotate: `+=${direction * 180}`, // rotates clockwise/counterclockwise
+        rotate: `+=${direction * 180}`,
         duration: 0.5,
         ease: "power2.inOut",
       },
@@ -146,16 +173,6 @@ const HeroSection = ({ theme }) => {
     handleSlide(-1);
   };
 
-  const handleBuyNow = async () => {
-    const currentProduct = products[current];
-    const variantId = currentProduct.variants.edges[0]?.node.id;
-
-    if (!variantId) return;
-
-    const checkoutUrl = await createShopifyCheckout(variantId);
-    window.location.href = checkoutUrl;
-  };
-
   if (products.length === 0) return <Loading />;
 
   const currentProduct = products[current];
@@ -168,9 +185,15 @@ const HeroSection = ({ theme }) => {
     >
       <div className="hero-content">
         <div className="home-text" style={{ color: theme.colors.beige }}>
-          <h2>UMI IS</h2>
-          <h2>SO MATCHA</h2>
-          <h2>BETTER</h2>
+          <div className="title-wrapper">
+            <h2 ref={(el) => (homeTextRefs.current[0] = el)}>UMI IS</h2>
+          </div>
+          <div className="title-wrapper">
+            <h2 ref={(el) => (homeTextRefs.current[1] = el)}>SO MATCHA</h2>
+          </div>
+          <div className="title-wrapper">
+            <h2 ref={(el) => (homeTextRefs.current[2] = el)}>BETTER</h2>
+          </div>
         </div>
 
         <div
@@ -215,17 +238,20 @@ const HeroSection = ({ theme }) => {
                     __html: `<strong>Price:</strong> ${currentProduct.variants.edges[0]?.node.price.amount} ${currentProduct.variants.edges[0]?.node.price.currencyCode}`,
                   }}
                 />
-                <div
-                  className="grid-item flower"
-                  onClick={handleBuyNow}
-                  style={{ cursor: "pointer" }}
-                >
+                <div className="grid-item flower" style={{ cursor: "pointer" }}>
                   <img src={sakura} alt="flower" ref={sakuraRef} />
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <img src={leaf1} alt="" className="leaf1" ref={leaf1Ref} />
+        <img src={leaf2} alt="" className="leaf2" ref={leaf2Ref} />
+        <img src={leaf3} alt="" className="leaf3" ref={leaf3Ref} />
+        <img src={leaf1} alt="" className="leaf4" ref={leaf4Ref} />
+        <img src={soupBowl} alt="" className="soup-bowl" ref={soupBowlRef} />
+        <img src={whisk} alt="" className="whisk" ref={whiskRef} />
       </div>
       <img className="checkered" src={checkered} alt="" />
     </section>
