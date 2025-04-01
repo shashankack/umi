@@ -4,6 +4,7 @@ import { useTheme } from "styled-components";
 import HeroSection from "../../components/HeroSection/HeroSection";
 import ProductsSection from "../../components/ProductsSection/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
+import TutorialSection from "../../components/TutorialSection/TutorialSection";
 
 const Home = () => {
   const theme = useTheme();
@@ -13,6 +14,7 @@ const Home = () => {
       <div className="wrapper">
         <ProductsSection />
         <AboutSection />
+        <TutorialSection />
       </div>
     </>
   );

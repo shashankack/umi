@@ -4,6 +4,7 @@ import pinkLogo from "../../assets/images/icons/pink_logo.png";
 import "./Navbar.scss";
 import gsap from "gsap";
 import { useTheme } from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const logoRef = useRef(null);
@@ -13,6 +14,13 @@ const Navbar = () => {
   const navVisible = useRef(true);
   const theme = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
+  const nav = useNavigate();
+
+  const handleRedirect = (e) => {
+    e.preventDefault();
+    const target = e.currentTarget.getAttribute("href");
+    nav(target);
+  };
 
   useEffect(() => {
     const introTL = gsap.timeline({ paused: true });

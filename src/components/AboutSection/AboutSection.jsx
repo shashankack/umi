@@ -14,11 +14,16 @@ import "swiper/css/navigation";
 import "./AboutSection.scss";
 import { useTheme } from "styled-components";
 
+import { useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import cloud from "../../assets/images/vectors/cloud.png";
 import paw from "../../assets/images/vectors/paw.png";
 
 import matchaField from "../../assets/images/matcha_field.png";
 
+gsap.registerPlugin(ScrollTrigger);
 const AboutSection = () => {
   const images = [
     matchaField,
@@ -29,6 +34,26 @@ const AboutSection = () => {
   ];
 
   const theme = useTheme();
+
+  useEffect(() => {
+    gsap.fromTo(
+      ".cloud",
+      { scale: 2, opacity: 0, y: 250 },
+      {
+        y: 150,
+        scale: 1,
+        opacity: 1,
+        ease: "power4.out",
+        scrollTrigger: {
+          trigger: ".cloud",
+          start: "top 50%",
+          end: "top 20%",
+          scrub: 1,
+        },
+      }
+    );
+  });
+
   return (
     <section
       className="about-section"
@@ -121,7 +146,7 @@ const AboutSection = () => {
           </div>
         </Swiper>
       </div>
-      <div className="text-content" style={{color: theme.colors.beige}} >
+      <div className="text-content" style={{ color: theme.colors.beige }}>
         <p>
           Nestled in the misty hills of Japan, our Matcha farm is a sanctuary of
           tradition and purity. We cultivate shade-grown tea leaves using

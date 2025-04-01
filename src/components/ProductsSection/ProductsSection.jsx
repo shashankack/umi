@@ -9,12 +9,18 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
-import { useEffect, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const ProductsSection = () => {
   const theme = useTheme();
+  const titleRef = useRef(null);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -30,6 +36,30 @@ const ProductsSection = () => {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    if (titleRef.current) {
+      const titleAnimation = gsap.fromTo(
+        titleRef.current,
+        { scale: 0.6, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: "top 80%",
+            scrub: 1,
+          },
+        }
+      );
+
+      return () => {
+        titleAnimation.kill();
+      };
+    }
+  });
+
   return (
     <section
       className="products-section"
@@ -38,21 +68,32 @@ const ProductsSection = () => {
         fontFamily: theme.fonts.text,
       }}
     >
-      <h3 className="title" style={{ color: theme.colors.pink }}>
+      <h3 className="title" style={{ color: theme.colors.pink }} ref={titleRef}>
         DISCOVER OUR <br />
         PRODUCTS
       </h3>
 
       <Swiper
         modules={[FreeMode, Pagination, Autoplay]}
-        spaceBetween={30}
+        spaceBetween={10}
         slidesPerView={3}
-        freeMode={true}
+        breakpoints={{
+          320: {
+            slidesPerView: 1,
+          },
+          640: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: 3,
+          },
+        }}
         pagination={{ clickable: true }}
         autoplay={{ delay: 5000 }}
         className="products-slider"
       >
         {products.map((product) => {
+          const title = product.title;
           const imageUrl = product.images.edges[0]?.node.url;
           const price = product.variants.edges[0]?.node.price.amount;
           const currency = product.variants.edges[0]?.node.price.currencyCode;
@@ -60,21 +101,26 @@ const ProductsSection = () => {
           return (
             <SwiperSlide key={product.id}>
               <div className="product-card">
-                <img
-                  src={windowImage}
-                  alt="Product Window"
-                  className="product-window"
-                />
+                <div className="title">
+                  <h2>{title}</h2>
+                </div>
+                <div className="rect" />
                 <div className="product-image">
                   <img src={imageUrl} alt={product.title} />
                 </div>
 
-                <div className="product-overlay">
-                  <div className="price" style={{ color: theme.colors.beige }}>
+                <div
+                  className="product-actions"
+                  style={{ color: theme.colors.beige }}
+                >
+                  <div className="price">
                     {currency} {price}
                   </div>
+
+                  <p className="learn-more">Learn More</p>
+
                   <div className="cart-icon">
-                    <FaShoppingCart color={theme.colors.beige} size={20} />
+                    <FaShoppingCart size={20} />
                   </div>
                 </div>
               </div>
