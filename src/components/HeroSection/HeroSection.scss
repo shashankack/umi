@@ -78,6 +78,13 @@
           line-height: 1;
           margin-left: 140px;
         }
+
+        @media screen and (max-width: 1300px) {
+          h2 {
+            font-size: 6rem;
+            text-wrap: nowrap;
+          }
+        }
       }
     }
 
