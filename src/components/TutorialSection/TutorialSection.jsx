@@ -44,7 +44,9 @@ const TutorialSection = () => {
       <div className="steps">
         {stepsImages.map((step, index) => (
           <div className="step" key={index}>
-            <img src={step.image} alt="" />
+            <div className="image-wrapper">
+              <img src={step.image} />
+            </div>
             <p
               style={{
                 color: theme.colors.beige,
@@ -55,6 +57,22 @@ const TutorialSection = () => {
           </div>
         ))}
       </div>
+      <div className="divider">
+        <hr /> <p>Or</p> <hr />
+      </div>
+      <iframe
+        width="60%"
+        height="500px"
+        src="https://www.youtube.com/embed/13uVij4DsZk?si=OC0gX3Ow6-t2ra4z"
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+        style={{
+          borderRadius: "20px",
+          boxShadow: "-5px 10px 5px 1px rgba(0, 0, 0, 0.1)",
+        }}
+      />
     </section>
   );
 };

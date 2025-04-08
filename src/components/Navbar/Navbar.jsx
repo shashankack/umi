@@ -16,11 +16,26 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const nav = useNavigate();
 
+  const handleSmoothScroll = (e) => {
+    e.preventDefault();
+    const targetId = e.currentTarget.getAttribute("href").substring(1);
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const handleRedirect = (e) => {
     e.preventDefault();
     const target = e.currentTarget.getAttribute("href");
     nav(target);
   };
+
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
 
   useEffect(() => {
     const introTL = gsap.timeline({ paused: true });
@@ -31,15 +46,13 @@ const Navbar = () => {
       ...rightLinksRef.current.children,
     ];
 
-    // Initial GSAP setup
-    gsap.set(navItems, {
-      opacity: 0,
-      scale: 0.8,
-    });
+    // Initial setup
+    gsap.set(navItems, { opacity: 0, scale: 0.8 });
     gsap.set(logoRef.current, { y: -100, opacity: 0 });
 
-    // Intro Animation
+    // Intro animation
     introTL
+      .clear()
       .to(logoRef.current, {
         y: 0,
         opacity: 1,
@@ -47,40 +60,43 @@ const Navbar = () => {
         ease: "power3.out",
       })
       .add("itemsIn", "-=0.5")
-      .fromTo(
+      .to(
         leftLinksRef.current.children,
-        { x: 0, opacity: 0 },
         {
           x: "-100px",
-          stagger: 0.2,
           opacity: 1,
           duration: 0.8,
           ease: "power3.out",
+          stagger: 0.2,
         },
         "itemsIn"
       )
-      .fromTo(
+      .to(
         rightLinksRef.current.children,
-        { x: 0, opacity: 0 },
         {
           x: "100px",
-          stagger: { each: 0.2, from: "end" },
           opacity: 1,
           duration: 0.8,
           ease: "power3.out",
+          stagger: { each: 0.2, from: "end" },
         },
         "itemsIn"
       );
 
-    // Outro Animation
+    // Outro animation
     outroTL
-      .to(leftLinksRef.current.children, {
-        x: 0,
-        opacity: 0,
-        duration: 0.4,
-        stagger: 0.1,
-        ease: "power2.in",
-      })
+      .clear()
+      .to(
+        leftLinksRef.current.children,
+        {
+          x: 0,
+          opacity: 0,
+          duration: 0.4,
+          stagger: 0.1,
+          ease: "power2.in",
+        },
+        0
+      )
       .to(
         rightLinksRef.current.children,
         {
@@ -90,7 +106,7 @@ const Navbar = () => {
           stagger: { each: 0.1, from: "start" },
           ease: "power2.in",
         },
-        "<"
+        0
       )
       .to(
         logoRef.current,
@@ -100,75 +116,103 @@ const Navbar = () => {
           duration: 0.4,
           ease: "power3.in",
         },
-        "+=0.1"
+        ">0.1"
       );
 
-    const SCROLL_THRESHOLD = 5;
-    const currentScrollY = window.scrollY;
-    prevScrollY.current = currentScrollY;
+    // Setup scroll logic
+    const SCROLL_THRESHOLD = 30;
+    prevScrollY.current = window.scrollY;
 
-    if (currentScrollY > window.innerHeight) {
-      // If already scrolled, go straight to outro state
+    const alreadyScrolled = window.scrollY > window.innerHeight;
+
+    if (alreadyScrolled) {
+      // Skip animation, directly set final OUTRO state
       gsap.set(logoRef.current, { y: -100, opacity: 0 });
       gsap.set(leftLinksRef.current.children, { x: 0, opacity: 0 });
       gsap.set(rightLinksRef.current.children, { x: 0, opacity: 0 });
       navVisible.current = false;
       setIsScrolled(true);
     } else {
-      // At top, play intro normally
-      introTL.play();
+      // Ensure everything starts invisible for intro
+      gsap.set(logoRef.current, { y: -100, opacity: 0 });
+      gsap.set(leftLinksRef.current.children, { x: 0, opacity: 0 });
+      gsap.set(rightLinksRef.current.children, { x: 0, opacity: 0 });
+      introTL.play(0);
       navVisible.current = true;
       setIsScrolled(false);
     }
 
+    let ticking = false;
+
     const handleScroll = () => {
-      const newY = window.scrollY + 100;
-      const delta = newY - prevScrollY.current;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const newY = window.scrollY;
+          const delta = newY - prevScrollY.current;
 
-      if (delta > SCROLL_THRESHOLD && navVisible.current) {
-        outroTL.restart();
-        navVisible.current = false;
-      } else if (delta < -SCROLL_THRESHOLD && !navVisible.current) {
-        introTL.restart();
-        navVisible.current = true;
+          if (
+            delta > SCROLL_THRESHOLD &&
+            navVisible.current &&
+            !outroTL.isActive()
+          ) {
+            outroTL.restart(true);
+            navVisible.current = false;
+          } else if (
+            delta < -SCROLL_THRESHOLD &&
+            !navVisible.current &&
+            !introTL.isActive()
+          ) {
+            introTL.restart(true);
+            navVisible.current = true;
+          }
+
+          setIsScrolled(newY > window.innerHeight);
+          prevScrollY.current = newY;
+          ticking = false;
+        });
+        ticking = true;
       }
-
-      setIsScrolled(window.scrollY > window.innerHeight);
-      prevScrollY.current = newY;
     };
 
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      introTL.kill();
+      outroTL.kill();
     };
   }, []);
 
   return (
-    <nav
-      className={`navbar ${isScrolled ? "scrolled" : ""}`}
-      style={{
-        fontFamily: theme.fonts.text,
-        color: isScrolled ? theme.colors.beige : theme.colors.pink,
-      }}
-    >
-      <div className="nav-links left" ref={leftLinksRef}>
-        <a href="/">home</a>
-        <a href="/shop">shop</a>
-      </div>
+    <>
+      <nav
+        className={`navbar ${isScrolled ? "scrolled" : ""}`}
+        style={{
+          fontFamily: theme.fonts.text,
+          color: isScrolled ? theme.colors.beige : theme.colors.pink,
+        }}
+      >
+        <div className="nav-links left" ref={leftLinksRef}>
+          <a href="/">home</a>
+          <a href="#shop" onClick={handleSmoothScroll}>
+            shop
+          </a>
+        </div>
 
-      <img
-        src={isScrolled ? pinkLogo : beigeLogo}
-        alt="UMI Logo"
-        className="logo"
-        ref={logoRef}
-      />
+        <img
+          src={isScrolled ? pinkLogo : beigeLogo}
+          alt="UMI Logo"
+          className="logo"
+          onClick={() => (window.location.href = "/")}
+          ref={logoRef}
+        />
 
-      <div className="nav-links right" ref={rightLinksRef}>
-        <a href="/contact">contact</a>
-        <a href="/about">about</a>
-      </div>
-    </nav>
+        <div className="nav-links right" ref={rightLinksRef}>
+          <a href="/contact">contact</a>
+          <a href="/about">about</a>
+        </div>
+      </nav>
+    </>
   );
 };
 

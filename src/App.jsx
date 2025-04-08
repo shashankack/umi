@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import { ThemeProvider } from "styled-components";
 import About from "./pages/About/About";
+import SolidNavbar from "./components/Navbar/SolidNavbar";
 
 const theme = {
   colors: {
@@ -22,7 +23,7 @@ const theme = {
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Router>
+      <Router basename="/" window={window}>
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

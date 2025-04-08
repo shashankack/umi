@@ -3,7 +3,6 @@ import { useTheme } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { FaShoppingCart } from "react-icons/fa";
-import windowImage from "../../assets/images/vectors/products/window.png";
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -16,11 +15,14 @@ import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
 
+import surfingNeko from "../../assets/images/vectors/neko/surfing.png";
+
 gsap.registerPlugin(ScrollTrigger);
 
 const ProductsSection = () => {
   const theme = useTheme();
   const titleRef = useRef(null);
+  const svgRef = useRef(null);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -54,20 +56,46 @@ const ProductsSection = () => {
         }
       );
 
+      if (svgRef.current) {
+        gsap.fromTo(
+          svgRef.current,
+          { height: "60%" },
+          {
+            height: "100%",
+            ease: "none",
+            scrollTrigger: {
+              trigger: svgRef.current,
+              start: "top bottom",
+              end: "bottom bottom ",
+              scrub: 3,
+            },
+          }
+        );
+      }
+
       return () => {
         titleAnimation.kill();
       };
     }
-  });
+  }, []);
 
   return (
     <section
       className="products-section"
+      id="shop"
       style={{
         backgroundColor: theme.colors.beige,
         fontFamily: theme.fonts.text,
       }}
     >
+      <div className="top">
+        <div className="image-container">
+          <img src={surfingNeko} alt="Surfing Neko" className="neko" />
+        </div>
+        <h2>Ride the wave</h2>
+        <h2>with umi</h2>
+        <button>Shop Now</button>
+      </div>
       <h3 className="title" style={{ color: theme.colors.pink }} ref={titleRef}>
         DISCOVER OUR <br />
         PRODUCTS
@@ -128,9 +156,50 @@ const ProductsSection = () => {
           );
         })}
       </Swiper>
+
       <div className="marquee">
         <CurvedMarquee />
       </div>
+      <svg
+        ref={svgRef}
+        width="100vw"
+        viewBox="0 0 1440 200"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          zIndex: 1,
+        }}
+      >
+        <path fill="#F3EDB8">
+          <animate
+            attributeName="d"
+            dur="8s"
+            repeatCount="indefinite"
+            values="
+      M0,100 
+      C180,120 360,90 540,100 
+      C720,110 900,90 1080,100 
+      C1260,110 1440,90 1620,100 
+      L1440,200 L0,200 Z;
+
+      M-180,100 
+      C0,120 190,90 360,100 
+      C540,110 720,90 900,100 
+      C1080,110 1260,90 1440,100 
+      L1440,200 L0,200 Z;
+
+      M0,100 
+      C180,120 360,90 540,100 
+      C720,110 900,90 1080,100 
+      C1260,110 1440,90 1620,100 
+      L1440,200 L0,200 Z
+    "
+          />
+        </path>
+      </svg>
     </section>
   );
 };

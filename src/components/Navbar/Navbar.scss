@@ -55,7 +55,7 @@
 
       a {
         margin-left: 40px;
-        box-shadow: -2px 2px 0px 0px #B3D681;
+        box-shadow: -2px 2px 0px 0px #b3d681;
       }
     }
 
@@ -64,8 +64,23 @@
 
       a {
         margin-right: 40px;
-        box-shadow: 2px 2px 0px 0px #B3D681;
+        box-shadow: 2px 2px 0px 0px #b3d681;
       }
     }
+  }
+}
+
+.cart {
+  width:  60px;
+  height: 60px;
+  position: fixed;
+  top:   50px;
+  right: 100px;
+  z-index: 30;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 }
