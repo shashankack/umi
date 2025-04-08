@@ -30,37 +30,17 @@ const HeroSection = ({ theme }) => {
   const whiskRef = useRef(null);
 
   const getAnimationPositions = () => {
-    const width = window.innerWidth;
+    const vw = (percent) => (window.innerWidth * percent) / 100;
+    const vh = (percent) => (window.innerHeight * percent) / 100;
 
-    if (width <= 500) {
-      return {
-        leaf1: { from: { x: -50, y: -20 }, to: { x: 0, y: 0 } },
-        leaf2: { from: { x: 50, y: -10 }, to: { x: 0, y: 0 } },
-        leaf3: { from: { x: -40, y: 30 }, to: { x: 0, y: 0 } },
-        leaf4: { from: { x: 40, y: 40 }, to: { x: 0, y: 0 } },
-        soupBowl: { from: { y: 50 }, to: { y: 0 } },
-        whisk: { from: { x: 30, y: 20 }, to: { x: 0, y: 0 } },
-      };
-    } else if (width <= 786) {
-      return {
-        leaf1: { from: { x: -70, y: -30 }, to: { x: 0, y: 0 } },
-        leaf2: { from: { x: 70, y: -20 }, to: { x: 0, y: 0 } },
-        leaf3: { from: { x: -60, y: 40 }, to: { x: 0, y: 0 } },
-        leaf4: { from: { x: 60, y: 50 }, to: { x: 0, y: 0 } },
-        soupBowl: { from: { y: 60 }, to: { y: 0 } },
-        whisk: { from: { x: 40, y: 30 }, to: { x: 0, y: 0 } },
-      };
-    } else {
-      // >= 1024
-      return {
-        leaf1: { from: { x: -100, y: -40 }, to: { x: 0, y: 0 } },
-        leaf2: { from: { x: 100, y: -30 }, to: { x: 0, y: 0 } },
-        leaf3: { from: { x: -80, y: 60 }, to: { x: 0, y: 0 } },
-        leaf4: { from: { x: 80, y: 70 }, to: { x: 0, y: 0 } },
-        soupBowl: { from: { y: 80 }, to: { y: 0 } },
-        whisk: { from: { x: 60, y: 40 }, to: { x: 0, y: 0 } },
-      };
-    }
+    return {
+      leaf1: { from: { x: -vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
+      leaf2: { from: { x: vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
+      leaf3: { from: { x: -vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
+      leaf4: { from: { x: vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
+      soupBowl: { from: { y: vh(5) }, to: { y: 0 } },
+      whisk: { from: { x: vw(4), y: vh(3) }, to: { x: 0, y: 0 } },
+    };
   };
 
   homeTextRefs.current = [];
@@ -80,7 +60,9 @@ const HeroSection = ({ theme }) => {
     if (!products.length) return;
 
     const positions = getAnimationPositions();
+    const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
+    // Initial entrance animations
     gsap.fromTo(leaf1Ref.current, positions.leaf1.from, {
       ...positions.leaf1.to,
       duration: 1,
@@ -110,6 +92,52 @@ const HeroSection = ({ theme }) => {
       ...positions.whisk.to,
       duration: 1,
       ease: "power3.out",
+    });
+
+    // Float animations (infinite yoyo effect)
+    gsap.to(leaf1Ref.current, {
+      y: "-=10",
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+    gsap.to(leaf2Ref.current, {
+      y: "+=10",
+      duration: 2.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+    gsap.to(leaf3Ref.current, {
+      y: "-=8",
+      duration: 2.8,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+    gsap.to(leaf4Ref.current, {
+      y: "+=10",
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+
+    gsap.to(whiskRef.current, {
+      y: "-=6",
+      duration: 1.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+
+    // Continuous rotation for soup bowl
+    gsap.to(soupBowlRef.current, {
+      rotate: -360,
+      duration: 30,
+      repeat: -1,
+      ease: "none",
     });
 
     gsap.fromTo(
@@ -267,32 +295,22 @@ const HeroSection = ({ theme }) => {
           className="product-window"
           style={{ fontFamily: theme.fonts.text }}
         >
-          <img
-            src={productWindow}
-            alt="Product Frame"
-            className="product-frame"
-          />
+          <div className="product-frame">
+            <div className="slider">
+              <h2 ref={nameRef}>{currentProduct.title}</h2>
+              <div className="navigation">
+                <div className="arrow left" onClick={prevSlide}>
+                  <FaArrowLeft color={theme.colors.pink} />
+                </div>
 
-          <div className="slider">
-            <div className="arrow left" onClick={prevSlide}>
-              <FaArrowLeft color={theme.colors.pink} />
+                <div className="arrow right" onClick={nextSlide}>
+                  <FaArrowRight color={theme.colors.pink} />
+                </div>
+              </div>
+              <div className="image-container">
+                <img src={imageUrl} ref={imageRef} />
+              </div>
             </div>
-
-            <h3 className="product-name" ref={nameRef}>
-              {currentProduct.title}
-            </h3>
-
-            <img
-              ref={imageRef}
-              src={imageUrl}
-              alt={currentProduct.title}
-              className="product-img"
-            />
-
-            <div className="arrow right" onClick={nextSlide}>
-              <FaArrowRight color={theme.colors.pink} />
-            </div>
-
             <div className="product-info">
               <div className="text-grid">
                 <div className="grid-item" ref={descRef}>

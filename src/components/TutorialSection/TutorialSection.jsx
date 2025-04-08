@@ -71,6 +71,7 @@ const TutorialSection = () => {
         style={{
           borderRadius: "20px",
           boxShadow: "-5px 10px 5px 1px rgba(0, 0, 0, 0.1)",
+          border: "none",
         }}
       />
     </section>
