@@ -103,7 +103,6 @@ const ProductsSection = () => {
 
       <Swiper
         modules={[FreeMode, Pagination, Autoplay]}
-        spaceBetween={10}
         slidesPerView={3}
         breakpoints={{
           320: {

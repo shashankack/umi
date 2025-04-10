@@ -17,17 +17,18 @@
   }
 
   // Tablet (768px)
-  @media (max-width: 1024px) {
+  @media (max-width: 1440px) {
     svg {
-      height: 160px;
+      margin-bottom: 40px;
+      height: 200px;
     }
 
     text {
-      font-size: 32px;
+      font-size: 22px;
     }
 
     use {
-      stroke-width: 45px;
+      stroke-width: 70px;
     }
   }
 

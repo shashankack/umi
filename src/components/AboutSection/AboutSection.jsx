@@ -38,7 +38,7 @@ const AboutSection = () => {
   useEffect(() => {
     gsap.fromTo(
       ".cloud",
-      { scale: 2, opacity: 0, y: 250 },
+      { scale: 4, opacity: 0, y: -350 },
       {
         y: 150,
         scale: 1,
@@ -46,9 +46,8 @@ const AboutSection = () => {
         ease: "power4.out",
         scrollTrigger: {
           trigger: ".cloud",
-          start: "top 50%",
-          end: "top 20%",
-          scrub: 1,
+          start: "top+=500 top",
+          toggleActions: "play none none reverse",
         },
       }
     );

@@ -2,9 +2,9 @@ import React from "react";
 
 const Loading = () => {
   const spinnerStyle = {
-    width: "40px",
-    height: "40px",
-    border: "4px solid #3498db",
+    width: " 50px",
+    height: "50px",
+    border: "5px solid #FDF8CE",
     borderTop: "4px solid transparent",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
@@ -16,11 +16,13 @@ const Loading = () => {
     justifyContent: "center",
     gap: "12px",
     height: "100vh",
+    backgroundColor: "#F6A09E",
   };
 
   const textStyle = {
-    fontSize: "16px",
-    color: "#555",
+    fontSize: "18px",
+    color: "#FDF8CE",
+    fontFamily: "Stolzl",
   };
 
   return (

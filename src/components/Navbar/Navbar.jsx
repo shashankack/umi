@@ -14,6 +14,8 @@ const Navbar = () => {
   const navVisible = useRef(true);
   const theme = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
   const nav = useNavigate();
 
   const handleSmoothScroll = (e) => {
@@ -53,6 +55,7 @@ const Navbar = () => {
     // Intro animation
     introTL
       .clear()
+      .call(() => setIsVisible(true))
       .to(logoRef.current, {
         y: 0,
         opacity: 1,
@@ -115,6 +118,7 @@ const Navbar = () => {
           opacity: 0,
           duration: 0.4,
           ease: "power3.in",
+          onComplete: () => setIsVisible(false),
         },
         ">0.1"
       );
@@ -188,6 +192,7 @@ const Navbar = () => {
       <nav
         className={`navbar ${isScrolled ? "scrolled" : ""}`}
         style={{
+          display: isVisible ? "flex" : "none",
           fontFamily: theme.fonts.text,
           color: isScrolled ? theme.colors.beige : theme.colors.pink,
         }}

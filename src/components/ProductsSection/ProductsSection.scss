@@ -16,7 +16,7 @@
     width: 100%;
 
     .image-container {
-      height: 300px;
+      height: 200px;
 
       img {
         width: 100%;
@@ -30,7 +30,7 @@
       text-align: center;
       text-shadow: 1px 7px 0px #b5d782;
       font-family: "Genty";
-      font-size: 8rem;
+      font-size: 6rem;
       font-style: normal;
       font-weight: 400;
       line-height: 60%;
@@ -47,7 +47,7 @@
       color: #fdf8ce;
       font-family: "Stolzl";
       text-align: center;
-      font-size: 2rem;
+      font-size: 1rem;
       text-transform: uppercase;
       cursor: pointer;
       font-style: normal;
@@ -84,7 +84,7 @@
   }
 
   .product-card {
-    width: 380px;
+    width: 400px;
     height: 580px;
     padding: 30px;
     border-radius: 185.5px 185.5px 0px 0px;
@@ -93,6 +93,11 @@
     box-shadow: 12px 16px 0px 0px #f6a09e;
     margin: 0 auto;
     position: relative;
+
+    @media screen and (max-width: 1512px) {
+      width: 350px;
+      height: 500px;
+    }
 
     .title {
       color: #3d6334;
@@ -115,6 +120,11 @@
       bottom: 0;
       background-color: #b5d782;
       height: 160px;
+
+      @media screen and (max-width: 1512px) {
+        height: 120px;
+        
+      }
     }
 
     .product-image {
@@ -144,6 +154,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      @media screen and (max-width: 1512px) {
+        bottom: 30px;
+        
+      }
     }
 
     .price {
