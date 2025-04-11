@@ -1,6 +1,5 @@
 const SHOPIFY_DOMAIN = "6ix8jh-qp.myshopify.com";
 const STOREFRONT_ACCESS_TOKEN = "2cba03757af47abdf34dea05d931f828";
-
 const endpoint = `https://${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`;
 
 export async function fetchShopifyProducts() {
@@ -11,8 +10,8 @@ export async function fetchShopifyProducts() {
           node {
             id
             title
-            description
-            images(first: 1) {
+            descriptionHtml
+            images(first:6) {
               edges {
                 node {
                   url
@@ -27,6 +26,8 @@ export async function fetchShopifyProducts() {
                     amount
                     currencyCode
                   }
+                  weight
+                  weightUnit
                 }
               }
             }
@@ -67,6 +68,7 @@ export async function createShopifyCheckout(variantId) {
         ]
       }) {
         checkout {
+          id
           webUrl
         }
       }
@@ -83,5 +85,79 @@ export async function createShopifyCheckout(variantId) {
   });
 
   const json = await res.json();
-  return json.data.checkoutCreate.checkout.webUrl;
+  return json.data.checkoutCreate.checkout;
+}
+
+export async function addToCart(checkoutId, variantId, quantity) {
+  const mutation = `
+    mutation {
+      checkoutLineItemsAdd(checkoutId: "${checkoutId}", lineItems: [
+        {
+          variantId: "${variantId}"
+          quantity: ${quantity}
+        }
+      ]) {
+        checkout {
+          id
+          lineItems(first: 5) {
+            edges {
+              node {
+                title
+                quantity
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": STOREFRONT_ACCESS_TOKEN,
+    },
+    body: JSON.stringify({ query: mutation }),
+  });
+
+  const json = await res.json();
+  return json.data.checkoutLineItemsAdd.checkout;
+}
+
+export async function getCheckoutDetails(checkoutId) {
+  const query = `
+    query {
+      checkout(id: "${checkoutId}") {
+        id
+        lineItems(first: 5) {
+          edges {
+            node {
+              title
+              quantity
+              variant {
+                id
+                price {
+                  amount
+                  currencyCode
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": STOREFRONT_ACCESS_TOKEN,
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  const json = await res.json();
+  return json.data.checkout;
 }

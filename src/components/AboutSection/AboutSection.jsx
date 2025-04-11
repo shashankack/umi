@@ -12,7 +12,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 import "./AboutSection.scss";
-import { useTheme } from "styled-components";
+import { useTheme } from "@mui/material/styles";
 
 import { useEffect } from "react";
 import gsap from "gsap";

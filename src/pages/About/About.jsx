@@ -1,7 +1,7 @@
 import "./About.scss";
-import neko from "../../assets/images/neko.gif";
+import neko from "../../assets/images/vectors/neko/neko.gif";
 import founder from "../../assets/images/founder.jpg";
-import { useTheme } from "styled-components";
+import { useTheme } from "@mui/material/styles";
 
 const About = () => {
   const theme = useTheme();

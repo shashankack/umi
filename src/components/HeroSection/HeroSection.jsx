@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 import { gsap } from "gsap";
-import productWindow from "../../assets/images/vectors/product_window.png";
+
 import sakura from "../../assets/images/vectors/sakura.png";
 import "./HeroSection.scss";
 import checkered from "../../assets/images/vectors/checkered.png";
@@ -300,11 +301,11 @@ const HeroSection = ({ theme }) => {
               <h2 ref={nameRef}>{currentProduct.title}</h2>
               <div className="navigation">
                 <div className="arrow left" onClick={prevSlide}>
-                  <FaArrowLeft color={theme.colors.pink} />
+                  <IoIosArrowBack color={theme.colors.pink} size={45} />
                 </div>
 
                 <div className="arrow right" onClick={nextSlide}>
-                  <FaArrowRight color={theme.colors.pink} />
+                  <IoIosArrowForward color={theme.colors.pink} size={45} />
                 </div>
               </div>
               <div className="image-container">
@@ -314,7 +315,7 @@ const HeroSection = ({ theme }) => {
             <div className="product-info">
               <div className="text-grid">
                 <div className="grid-item" ref={descRef}>
-                  {currentProduct.description}
+                  Made in Japan
                 </div>
                 <div
                   className="grid-item"

@@ -1,5 +1,4 @@
 import React from "react";
-import { useTheme } from "styled-components";
 import { useState, useEffect } from "react";
 
 import pinkLogo from "../../assets/images/icons/pink_logo.png";
@@ -8,7 +7,6 @@ import "./SolidNavbar.scss";
 
 const SolidNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const theme = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {

@@ -1,7 +1,9 @@
 import "./ProductsSection.scss";
-import { useTheme } from "styled-components";
+import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
+import { Link } from "react-router-dom";
+
 import { FaShoppingCart } from "react-icons/fa";
 
 import "swiper/css";
@@ -30,6 +32,7 @@ const ProductsSection = () => {
       try {
         const data = await fetchShopifyProducts();
         setProducts(data);
+        console.log("Incoming products data:", data); // Log the incoming data
       } catch (error) {
         console.error("Failed to fetch products", error);
       }
@@ -125,6 +128,9 @@ const ProductsSection = () => {
           const price = product.variants.edges[0]?.node.price.amount;
           const currency = product.variants.edges[0]?.node.price.currencyCode;
 
+          // Extract the numeric product ID
+          const productId = product.id.split("/").pop(); // Get the numeric ID
+
           return (
             <SwiperSlide key={product.id}>
               <div className="product-card">
@@ -144,7 +150,9 @@ const ProductsSection = () => {
                     {currency} {price}
                   </div>
 
-                  <p className="learn-more">Learn More</p>
+                  <Link to={`/product/${productId}`} className="learn-more">
+                    Learn More
+                  </Link>
 
                   <div className="cart-icon">
                     <FaShoppingCart size={20} />

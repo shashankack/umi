@@ -1,5 +1,5 @@
 import "./TutorialSection.scss";
-import { useTheme } from "styled-components";
+import { useTheme } from "@mui/material/styles";
 
 import step1 from "../../assets/images/vectors/about/step1.png";
 import step2 from "../../assets/images/vectors/about/step2.png";
@@ -58,7 +58,7 @@ const TutorialSection = () => {
         ))}
       </div>
       <div className="divider">
-        <hr /> <p>Or</p> <hr />
+        <hr /> <p>or</p> <hr />
       </div>
       <iframe
         width="60%"

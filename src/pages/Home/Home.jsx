@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
 import "./Home.scss";
-import { useTheme } from "styled-components";
+import { useTheme } from "@mui/material/styles";
 import HeroSection from "../../components/HeroSection/HeroSection";
-import ProductsSection from "../../components/ProductsSection/ProductsSection";
+import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 

@@ -3,7 +3,7 @@ import beigeLogo from "../../assets/images/icons/beige_logo.png";
 import pinkLogo from "../../assets/images/icons/pink_logo.png";
 import "./Navbar.scss";
 import gsap from "gsap";
-import { useTheme } from "styled-components";
+import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
