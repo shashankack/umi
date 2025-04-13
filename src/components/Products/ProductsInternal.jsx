@@ -253,9 +253,7 @@ const ProductsInternal = () => {
                   {product.title}
                   {console.log(product.descriptionHtml)}
                 </Typography>
-                <Typography
-                  variant="h5"
-                  gutterBottom
+                <Box
                   sx={{
                     fontFamily: theme.fonts.text,
                     fontWeight: 200,
@@ -263,7 +261,7 @@ const ProductsInternal = () => {
                   }}
                 >
                   {parsedParagraphs}
-                </Typography>
+                </Box>
               </Box>
 
               <Box mt={4} p={2}>
