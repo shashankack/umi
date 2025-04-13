@@ -17,6 +17,10 @@
   -ms-overflow-style: none;
 }
 
+.swiper-scrollbar {
+  display: none;
+}
+
 @font-face {
   font-family: "Gliker";
   src: url("./assets/fonts/Gliker-Regular.ttf") format("truetype");

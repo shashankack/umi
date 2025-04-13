@@ -11,7 +11,7 @@ export async function fetchShopifyProducts() {
             id
             title
             descriptionHtml
-            images(first:6) {
+            images(first:10) {
               edges {
                 node {
                   url

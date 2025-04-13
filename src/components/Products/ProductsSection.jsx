@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
 
-import surfingNeko from "../../assets/images/vectors/neko/surfing.png";
+import surfingNeko from "../../assets/images/vectors/neko/surfing.gif";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,12 +64,12 @@ const ProductsSection = () => {
           svgRef.current,
           { height: "60%" },
           {
-            height: "100%",
+            height: "140%",
             ease: "none",
             scrollTrigger: {
               trigger: svgRef.current,
               start: "top bottom",
-              end: "bottom bottom ",
+              end: "top 60% ",
               scrub: 3,
             },
           }
@@ -92,12 +92,12 @@ const ProductsSection = () => {
       }}
     >
       <div className="top">
+        <h2>Ride the wave</h2>
+        <h2>with umi</h2>
         <div className="image-container">
           <img src={surfingNeko} alt="Surfing Neko" className="neko" />
         </div>
-        <h2>Ride the wave</h2>
-        <h2>with umi</h2>
-        <button>Shop Now</button>
+        {/* <button>Shop Now</button> */}
       </div>
       <h3 className="title" style={{ color: theme.colors.pink }} ref={titleRef}>
         DISCOVER OUR <br />
@@ -107,6 +107,8 @@ const ProductsSection = () => {
       <Swiper
         modules={[FreeMode, Pagination, Autoplay]}
         slidesPerView={3}
+        loop
+        freeMode
         breakpoints={{
           320: {
             slidesPerView: 1,

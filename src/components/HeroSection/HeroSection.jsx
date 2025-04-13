@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 import sakura from "../../assets/images/vectors/sakura.png";
 import "./HeroSection.scss";
 import checkered from "../../assets/images/vectors/checkered.png";
-import { fetchShopifyProducts } from "../../utils/shopify";
 import Loading from "../Loading/Loading";
 
 import leaf1 from "../../assets/images/vectors/leaf1.png";
@@ -14,6 +13,10 @@ import leaf2 from "../../assets/images/vectors/leaf2.png";
 import leaf3 from "../../assets/images/vectors/leaf3.png";
 import soupBowl from "../../assets/images/vectors/soup_bowl.png";
 import whisk from "../../assets/images/vectors/whisk.png";
+
+import haruTin from "../../assets/images/products/haru_tin.png";
+import nakaiTin from "../../assets/images/products/nakai_tin.png";
+import matchaLatte from "../../assets/images/products/matcha_latte.png";
 
 const HeroSection = ({ theme }) => {
   const imageRef = useRef(null);
@@ -46,7 +49,27 @@ const HeroSection = ({ theme }) => {
 
   homeTextRefs.current = [];
 
-  const [products, setProducts] = useState([]);
+  const productsData = [
+    {
+      title: "Haru Ceremonial",
+      image: haruTin,
+      price: 2999.0,
+    },
+
+    {
+      title: "Nakai Ceremonial",
+      image: nakaiTin,
+      price: 1999.0,
+    },
+
+    {
+      title: "Instant Matcha Latte",
+      image: matchaLatte,
+      price: 999.0,
+    },
+  ];
+
+  const [products] = useState(productsData);
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef(null);
 
@@ -173,16 +196,6 @@ const HeroSection = ({ theme }) => {
   useEffect(() => {
     window.history.scrollRestoration = "manual";
     window.scrollTo(0, 0);
-
-    const loadProducts = async () => {
-      try {
-        const data = await fetchShopifyProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to load products", error);
-      }
-    };
-    loadProducts();
   }, []);
 
   const animateOut = (direction = 1) => {
@@ -269,10 +282,8 @@ const HeroSection = ({ theme }) => {
     handleSlide(-1);
   };
 
-  if (products.length === 0) return <Loading />;
-
   const currentProduct = products[current];
-  const imageUrl = currentProduct.images.edges[0]?.node.url;
+  const imageUrl = currentProduct.image;
 
   return (
     <section
@@ -317,13 +328,11 @@ const HeroSection = ({ theme }) => {
                 <div className="grid-item" ref={descRef}>
                   Made in Japan
                 </div>
-                <div
-                  className="grid-item"
-                  ref={originRef}
-                  dangerouslySetInnerHTML={{
-                    __html: `<strong>Price:</strong> ${currentProduct.variants.edges[0]?.node.price.amount} ${currentProduct.variants.edges[0]?.node.price.currencyCode}`,
-                  }}
-                />
+
+                <div className="grid-item" ref={originRef}>
+                  <strong>Price:</strong> ₹{currentProduct.price}
+                </div>
+
                 <div className="grid-item flower" style={{ cursor: "pointer" }}>
                   <img src={sakura} alt="flower" ref={sakuraRef} />
                 </div>
