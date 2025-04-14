@@ -4,7 +4,6 @@ import pinkLogo from "../../assets/images/icons/pink_logo.png";
 import "./Navbar.scss";
 import gsap from "gsap";
 import { useTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const logoRef = useRef(null);
@@ -15,23 +14,6 @@ const Navbar = () => {
   const theme = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-
-  const nav = useNavigate();
-
-  const handleSmoothScroll = (e) => {
-    e.preventDefault();
-    const targetId = e.currentTarget.getAttribute("href").substring(1);
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const handleRedirect = (e) => {
-    e.preventDefault();
-    const target = e.currentTarget.getAttribute("href");
-    nav(target);
-  };
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -199,9 +181,7 @@ const Navbar = () => {
       >
         <div className="nav-links left" ref={leftLinksRef}>
           <a href="/">home</a>
-          <a href="#shop" onClick={handleSmoothScroll}>
-            shop
-          </a>
+          <a href="/shop">shop</a>
         </div>
 
         <img

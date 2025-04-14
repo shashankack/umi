@@ -97,7 +97,9 @@ const ProductsSection = () => {
         <div className="image-container">
           <img src={surfingNeko} alt="Surfing Neko" className="neko" />
         </div>
-        {/* <button>Shop Now</button> */}
+        <button onClick={() => (window.location.href = "/shop")}>
+          Shop Now
+        </button>
       </div>
       <h3 className="title" style={{ color: theme.colors.pink }} ref={titleRef}>
         DISCOVER OUR <br />

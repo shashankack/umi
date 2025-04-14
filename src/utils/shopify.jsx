@@ -2,14 +2,15 @@ const SHOPIFY_DOMAIN = "6ix8jh-qp.myshopify.com";
 const STOREFRONT_ACCESS_TOKEN = "2cba03757af47abdf34dea05d931f828";
 const endpoint = `https://${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`;
 
-export async function fetchShopifyProducts() {
+export async function fetchShopifyProducts(limit = 20) {
   const query = `
     {
-      products(first: 10) {
+      products(first: ${limit}) {
         edges {
           node {
             id
             title
+            productType
             descriptionHtml
             images(first:10) {
               edges {

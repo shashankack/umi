@@ -23,6 +23,7 @@ import { Mousewheel, Scrollbar } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/scrollbar";
+import Loading from "../Loading/Loading";
 
 const ProductsInternal = () => {
   const theme = useTheme();
@@ -54,12 +55,12 @@ const ProductsInternal = () => {
     return Array.from(paragraphs).map((p, i) => (
       <Typography
         key={i}
-        variant="h5"
         gutterBottom
         sx={{
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
+          fontSize: isMobile ? "0.9rem" : "1.4rem",
           mb: 2,
         }}
       >
@@ -78,12 +79,12 @@ const ProductsInternal = () => {
     return Array.from(attributes).map((li, i) => (
       <Typography
         key={i}
-        variant="h5"
         gutterBottom
         sx={{
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
+          fontSize: isMobile ? "0.9rem" : "1.4rem",
           mb: 2,
         }}
       >
@@ -99,13 +100,18 @@ const ProductsInternal = () => {
     const doc = parser.parseFromString(product.descriptionHtml, "text/html");
     const attributes = doc.querySelectorAll("ul.highlighted-attributes li");
 
+    console.log(
+      "Parsed highlighted attributes:",
+      Array.from(attributes).map((li) => li.textContent)
+    );
     return Array.from(attributes).map((li, i) => (
       <Box key={i} mb={2} gap={2}>
         <Typography
-          variant="h6"
           sx={{
             color: theme.colors.pink,
             backgroundColor: theme.colors.beige,
+            fontSize: isMobile ? "0.9rem" : "1.4rem",
+
             p: `10px 20px`,
             borderRadius: 3,
             boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
@@ -170,6 +176,7 @@ const ProductsInternal = () => {
         const fullProductId = `gid://shopify/Product/${productId}`;
         const foundProduct = data.find((p) => p.id === fullProductId);
         setProduct(foundProduct);
+        console.log("Incoming product data:", foundProduct); // Log the incoming data
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
       } catch (error) {
         console.error("Failed to fetch product", error);
@@ -179,14 +186,14 @@ const ProductsInternal = () => {
     loadProduct();
   }, [productId]);
 
-  if (!product) return <Box p={4}>Loading...</Box>;
+  if (!product) return <Loading />;
 
   return (
     <Box
       height={
         parsedProductProfile.left.length > 0 ||
         parsedTastingNotes.left.length > 0
-          ? "100%"
+          ? ""
           : "100vh"
       }
       sx={{
@@ -304,12 +311,10 @@ const ProductsInternal = () => {
                   sx={{
                     fontFamily: "Genty",
                     fontWeight: 200,
-                    textTransform: "lowercase",
-                    textShadow: `1px 7px 0px ${theme.colors.pink}`,
+                    textShadow: `1px 5px 0px ${theme.colors.pink}`,
                   }}
                 >
                   {product.title}
-                  {console.log(product.descriptionHtml)}
                 </Typography>
                 <Box
                   sx={{
@@ -334,12 +339,7 @@ const ProductsInternal = () => {
                 justifyContent={"space-between"}
                 alignItems={"start"}
               >
-                <Typography
-                  variant="h4"
-                  fontFamily="Genty"
-                  fontWeight={200}
-                  color={theme.colors.beige}
-                >
+                <Typography fontFamily="Genty" color={theme.colors.beige}>
                   {parsedAttributes}
                 </Typography>
               </Box>
@@ -418,6 +418,7 @@ const ProductsInternal = () => {
                     onClick={handleAddToCart}
                     variant="contained"
                     sx={{
+                      fontFamily: theme.fonts.text,
                       ml: 2,
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
@@ -441,8 +442,8 @@ const ProductsInternal = () => {
       </Box>
 
       {/* Bottom Section - SVG + Extra */}
-      {parsedProductProfile.left.length > 0 ||
-        (parsedTastingNotes.left.length > 0 && (
+      {parsedProductProfile.left.length > 0 &&
+        parsedTastingNotes.left.length > 0 && (
           <Grid container spacing={4}>
             {/* Product Profile */}
             <Grid
@@ -657,7 +658,7 @@ const ProductsInternal = () => {
               </Box>
             </Grid>
           </Grid>
-        ))}
+        )}
     </Box>
   );
 };

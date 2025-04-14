@@ -6,6 +6,7 @@ import About from "./pages/About/About";
 import ProductsInternal from "./components/Products/ProductsInternal";
 import Contact from "./pages/Contact/Contact";
 import { createTheme, ThemeProvider } from "@mui/material";
+import Shop from "./pages/Shop/Shop";
 
 const theme = createTheme({
   colors: {
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/product/:productId" element={<ProductsInternal />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/shop" element={<Shop />} />
         </Routes>
       </Router>
     </ThemeProvider>
