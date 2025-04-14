@@ -58,7 +58,7 @@ const TutorialSection = () => {
         ))}
       </div>
       <div className="divider">
-        <hr /> <p>or</p> <hr />
+        <hr /> <p>or watch this quick video</p> <hr />
       </div>
       <iframe
         width="60%"
