@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import "./HeroSection.scss";
 
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
-import sakura from "../../assets/images/vectors/sakura.png";
-import "./HeroSection.scss";
-import checkered from "../../assets/images/vectors/checkered.png";
-import Loading from "../Loading/Loading";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
+import sakura from "../../assets/images/vectors/sakura.png";
+import checkered from "../../assets/images/vectors/checkered.png";
 import leaf1 from "../../assets/images/vectors/leaf1.png";
 import leaf2 from "../../assets/images/vectors/leaf2.png";
 import leaf3 from "../../assets/images/vectors/leaf3.png";
@@ -32,20 +31,6 @@ const HeroSection = ({ theme }) => {
   const leaf4Ref = useRef(null);
   const soupBowlRef = useRef(null);
   const whiskRef = useRef(null);
-
-  const getAnimationPositions = () => {
-    const vw = (percent) => (window.innerWidth * percent) / 100;
-    const vh = (percent) => (window.innerHeight * percent) / 100;
-
-    return {
-      leaf1: { from: { x: -vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
-      leaf2: { from: { x: vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
-      leaf3: { from: { x: -vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
-      leaf4: { from: { x: vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
-      soupBowl: { from: { y: vh(5) }, to: { y: 0 } },
-      whisk: { from: { x: vw(4), y: vh(3) }, to: { x: 0, y: 0 } },
-    };
-  };
 
   homeTextRefs.current = [];
 
@@ -72,6 +57,21 @@ const HeroSection = ({ theme }) => {
   const [products] = useState(productsData);
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef(null);
+  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
+
+  const getAnimationPositions = () => {
+    const vw = (percent) => (window.innerWidth * percent) / 100;
+    const vh = (percent) => (window.innerHeight * percent) / 100;
+
+    return {
+      leaf1: { from: { x: -vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
+      leaf2: { from: { x: vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
+      leaf3: { from: { x: -vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
+      leaf4: { from: { x: vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
+      soupBowl: { from: { y: vh(5) }, to: { y: 0 } },
+      whisk: { from: { x: vw(4), y: vh(3) }, to: { x: 0, y: 0 } },
+    };
+  };
 
   const resetAutoSlide = () => {
     clearInterval(intervalRef.current);

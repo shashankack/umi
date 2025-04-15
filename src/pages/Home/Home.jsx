@@ -10,11 +10,9 @@ const Home = () => {
   return (
     <>
       <HeroSection theme={theme} />
-      <div className="wrapper">
-        <ProductsSection />
-        <AboutSection />
-        <TutorialSection />
-      </div>
+      {/* <ProductsSection /> */}
+      {/* <AboutSection /> */}
+      {/* <TutorialSection /> */}
     </>
   );
 };

@@ -46,7 +46,7 @@ const About = () => {
           justifyContent="center"
           alignItems="center"
           flexDirection={{
-            xs: "column",
+            xs: "column-reverse",
             sm: "row",
             md: "row",
             lg: "row",
@@ -127,7 +127,7 @@ const About = () => {
       >
         <Grid
           size={{
-            xs: 12,
+            xs: 6,
             sm: 12,
             md: 4,
             lg: 4,
