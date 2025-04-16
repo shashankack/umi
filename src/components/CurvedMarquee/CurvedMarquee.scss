@@ -50,15 +50,11 @@
   // Mobile (500px)
   @media (max-width: 500px) {
     svg {
-      height: 110px;
-    }
+      height: 250px;
 
-    text {
-      font-size: 22px;
-    }
-
-    use {
-      stroke-width: 32px;
+      text {
+        font-size: 30px;
+      }
     }
   }
 }

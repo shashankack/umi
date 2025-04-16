@@ -1,5 +1,4 @@
-import "./TutorialSection.scss";
-import { useTheme } from "@mui/material/styles";
+import { Box, Typography, useTheme, useMediaQuery, Grid } from "@mui/material";
 
 import step1 from "../../assets/images/vectors/about/step1.png";
 import step2 from "../../assets/images/vectors/about/step2.png";
@@ -8,6 +7,7 @@ import step4 from "../../assets/images/vectors/about/step4.png";
 
 const TutorialSection = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const stepsImages = [
     {
       image: step1,
@@ -23,58 +23,138 @@ const TutorialSection = () => {
     },
     {
       image: step4,
-      text: "Add sweetner ofyour choice.",
+      text: "Add sweetner of your choice.",
     },
   ];
 
   return (
-    <section
-      className="tutorial-section"
-      style={{ backgroundColor: theme.colors.pink }}
+    <Box
+      sx={{
+        backgroundColor: theme.colors.pink,
+        py: { sm: 6, md: 10 },
+        px: { sm: 2, md: 4 },
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: { sm: 6, md: 12 },
+      }}
     >
-      <div
-        className="title-wrapper"
-        style={{
-          color: theme.colors.pink,
+      <Box
+        sx={{
+          width: { xs: "90%", sm: 400, md: 700 },
+          height: { xs: 80, sm: 100, md: 100 },
           backgroundColor: theme.colors.beige,
+          color: theme.colors.pink,
+          borderRadius: "30px",
+          boxShadow: "6px 7px 3px 0px #b5d782",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: { xs: 5, sm: 5, md: 5 },
         }}
       >
-        <h2>Brew it the Umi way</h2>
-      </div>
-      <div className="steps">
+        <Typography
+          sx={{
+            fontFamily: "Genty",
+            fontSize: { xs: "2rem", sm: "2rem", md: "4rem" },
+            mt: "15px",
+            fontWeight: 400,
+          }}
+        >
+          Brew it the Umi way
+        </Typography>
+      </Box>
+
+      <Grid container spacing={5} p={5}>
         {stepsImages.map((step, index) => (
-          <div className="step" key={index}>
-            <div className="image-wrapper">
-              <img src={step.image} />
-            </div>
-            <p
-              style={{
-                color: theme.colors.beige,
+          <Grid
+            key={`step-${index}`}
+            size={{
+              xs: 6,
+              sm: 6,
+              md: 3,
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 3,
+                textAlign: "center",
+                px: { sm: 0, md: 2 },
+                py: { sm: 0, md: 2 },
               }}
             >
-              {step.text}
-            </p>
-          </div>
+              <Box
+                component="img"
+                src={step.image}
+                alt={`step-${index + 1}`}
+                sx={{
+                  width: { xs: 130, sm: 150, md: 200 },
+                  height: { xs: 130, sm: 150, md: 200 },
+                  objectFit: "contain",
+                }}
+              />
+              <Typography
+                sx={{
+                  fontSize: { sm: "1.2rem", md: "1.5rem" },
+                  fontFamily: "Stolzl",
+                  fontWeight: 200,
+                  color: theme.colors.beige,
+                }}
+              >
+                {step.text}
+              </Typography>
+            </Box>
+          </Grid>
         ))}
-      </div>
-      <div className="divider">
-        <hr /> <p>or watch this quick video</p> <hr />
-      </div>
-      <iframe
-        width="60%"
-        height="500px"
+      </Grid>
+
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <Box sx={{ flex: 1, height: "6px", backgroundColor: "#fdf8ce" }}></Box>
+        <Typography
+          sx={{
+            whiteSpace: "nowrap",
+            fontFamily: "Stolzl",
+            fontWeight: 200,
+            fontSize: { sm: "1.5rem", md: "3rem" },
+            color: "#fdf8ce",
+            mb: "10px",
+          }}
+        >
+          or watch this quick video
+        </Typography>
+        <Box sx={{ flex: 1, height: "6px", backgroundColor: "#fdf8ce" }}></Box>
+      </Box>
+
+      <Box
+        component="iframe"
+        width={isMobile ? "100%" : "60%"}
+        height={isMobile ? "300px" : "500px"}
         src="https://www.youtube.com/embed/13uVij4DsZk?si=OC0gX3Ow6-t2ra4z"
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
-        style={{
+        p={2}
+        sx={{
           borderRadius: "20px",
-          boxShadow: "-5px 10px 5px 1px rgba(0, 0, 0, 0.1)",
+          bosmhadow: "-5px 10px 5px 1px rgba(0, 0, 0, 0.1)",
           border: "none",
         }}
       />
-    </section>
+    </Box>
   );
 };
 

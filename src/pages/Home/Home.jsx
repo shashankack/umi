@@ -5,14 +5,32 @@ import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 
+import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
+
 const Home = () => {
   const theme = useTheme();
   return (
     <>
       <HeroSection theme={theme} />
-      {/* <ProductsSection /> */}
-      {/* <AboutSection /> */}
-      {/* <TutorialSection /> */}
+      <div className="products-sec" style={{ position: "relative" }}>
+        <ProductsSection />
+        <div
+          className="marquee"
+          style={{
+            position: "absolute",
+            zIndex: 100,
+            bottom: window.innerWidth <= 500 ? "-8%" : "-8%",
+            left: "0",
+            width: "100%",
+          }}
+        >
+          <CurvedMarquee />
+        </div>
+      </div>
+      <div className="about-sec">
+        <AboutSection />
+      </div>
+      <TutorialSection />
     </>
   );
 };

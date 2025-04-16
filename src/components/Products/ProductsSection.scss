@@ -5,6 +5,7 @@
   align-items: center;
   padding: 5% 0 10%;
   position: relative;
+  overflow: hidden;
 
   .top {
     display: flex;
@@ -35,6 +36,14 @@
       font-style: normal;
       font-weight: 400;
       line-height: 60%;
+    }
+
+    @media screen and (max-width: 500px) {
+      margin-top: 50px;
+      h2 {
+        font-size: 3.5rem;
+        text-shadow: 1px 4px 0px #b5d782;
+      }
     }
 
     button {
@@ -70,11 +79,6 @@
     }
   }
 
-  .title {
-    font-size: 52px;
-    text-align: center;
-    z-index: 5;
-  }
   .products-slider {
     width: 80%;
     height: 100%;
@@ -124,6 +128,11 @@
     @media screen and (max-width: 1512px) {
       width: 350px;
       height: 500px;
+    }
+
+    @media screen and (max-width: 500px) {
+      width: 300px;
+      height: 450px;
     }
 
     .title {

@@ -15,7 +15,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
-import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
 
 import surfingNeko from "../../assets/images/vectors/neko/surfing.gif";
 
@@ -25,6 +24,7 @@ const ProductsSection = () => {
   const theme = useTheme();
   const titleRef = useRef(null);
   const svgRef = useRef(null);
+  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const ProductsSection = () => {
       try {
         const data = await fetchShopifyProducts();
         setProducts(data);
-        console.log("Incoming products data:", data); // Log the incoming data
+        console.log("Incoming products data:", data);
       } catch (error) {
         console.error("Failed to fetch products", error);
       }
@@ -45,16 +45,16 @@ const ProductsSection = () => {
     if (titleRef.current) {
       const titleAnimation = gsap.fromTo(
         titleRef.current,
-        { scale: 0.6, opacity: 0 },
+        { y: "50%", opacity: 0 },
         {
-          scale: 1,
+          y: "0%",
           opacity: 1,
           duration: 1,
           ease: "power4.out",
           scrollTrigger: {
             trigger: titleRef.current,
             start: "top 80%",
-            scrub: 1,
+            toggleActions: "play none none reverse",
           },
         }
       );
@@ -101,9 +101,17 @@ const ProductsSection = () => {
           Shop Now
         </button>
       </div>
-      <h3 className="title" style={{ color: theme.colors.pink }} ref={titleRef}>
-        DISCOVER OUR <br />
-        PRODUCTS
+      <h3
+        className="title"
+        style={{
+          color: theme.colors.pink,
+          fontSize: isMobile ? "32px" : "52px",
+          zIndex: 5,
+          textAlign: "center",
+        }}
+        ref={titleRef}
+      >
+        DISCOVER OUR <br /> PRODUCTS
       </h3>
 
       <Swiper
@@ -122,7 +130,7 @@ const ProductsSection = () => {
             slidesPerView: 3,
           },
         }}
-        pagination={{ clickable: true }}
+        pagination={isMobile ? false : { clickable: true }}
         autoplay={{ delay: 5000 }}
         className="products-slider"
       >
@@ -132,16 +140,19 @@ const ProductsSection = () => {
           const price = product.variants.edges[0]?.node.price.amount;
           const currency = product.variants.edges[0]?.node.price.currencyCode;
 
-          // Extract the numeric product ID
-          const productId = product.id.split("/").pop(); // Get the numeric ID
+          const productId = product.id.split("/").pop();
 
           return (
             <SwiperSlide key={product.id}>
               <div className="product-card">
                 <div className="title">
-                  <h2 style={{
-                    color: theme.colors.green,
-                  }}>{title}</h2>
+                  <h2
+                    style={{
+                      color: theme.colors.green,
+                    }}
+                  >
+                    {title}
+                  </h2>
                 </div>
                 <div className="rect" />
                 <div className="product-image">
@@ -170,12 +181,10 @@ const ProductsSection = () => {
         })}
       </Swiper>
 
-      <div className="marquee">
-        <CurvedMarquee />
-      </div>
       <svg
         ref={svgRef}
-        width="100vw"
+        width={isMobile ? "300%" : "100vw"}
+        height={isMobile ? "150%" : "100%"}
         viewBox="0 0 1440 200"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"

@@ -348,7 +348,24 @@ const HeroSection = ({ theme }) => {
         <img src={soupBowl} alt="" className="soup-bowl" ref={soupBowlRef} />
         <img src={whisk} alt="" className="whisk" ref={whiskRef} />
       </div>
-      <img className="checkered" src={checkered} alt="" />
+      <div className="checkered-grid">
+        {[...Array(2)].map((_, rowIdx) => (
+          <div className="row" key={rowIdx}>
+            {[...Array(isMobile ? 13 : 40)].map((_, colIdx) => (
+              <div
+                key={colIdx}
+                className="square"
+                style={{
+                  backgroundColor:
+                    (rowIdx + colIdx) % 2 === 0
+                      ? theme.colors.green
+                      : theme.colors.beige,
+                }}
+              ></div>
+            ))}
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
