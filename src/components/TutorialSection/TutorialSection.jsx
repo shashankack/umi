@@ -128,12 +128,11 @@ const TutorialSection = () => {
             whiteSpace: "nowrap",
             fontFamily: "Stolzl",
             fontWeight: 200,
-            fontSize: { sm: "1.5rem", md: "3rem" },
+            fontSize: { sm: "1.6rem", md: "3rem" },
             color: "#fdf8ce",
-            mb: "10px",
           }}
         >
-          or watch this quick video
+          video tutorial
         </Typography>
         <Box sx={{ flex: 1, height: "6px", backgroundColor: "#fdf8ce" }}></Box>
       </Box>

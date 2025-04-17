@@ -1,8 +1,18 @@
 import "./Shop.scss";
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
+
+import shopBg from "../../assets/images/shop_bg.png";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const Shop = () => {
   const theme = useTheme();
@@ -21,6 +31,56 @@ const Shop = () => {
     loadProducts();
   }, []);
 
+  const generateSquares = (
+    width,
+    height,
+    rows,
+    cols,
+    color1,
+    color2,
+    flipped = false
+  ) => {
+    const squares = [];
+    const squareWidth = width;
+    const squareHeight = height;
+
+    // Create a grid container to hold squares
+    const gridStyle = {
+      display: "grid",
+      gridTemplateColumns: `repeat(${cols}, ${squareWidth}px)`, // Set the columns to fixed square width
+      gridTemplateRows: `repeat(${rows}, ${squareHeight}px)`, // Set the rows to fixed square height
+      width: "100%", // Ensure it takes up the full width of the parent container
+      height: "100%", // Ensure it takes up the full height of the parent container
+      overflow: "hidden", // Hide overflow to avoid showing extra squares
+    };
+
+    // Generate squares with alternating colors
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        // If flipped, reverse the order of squares
+        const rowIndex = flipped ? rows - 1 - i : i;
+        const colIndex = flipped ? cols - 1 - j : j;
+
+        const isEven = (rowIndex + colIndex) % 2 === 0;
+        const squareColor = isEven ? color1 : color2;
+
+        squares.push(
+          <div
+            key={`${rowIndex}-${colIndex}`}
+            style={{
+              width: `${squareWidth}px`,
+              height: `${squareHeight}px`,
+              backgroundColor: squareColor,
+              boxSizing: "border-box",
+            }}
+          />
+        );
+      }
+    }
+
+    return <div style={gridStyle}>{squares}</div>;
+  };
+
   const categories = products.reduce((acc, product) => {
     const { productType } = product;
     if (!acc[productType]) {
@@ -31,7 +91,10 @@ const Shop = () => {
   }, {});
 
   return (
-    <Box sx={{ padding: 4, backgroundColor: theme.colors.beige }}>
+    <Box
+      sx={{ padding: 1, backgroundColor: theme.colors.pink }}
+      overflow="hidden"
+    >
       {Object.keys(categories).map((category) => (
         <Box
           key={category}
@@ -42,20 +105,49 @@ const Shop = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography
-            variant="h2"
-            fontFamily="Genty"
-            textTransform="capitalize"
-            color={theme.colors.pink}
-            sx={{ marginBottom: 6, textShadow: "2px 2px 0 #B5D782" }}
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            {category}
-          </Typography>
+            <Box ml={-6}>
+              {generateSquares(
+                40,
+                40,
+                2,
+                15,
+                theme.colors.green,
+                theme.colors.beige
+              )}
+            </Box>
+            <Typography
+              mt={6}
+              variant="h2"
+              fontFamily="Genty"
+              textTransform="capitalize"
+              color={theme.colors.beige}
+              sx={{ marginBottom: 6, textShadow: "2px 2px 0 #B5D782" }}
+            >
+              {category}
+            </Typography>
+            <Box mr={-6}>
+              {generateSquares(
+                40,
+                40,
+                2,
+                15,
+                theme.colors.green,
+                theme.colors.beige,
+                true
+              )}
+            </Box>
+          </Box>
 
           <Grid
             container
             spacing={4}
-            width={"100%"}
+            width="100%"
             display="flex"
             justifyContent="space-evenly"
           >
@@ -63,75 +155,99 @@ const Shop = () => {
               const productId = product.id.split("/").pop();
 
               return (
-                <Grid item xs={12} sm={6} md={4} key={product.id}>
+                <Grid
+                  size={{
+                    xs: 6,
+                    sm: 6,
+                    md: 4,
+                  }}
+                  key={product.id}
+                  position="relative"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Box component="img" src={shopBg} />
                   <Box
-                    height="300px"
-                    width="300px"
-                    zIndex={2}
-                    sx={{
-                      borderRadius: 2,
-                      boxShadow: `4px 4px 0 0 #B5D782`,
-                      backgroundColor: "#fff",
-                      textAlign: "center",
-                      overflow: "hidden",
-                      cursor: "pointer",
-                      position: "relative",
-                      transition: "all 0.3s ease",
-
-                      "&:hover": {
-                        scale: 0.98,
-                      },
-
-                      "&:hover .product-title": {
-                        transform: "translateY(0)",
-                      },
-
-                      "& img": {
-                        transform: "scale(1.1)",
-                        transition: "all 0.3s ease",
-
-                        "&:hover": {
-                          transform: "scale(1)",
-                          filter: "blur(2px)",
-                        },
-                      },
-                    }}
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    width="100%"
+                    height="100%"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    zIndex={10}
+                    p={5}
+                    overflow={"hidden"}
                   >
                     <Box
-                      component="img"
-                      src={product.images.edges[0]?.node.url}
-                      onClick={() => {
-                        window.location.href = `/product/${productId}`;
-                      }}
-                      alt={product.title}
-                      sx={{
-                        overflow: "hidden",
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                        transition: "transform 0.3s ease",
-                      }}
-                    />
-                    <Typography
-                      variant="h6"
-                      className="product-title"
-                      position="absolute"
-                      bottom={0}
-                      left={0}
-                      right={0}
-                      zIndex={1}
-                      color={theme.colors.beige}
-                      fontWeight={600}
-                      textAlign="center"
-                      sx={{
-                        transform: "translateY(100%)",
-                        transition: "transform 0.3s ease",
-                        backdropFilter: "blur(5px)",
-                        backgroundColor: "#B5D782",
+                      component="h2"
+                      style={{
+                        fontFamily: "Stolzl",
+                        color: theme.colors.pink,
+                        textAlign: "center",
+                        fontSize: "1.5rem",
+                        marginBottom: "1rem",
                       }}
                     >
                       {product.title}
-                    </Typography>
+                    </Box>
+                    <Box
+                      component="img"
+                      src={product.images.edges[0]?.node.url}
+                      sx={{
+                        width: "80%",
+                        height: "80%",
+                        objectFit: "contain",
+                        transition: "transform 0.3s ease-in-out",
+                        cursor: "pointer",
+
+                        "&:hover": {
+                          transform: "scale(1.1)",
+                        },
+                      }}
+                    />
+                    <Stack
+                      width="80%"
+                      direction={"row"}
+                      justifyContent={"space-between"}
+                    >
+                      <Button
+                        style={{
+                          backgroundColor: theme.colors.green,
+                          color: theme.colors.beige,
+                          border: "none",
+                          padding: "10px 20px",
+                          borderRadius: "25px",
+                          cursor: "pointer",
+                          fontFamily: "Stolzl",
+                          fontSize: "1rem",
+                          zIndex: 10,
+                        }}
+                        onClick={() => {
+                          window.location.href = `/product/${productId}`;
+                        }}
+                      >
+                        Product Info
+                      </Button>
+                      <Button
+                        style={{
+                          backgroundColor: theme.colors.green,
+                          color: theme.colors.beige,
+                          border: "none",
+                          padding: "10px 30px",
+                          borderRadius: "25px",
+                          cursor: "pointer",
+                          fontFamily: "Stolzl",
+                          fontSize: "1rem",
+                          zIndex: 10,
+                        }}
+                      >
+                        <ShoppingCartIcon sx={{ color: theme.colors.beige }} />
+                      </Button>
+                    </Stack>
                   </Box>
                 </Grid>
               );

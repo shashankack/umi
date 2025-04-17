@@ -59,4 +59,25 @@
       }
     }
   }
+
+  @media screen and (max-width: 768px) {
+    .contact-container {
+      width: 100%;
+
+      .inner-container {
+        .links-section {
+          width: 50%;
+
+          .link {
+            font-size: 0.7rem;
+            padding: 8px 16px;
+          }
+        }
+
+        .neko {
+          width: 200px;
+        }
+      }
+    }
+  }
 }

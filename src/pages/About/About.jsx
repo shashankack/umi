@@ -59,13 +59,16 @@ const About = () => {
               md: 6,
               lg: 6,
             }}
+            alignItems="center"
+            display="flex"
+            justifyContent="center"
           >
             <Box
               component={"img"}
               src={neko}
               sx={{
                 height: "100%",
-                width: "100%",
+                width: { xs: "60%", md: "100%" },
                 objectFit: "cover",
               }}
             />
@@ -85,6 +88,7 @@ const About = () => {
                 height: "100%",
                 width: "100%",
                 objectFit: "cover",
+                mt: { xs: 5, md: 0 },
               }}
             />
           </Grid>
@@ -122,7 +126,7 @@ const About = () => {
         }}
         sx={{
           backgroundColor: theme.colors.beige,
-          boxShadow: `8px 8px 0px 0px ${theme.colors.pink}`,
+          boxShadow: { xs: "none", md: `8px 8px 0px 0px ${theme.colors.pink}` },
         }}
       >
         <Grid
@@ -157,7 +161,7 @@ const About = () => {
             textAlign="justify"
             fontWeight={300}
             fontFamily={theme.fonts.text}
-            color={theme.colors.pink}
+            color={theme.colors.green}
             fontSize={{
               xs: 14,
               sm: 14,
@@ -212,6 +216,7 @@ const About = () => {
               alignItems={"end"}
               display="flex"
               justifyContent={"end"}
+              color={theme.colors.green}
               fontSize={{
                 xs: 14,
                 sm: 14,
