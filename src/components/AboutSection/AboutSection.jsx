@@ -24,6 +24,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useState } from "react";
 import "./AboutSection.scss";
 
+import aboutSection from "../../assets/images/about_section.png";
+
 import cloud from "../../assets/images/vectors/cloud.png";
 import paw from "../../assets/images/vectors/paw.png";
 import matchaField from "../../assets/images/matcha_field.png";
@@ -65,7 +67,7 @@ const AboutSection = () => {
       }
     );
 
-    gsap.utils.toArray(".about-text p").forEach((el) => {
+    gsap.utils.toArray(".about-text").forEach((el) => {
       gsap.fromTo(
         el,
         { y: 60, opacity: 0 },
@@ -90,97 +92,76 @@ const AboutSection = () => {
         width: "100%",
         backgroundColor: theme.colors.green,
         py: { xs: 6, md: 12 },
-        px: { xs: 0, md: 10 },
         overflow: "hidden",
         zIndex: 1,
       }}
     >
-      <Container maxWidth="xl">
-        <Box
-          className="about-text"
-          sx={{ textAlign: "justify", color: theme.colors.beige, mb: 10 }}
+      <Box sx={{ textAlign: "justify", color: theme.colors.beige, mb: 10 }}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontFamily: "Genty",
+            fontSize: { xs: "3rem", md: "8rem" },
+            textShadow: "0px 5.475px 0px rgba(0, 0, 0, 0.25)",
+            fontWeight: 400,
+            mt: 4,
+            textAlign: "center",
+          }}
         >
-          <Typography
-            variant="h2"
-            sx={{
-              fontFamily: "Genty",
-              fontSize: { xs: "3rem", md: "8rem" },
-              textShadow: "0px 5.475px 0px rgba(0, 0, 0, 0.25)",
-              fontWeight: 400,
-              mt: 4,
-              textAlign: "center",
-            }}
-          >
-            About our matcha
-          </Typography>
-
-          {isMobile ? (
-            <>
-              {[
-                "Life comes in waves, matcha your flow",
-                "Umi: wave",
-                ...paragraphs.slice(0, 1),
-              ].map((text, i) => (
-                <Typography
-                  key={i}
-                  sx={{
-                    fontFamily: "Stolzl",
-                    fontSize: { xs: 18, md: 26 },
-                    mt: 4,
-                  }}
-                >
-                  {text}
-                </Typography>
-              ))}
-
-              <Collapse in={showMorePara1}>
-                {paragraphs.slice(1).map((text, i) => (
-                  <Typography
-                    key={i}
-                    sx={{
-                      fontFamily: "Stolzl",
-                      fontSize: { xs: 18, md: 26 },
-                      mt: 4,
-                    }}
-                  >
-                    {text}
-                  </Typography>
-                ))}
-              </Collapse>
-
-              <Button
-                variant="text"
-                sx={{
-                  mt: 2,
-                  color: theme.colors.beige,
-                  textTransform: "none",
-                  fontFamily: "Stolzl",
-                }}
-                onClick={() => setShowMorePara1((prev) => !prev)}
-              >
-                {showMorePara1 ? "Read less..." : "Read more..."}
-              </Button>
-            </>
-          ) : (
-            [
-              "Life comes in waves, matcha your flow",
-              "Umi: wave",
-              ...paragraphs,
-            ].map((text, i) => (
-              <Typography
-                key={i}
-                sx={{
-                  fontFamily: "Stolzl",
-                  fontSize: { xs: 18, md: 26 },
-                  mt: 4,
-                }}
-              >
-                {text}
-              </Typography>
-            ))
-          )}
-        </Box>
-
+          About our matcha
+        </Typography>
+        <Box
+          component="img"
+          src={aboutSection}
+          width="100%"
+          height="100%"
+          objectFit="cover"
+        />
+      </Box>
+      <Container maxWidth="xl">
+        <Typography
+          variant="h2"
+          mt={-5}
+          mb={20}
+          sx={{
+            fontFamily: "Stolzl",
+            fontSize: isMobile ? 16 : 26,
+            color: theme.colors.beige,
+            textAlign: "justify",
+          }}
+          className="about-text"
+        >
+          Life comes in waves, matcha your flow <br />
+          <br /> Umi: wave <br />
+          <br />
+          Umi is a premium matcha brand that is crafted from the finest,
+          single-origin, and single-cultivar tea leaves that are spring 1st
+          flush harvest sourced exclusively from Japan's most renowned
+          matcha-growing regions. Cultivated with meticulous care, our matcha is
+          100% certified organic, free of pesticides, herbicides and synthetic
+          fertilisers ensuring a clean product that retains its natural purity
+          and vibrant green colour. Each batch is harvested from a single
+          cultivar, allowing for a distinct, consistent flavour profile that
+          reflects the terroir of its origin. With a smooth, umami-rich taste
+          and a silky texture, our matcha is ideal for both traditional
+          ceremonial use and contemporary culinary applications. Perfect for
+          discerning matcha enthusiasts seeking exceptional quality in every
+          sip. Umi is a premium matcha brand crafted from the finest,
+          single-origin, and single-cultivar tea leaves, harvested during the
+          first flush of spring from Japan's most renowned matcha-growing
+          regions. Cultivated with meticulous care, our matcha is 100% certified
+          organic, free of pesticides, herbicides, and synthetic fertilizers,
+          ensuring a clean product that retains its natural purity and vibrant
+          green color. Each batch is harvested from a single cultivar, allowing
+          for a distinct, consistent flavour profile that reflects the terroir
+          of its origin. With a smooth, umami-rich taste and a silky texture,
+          our matcha is ideal for both traditional ceremonial use and
+          contemporary culinary applications—perfect for discerning matcha
+          enthusiasts seeking exceptional quality in every sip. Our matcha
+          represents a symbolic change within the matcha community. We hope for
+          our matcha to stay with you through life’s highest highs and lowest
+          lows. Made with love by matcha lovers, for matcha lovers.
+        </Typography>
         <Box position="relative" height={{ xs: 300, md: 600 }}>
           <Box
             className="cloud"
