@@ -324,12 +324,14 @@ const HeroSection = ({ theme }) => {
             </div>
             <div className="product-info">
               <div className="text-grid">
-                <div className="grid-item" ref={descRef}>
-                  Made in Japan
+                <div className="grid-item">
+                  <p ref={descRef}>Made in Japan</p>
                 </div>
 
-                <div className="grid-item" ref={originRef}>
-                  <strong>Price:</strong> ₹{currentProduct.price}
+                <div className="grid-item">
+                  <p ref={originRef}>
+                    <strong>Price:</strong> ₹{currentProduct.price}
+                  </p>
                 </div>
 
                 <div className="grid-item flower" style={{ cursor: "pointer" }}>

@@ -1,6 +1,13 @@
 import "./Shop.scss";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
 
@@ -10,7 +17,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 const Shop = () => {
   const theme = useTheme();
   const [products, setProducts] = useState([]);
-  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -102,25 +112,28 @@ const Shop = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Box
-              ml={{
-                xs: "-15%",
-                sm: "-10%",
-                md: "-5%",
-              }}
-            >
+            <Box ml="-5%">
               {generateSquares(
-                40,
-                40,
+                isMobile ? 20 : 40,
+                isMobile ? 20 : 40,
                 2,
-                15,
+                isMobile
+                  ? 6
+                  : isTablet
+                  ? 6
+                  : isSmallDesktop
+                  ? 8
+                  : isLargeDesktop
+                  ? 10
+                  : 20,
                 theme.colors.green,
                 theme.colors.beige
               )}
             </Box>
             <Typography
-              mt={6}
+              mt={7}
               variant="h2"
+              fontSize={isMobile ? "2rem" : isSmallDesktop ? "4rem" : "5rem"}
               fontFamily="Genty"
               textTransform="capitalize"
               color={theme.colors.beige}
@@ -128,18 +141,20 @@ const Shop = () => {
             >
               {category}
             </Typography>
-            <Box
-              mr={{
-                xs: "-15%",
-                sm: "-10%",
-                md: "-5%",
-              }}
-            >
+            <Box mr="-5%">
               {generateSquares(
-                40,
-                40,
+                isMobile ? 20 : 40,
+                isMobile ? 20 : 40,
                 2,
-                15,
+                isMobile
+                  ? 6
+                  : isTablet
+                  ? 6
+                  : isSmallDesktop
+                  ? 8
+                  : isLargeDesktop
+                  ? 10
+                  : 20,
                 theme.colors.green,
                 theme.colors.beige,
                 true
@@ -159,94 +174,107 @@ const Shop = () => {
 
               return (
                 <Grid
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 4,
-                  }}
+                  item
                   key={product.id}
-                  position="relative"
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  xl={3}
                   display="flex"
-                  alignItems="center"
                   justifyContent="center"
                 >
-                  <Box component="img" src={shopBg} />
                   <Box
-                    position="absolute"
-                    top="0"
-                    left="0"
-                    width="100%"
+                    position="relative"
                     height="100%"
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    zIndex={10}
-                    p={5}
-                    overflow={"hidden"}
+                    width={{
+                      xs: "90%",
+                      sm: "85%",
+                      md: "80%",
+                      lg: "75%",
+                      xl: "70%",
+                    }}
                   >
+                    <Box component="img" src={shopBg} width="100%" />
                     <Box
-                      component="h2"
-                      style={{
-                        fontFamily: "Stolzl",
-                        color: theme.colors.pink,
-                        textAlign: "center",
-                        fontSize: "1.5rem",
-                        marginBottom: "1rem",
-                      }}
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      width="100%"
+                      height="100%"
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      justifyContent="center"
+                      zIndex={10}
+                      p={5}
+                      overflow={"hidden"}
                     >
-                      {product.title}
-                    </Box>
-                    <Box
-                      component="img"
-                      src={product.images.edges[0]?.node.url}
-                      sx={{
-                        width: "80%",
-                        height: "80%",
-                        objectFit: "contain",
-                        transition: "transform 0.3s ease-in-out",
-                        cursor: "pointer",
+                      <Box
+                        component="h2"
+                        style={{
+                          fontFamily: "Stolzl",
+                          color: theme.colors.pink,
+                          textAlign: "center",
+                          fontSize: "1.5rem",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        {product.title}
+                      </Box>
+                      <Box
+                        component="img"
+                        src={product.images.edges[0]?.node.url}
+                        sx={{
+                          width: "80%",
+                          height: "80%",
+                          objectFit: "contain",
+                          transition: "transform 0.3s ease-in-out",
+                          cursor: "pointer",
 
-                        "&:hover": {
-                          transform: "scale(1.1)",
-                        },
-                      }}
-                    />
-                    <Stack direction={"row"} gap={5}>
-                      <Button
-                        style={{
-                          backgroundColor: theme.colors.green,
-                          color: theme.colors.beige,
-                          border: "none",
-                          padding: "10px 20px",
-                          borderRadius: "25px",
-                          cursor: "pointer",
-                          fontFamily: "Stolzl",
-                          fontSize: "1rem",
-                          zIndex: 10,
+                          "&:hover": {
+                            transform: "scale(1.1)",
+                          },
                         }}
-                        onClick={() => {
-                          window.location.href = `/product/${productId}`;
-                        }}
-                      >
-                        Product Info
-                      </Button>
-                      <Button
-                        style={{
-                          backgroundColor: theme.colors.green,
-                          color: theme.colors.beige,
-                          border: "none",
-                          padding: "10px 30px",
-                          borderRadius: "25px",
-                          cursor: "pointer",
-                          fontFamily: "Stolzl",
-                          fontSize: "1rem",
-                          zIndex: 10,
-                        }}
-                      >
-                        <ShoppingCartIcon sx={{ color: theme.colors.beige }} />
-                      </Button>
-                    </Stack>
+                      />
+                      <Stack direction={"row"} gap={5}>
+                        <Button
+                          style={{
+                            backgroundColor: theme.colors.green,
+                            color: theme.colors.beige,
+                            border: "none",
+                            padding: "10px 20px",
+                            borderRadius: "25px",
+                            cursor: "pointer",
+                            fontFamily: "Stolzl",
+                            fontSize: ".7rem",
+                            zIndex: 10,
+                          }}
+                          onClick={() => {
+                            window.location.href = `/product/${productId}`;
+                          }}
+                        >
+                          Product Info
+                        </Button>
+                        <Button
+                          style={{
+                            backgroundColor: theme.colors.green,
+                            color: theme.colors.beige,
+                            border: "none",
+                            padding: "10px 30px",
+                            borderRadius: "25px",
+                            cursor: "pointer",
+                            fontFamily: "Stolzl",
+                            fontSize: ".7rem",
+                            zIndex: 10,
+                          }}
+                        >
+                          <ShoppingCartIcon
+                            sx={{ color: theme.colors.beige }}
+                          />
+                        </Button>
+                      </Stack>
+                    </Box>
                   </Box>
                 </Grid>
               );

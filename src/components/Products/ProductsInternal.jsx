@@ -25,13 +25,18 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import Loading from "../Loading/Loading";
 
+import pageFold from "../../assets/images/vectors/paper_fold.png";
+
 const ProductsInternal = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
   const handleThumbnailClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -60,7 +65,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.9rem" : "1.4rem",
+          fontSize: isMobile ? "0.7rem" : "1.4rem",
           mb: 2,
         }}
       >
@@ -81,13 +86,10 @@ const ProductsInternal = () => {
         key={i}
         gutterBottom
         sx={{
-          p: `10px 20px`,
-          borderRadius: 3,
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.9rem" : "1.4rem",
-          mb: 2,
+          fontSize: isMobile ? "0.7rem" : "1.4rem",
         }}
       >
         {li.textContent}
@@ -112,7 +114,7 @@ const ProductsInternal = () => {
           sx={{
             color: theme.colors.pink,
             backgroundColor: theme.colors.beige,
-            fontSize: isMobile ? "0.9rem" : "1.4rem",
+            fontSize: isMobile ? "0.7rem" : "1.4rem",
 
             p: `10px 20px`,
             borderRadius: 3,
@@ -192,6 +194,7 @@ const ProductsInternal = () => {
 
   return (
     <Box
+      overflow="hidden"
       height={
         parsedProductProfile.left.length > 0 ||
         parsedTastingNotes.left.length > 0
@@ -306,9 +309,9 @@ const ProductsInternal = () => {
               display={"flex"}
               flexDirection={"column"}
             >
-              <Box p={2}>
+              <Box>
                 <Typography
-                  variant="h2"
+                  fontSize={isMobile ? "1.7rem" : "2.5rem"}
                   gutterBottom
                   sx={{
                     fontFamily: "Genty",
@@ -329,24 +332,9 @@ const ProductsInternal = () => {
                 </Box>
               </Box>
 
-              <Box
-                sx={{
-                  fontFamily: theme.fonts.text,
-                  fontWeight: 200,
-                  textAlign: "justify",
-                }}
-                p={2}
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent={"space-between"}
-                alignItems={"start"}
-              >
-                <Typography fontFamily="Genty" color={theme.colors.beige}>
-                  {parsedAttributes}
-                </Typography>
-              </Box>
+              <Stack mt={isMobile ? 0 : -10}>{parsedAttributes}</Stack>
 
-              <Box p={2}>
+              <Box>
                 <Stack direction="row" gap={3}>
                   {parsedHighlightedAttributes}
                 </Stack>
@@ -355,29 +343,35 @@ const ProductsInternal = () => {
                   mt={2}
                   display="flex"
                   alignItems="center"
-                  justifyContent={"center"}
+                  justifyContent="start"
                   gap={5}
                 >
+                  {product.variants.edges[0]?.node.weight !== 0 && (
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontSize: isMobile ? "0.7rem" : "1.4rem",
+                        backgroundColor: theme.colors.beige,
+                        color: theme.colors.pink,
+                        borderRadius: 2,
+                        boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                        p: `10px 20px`,
+                        fontFamily: theme.fonts.text,
+                        fontWeight: 200,
+                      }}
+                    >
+                      weight: {product.variants.edges[0]?.node.weight}
+                      {product.variants.edges[0]?.node.weightUnit === "GRAMS"
+                        ? "g"
+                        : ""}
+                    </Typography>
+                  )}
                   <Typography
-                    variant="h5"
-                    sx={{
-                      backgroundColor: theme.colors.beige,
-                      color: theme.colors.pink,
-                      borderRadius: 2,
-                      boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                      px: 3,
-                      py: 1,
-                      fontFamily: theme.fonts.text,
-                      fontWeight: 200,
-                    }}
+                    variant="h4"
+                    fontWeight={800}
+                    sx={{ fontSize: isMobile ? "1.6rem" : "2rem" }}
                   >
-                    size: {product.variants.edges[0]?.node.weight}
-                    {product.variants.edges[0]?.node.weightUnit === "GRAMS"
-                      ? "g"
-                      : ""}
-                  </Typography>
-                  <Typography variant="h4" fontWeight={800}>
-                    {Math.floor(product.variants.edges[0]?.node.price.amount)}
+                    ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
                     /-
                   </Typography>
                 </Box>
@@ -393,6 +387,8 @@ const ProductsInternal = () => {
                     onChange={handleQuantityChange}
                     size="small"
                     sx={{
+                      fontSize: isMobile ? "0.7rem" : "1.4rem",
+                      padding: "5px 20px",
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
                       borderRadius: 2,
@@ -402,13 +398,7 @@ const ProductsInternal = () => {
                         color: theme.colors.pink,
                       },
                       "& .MuiOutlinedInput-notchedOutline": {
-                        borderColor: theme.colors.pink,
-                      },
-                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                        borderColor: theme.colors.pink,
-                      },
-                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: theme.colors.pink,
+                        border: "none",
                       },
                     }}
                   >
@@ -422,8 +412,12 @@ const ProductsInternal = () => {
                     onClick={handleAddToCart}
                     variant="contained"
                     sx={{
-                      fontFamily: theme.fonts.text,
+                      padding: "10px 20px",
                       ml: 2,
+                      fontFamily: theme.fonts.text,
+                      fontWeight: 400,
+                      textAlign: "justify",
+                      fontSize: isMobile ? "0.7rem" : "1.4rem",
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
                       boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
@@ -448,126 +442,122 @@ const ProductsInternal = () => {
       {/* Bottom Section - SVG + Extra */}
       {parsedProductProfile.left.length > 0 &&
         parsedTastingNotes.left.length > 0 && (
-          <Grid container spacing={4}>
+          <Grid
+            container
+            display="flex"
+            justifyContent="space-between"
+            alignItems="start"
+            mt={10}
+          >
             {/* Product Profile */}
             <Grid
               size={{
                 xs: 12,
-                md: 7,
+                md: 6,
               }}
-              mt={10}
+              height="100%"
               display={"flex"}
               justifyContent="start"
               alignItems={"center"}
               flexDirection={"column"}
-              padding={isMobile ? 0 : 2}
             >
               <Typography
                 gutterBottom
                 color={theme.colors.pink}
                 variant="h4"
-                fontFamily="Genty"
+                fontFamily="Gliker"
+                textTransform="capitalize"
               >
                 product profile
               </Typography>
 
               <Grid
-                width={"100%"}
-                height={"100%"}
                 position="relative"
                 display={"flex"}
-                justifyContent="center"
-                alignItems={"center"}
-                flexDirection={"row"}
+                justifyContent="start"
                 border={`4px solid ${theme.colors.pink}`}
-                borderRadius={8}
-                overflow={"hidden"}
+                borderRadius={isMobile ? 4 : 8}
+                gap={2}
               >
                 <Box
+                  component="img"
+                  src={pageFold}
+                  position="absolute"
+                  width={isMobile ? "80px" : "100px"}
+                  top={isMobile ? "-24px" : "-30px"}
+                  right={isMobile ? "-19px" : "-24px"}
+                />
+
+                <Box
+                  py={2}
+                  borderRadius={isMobile ? "10px 0 0 10px" : "27px 0 0 27px"}
+                  height="550px"
                   sx={{
-                    width: isMobile ? "100%" : "55%",
-                    height: "100%",
+                    maxWidth: "200px",
+                    width: "100%",
                     display: "flex",
+                    gap: 2,
                     flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "relative",
+                    justifyContent: "start",
+                    alignItems: "start",
+                    backgroundColor: theme.colors.green,
                   }}
                 >
-                  <svg
-                    height="100%"
-                    width="100%"
-                    viewBox="0 0 350 550"
-                    preserveAspectRatio="none"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M340.01 14.612V0H246.156H28.662H0V29.786V506.362V522.098V555.256H23.604H318.654L319.216 546.826L320.902 526.594L323.712 514.23L329.332 500.18L337.762 474.328L340.572 451.848L340.01 428.244L336.638 408.012L332.142 393.962L322.588 368.672L318.654 344.506V329.332L319.778 311.348L323.15 297.298L332.704 270.322L338.324 252.338L340.572 235.478V214.122L338.886 200.634L336.638 188.27L332.142 174.782L322.588 148.93L319.778 133.194L318.654 121.392V107.342L319.778 98.912L320.902 89.358L323.15 76.432L327.646 64.63L334.39 46.084L338.324 29.786L340.01 14.612Z"
-                      fill="#B5D782"
-                    />
-                  </svg>
-                  <Box
-                    position={"absolute"}
-                    height={isMobile ? "100%" : "80%"}
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="space-evenly"
-                    top="50%"
-                    left="10%"
-                    sx={{
-                      transform: "translateY(-50%)",
-                    }}
-                  >
-                    {parsedProductProfile.left.map((label, i) => (
-                      <Typography
-                        key={i}
-                        variant={isMobile ? "body2" : "h5"}
-                        sx={{
-                          fontWeight: 500,
-                          color: theme.colors.beige,
-                          fontFamily: theme.fonts.text,
-                        }}
-                      >
-                        {label}
-                      </Typography>
-                    ))}
-                  </Box>
+                  {parsedProductProfile.left.map((label, i) => (
+                    <Typography
+                      key={i}
+                      fontSize={
+                        isMobile
+                          ? ".8rem"
+                          : isTablet
+                          ? ".8rem"
+                          : isSmallDesktop
+                          ? "1rem"
+                          : "1.2rem"
+                      }
+                      sx={{
+                        width: "100%",
+                        m: "0 20px",
+                        fontWeight: 500,
+                        color: theme.colors.beige,
+                        fontFamily: theme.fonts.text,
+                      }}
+                    >
+                      {label}
+                    </Typography>
+                  ))}
                 </Box>
 
                 <Box
-                  position={"relative"}
-                  height={"100%"}
-                  display={"flex"}
+                  height="100%"
+                  display="flex"
                   flexDirection="column"
-                  justifyContent="center"
-                  alignItems="center"
+                  justifyContent="start"
+                  alignItems="start"
+                  py={2}
+                  gap={2}
                 >
-                  <Box
-                    height={isMobile ? "100%" : "80%"}
-                    p={1}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-evenly",
-                    }}
-                  >
-                    {parsedProductProfile.right.map((value, i) => (
-                      <Typography
-                        height={isMobile ? "100%" : "80%"}
-                        key={i}
-                        variant={isMobile ? "body2" : "h5"}
-                        sx={{
-                          fontWeight: 300,
-                          color: theme.colors.pink,
-                          fontFamily: theme.fonts.text,
-                          lineHeight: 1.5,
-                        }}
-                      >
-                        {value}
-                      </Typography>
-                    ))}
-                  </Box>
+                  {parsedProductProfile.right.map((value, i) => (
+                    <Typography
+                      key={i}
+                      fontSize={
+                        isMobile
+                          ? ".8rem"
+                          : isTablet
+                          ? ".8rem"
+                          : isSmallDesktop
+                          ? "1rem"
+                          : "1.2rem"
+                      }
+                      sx={{
+                        fontWeight: 300,
+                        color: theme.colors.pink,
+                        fontFamily: theme.fonts.text,
+                      }}
+                    >
+                      {value}
+                    </Typography>
+                  ))}
                 </Box>
               </Grid>
             </Grid>
@@ -579,86 +569,106 @@ const ProductsInternal = () => {
                 md: 5,
               }}
               display={"flex"}
-              justifyContent="center"
+              justifyContent="start"
               alignItems={"center"}
               flexDirection={"column"}
-              mt={10}
+              height="100%"
+              mt={isMobile ? 4 : isTablet ? 4 : 0}
             >
               <Typography
                 gutterBottom
                 color={theme.colors.pink}
                 variant="h4"
-                fontFamily="Genty"
+                fontFamily="Gliker"
+                textTransform="capitalize"
               >
                 tasting notes
               </Typography>
               <Box
-                borderRadius={8}
-                sx={{
-                  p: 3,
-                  width: "100%",
-                  backgroundColor: theme.colors.green,
-                }}
+                borderRadius={isMobile ? 4 : 8}
+                display={"flex"}
+                justifyContent="center"
+                alignItems={"center"}
+                flexDirection={"column"}
+                width="100%"
+                height="550px"
+                backgroundColor={theme.colors.green}
               >
-                {parsedTastingNotes.left.map((label, index) => {
-                  const value = parsedTastingNotes.right[index]; // Corresponding value for the left label
+                <Box
+                  width="100%"
+                  sx={{
+                    scale: isMobile
+                      ? "0.8"
+                      : isTablet
+                      ? "0.8"
+                      : isSmallDesktop
+                      ? ".9"
+                      : "1",
+                  }}
+                >
+                  {parsedTastingNotes.left.map((label, index) => {
+                    const value = parsedTastingNotes.right[index];
 
-                  return (
-                    <Box
-                      key={index}
-                      sx={{ mb: 3 }}
-                      display={"flex"}
-                      flexDirection={"column"}
-                      alignItems={"center"}
-                      justifyContent={"center"}
-                    >
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          textAlign: "start",
-                          fontWeight: "bold",
-                          mb: 1,
-                          width: "90%",
-                          color: theme.colors.beige,
-                        }}
+                    return (
+                      <Box
+                        key={index}
+                        display={"flex"}
+                        flexDirection={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        marginBottom={1}
                       >
-                        {label}{" "}
-                        {/* Display the label from parsedTastingNotes.left */}
-                      </Typography>
-                      <Slider
-                        defaultValue={value}
-                        disabled
-                        sx={{
-                          width: "90%",
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            textAlign: "start",
+                            fontWeight: "bold",
+                            mb: 1,
+                            width: "90%",
+                            color: theme.colors.beige,
+                          }}
+                        >
+                          {label}
+                        </Typography>
+                        <Slider
+                          defaultValue={value}
+                          disabled
+                          sx={{
+                            width: "90%",
+                            borderRadius: 6,
 
-                          "&.Mui-disabled": {
-                            color: theme.colors.pink,
-                            backgroundColor: theme.colors.beige,
+                            "&.Mui-disabled": {
+                              color: theme.colors.pink,
+                              backgroundColor: theme.colors.beige,
 
-                            "& .MuiSlider-thumb::after": {
-                              background: `url(${sliderThumb}) no-repeat center center`,
-                              backgroundSize: "cover",
-                              width: "50px",
-                              height: "50px",
-                              borderRadius: "0",
+                              "& .MuiSlider-thumb::after": {
+                                background: `url(${sliderThumb}) no-repeat center center`,
+                                backgroundSize: "cover",
+                                width: "55px",
+                                height: "55px",
+                                position: "absolute",
+                                top: "5px",
+                                left: "-5px",
+                                borderRadius: 0,
+                              },
+
+                              "& .MuiSlider-track": {
+                                backgroundColor: theme.colors.pink,
+                                height: "80%",
+                                marginLeft: "3px",
+                                borderRadius: 8,
+                              },
+
+                              "& .MuiSlider-rail": {
+                                display: "none",
+                              },
                             },
-
-                            "& .MuiSlider-track": {
-                              backgroundColor: theme.colors.pink,
-                              height: "70%",
-                              marginLeft: "3px",
-                              borderRadius: 2,
-                            },
-
-                            "& .MuiSlider-rail": {
-                              display: "none",
-                            },
-                          },
-                        }}
-                      />
-                    </Box>
-                  );
-                })}
+                          }}
+                        />
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Box>
             </Grid>
           </Grid>

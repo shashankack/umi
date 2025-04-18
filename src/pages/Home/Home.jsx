@@ -31,6 +31,12 @@ const Home = () => {
         <AboutSection />
       </div>
       <TutorialSection />
+      <div className="text-wrapper">
+        <h2> * matcha your flow</h2>
+        <h2> * matcha your flow</h2>
+        <h2> * matcha your flow</h2>
+        <h2> * matcha your flow</h2>
+      </div>
     </>
   );
 };
