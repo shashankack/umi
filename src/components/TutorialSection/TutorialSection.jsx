@@ -9,7 +9,10 @@ import neko from "../../assets/images/vectors/neko/neko.gif";
 
 const TutorialSection = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
+  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const stepsImages = [
     {
       image: step1,
@@ -43,12 +46,14 @@ const TutorialSection = () => {
     >
       <Box
         sx={{
-          width: { xs: "90%", sm: 400, md: 700 },
-          height: { xs: 80, sm: 100, md: 100 },
+          width: isMobile ? "60%" : isTablet ? "80%" : "40%",
+          height: isMobile ? "50px" : isTablet ? "60px" : "70px",
           backgroundColor: theme.colors.beige,
           color: theme.colors.pink,
           borderRadius: "30px",
-          boxShadow: "6px 7px 3px 0px #b5d782",
+          boxShadow: isMobile
+            ? "3px 4px 0px 0px #b5d782"
+            : "6px 7px 0px 0px #b5d782",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -58,8 +63,17 @@ const TutorialSection = () => {
         <Typography
           sx={{
             fontFamily: "Genty",
-            fontSize: { xs: "2rem", sm: "2rem", md: "4rem" },
-            mt: "15px",
+            fontSize: isMobile
+              ? "1.5rem"
+              : isTablet
+              ? "2rem"
+              : isSmallDesktop
+              ? "2.5rem"
+              : isLargeDesktop
+              ? "3rem"
+              : "4rem",
+
+            mt: isMobile ? "10px" : "15px",
             fontWeight: 400,
           }}
         >
@@ -68,7 +82,8 @@ const TutorialSection = () => {
       </Box>
 
       <Grid
-        maxWidth="500px"
+        maxWidth={isMobile ? "200px" : "300px"}
+        mt={isMobile ? 5 : 0}
         width="100%"
         display="flex"
         justifyContent="center"
@@ -97,6 +112,7 @@ const TutorialSection = () => {
           >
             <Box
               sx={{
+                scale: isMobile ? 0.8 : 1,
                 width: "100%",
                 display: "flex",
                 flexDirection: "column",
