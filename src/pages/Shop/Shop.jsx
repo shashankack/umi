@@ -1,13 +1,6 @@
 import "./Shop.scss";
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
 
@@ -17,6 +10,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 const Shop = () => {
   const theme = useTheme();
   const [products, setProducts] = useState([]);
+  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -44,20 +38,17 @@ const Shop = () => {
     const squareWidth = width;
     const squareHeight = height;
 
-    // Create a grid container to hold squares
     const gridStyle = {
       display: "grid",
-      gridTemplateColumns: `repeat(${cols}, ${squareWidth}px)`, // Set the columns to fixed square width
-      gridTemplateRows: `repeat(${rows}, ${squareHeight}px)`, // Set the rows to fixed square height
-      width: "100%", // Ensure it takes up the full width of the parent container
-      height: "100%", // Ensure it takes up the full height of the parent container
-      overflow: "hidden", // Hide overflow to avoid showing extra squares
+      gridTemplateColumns: `repeat(${cols}, ${squareWidth}px)`,
+      gridTemplateRows: `repeat(${rows}, ${squareHeight}px)`,
+      width: "100%",
+      height: "100%",
+      overflow: "hidden",
     };
 
-    // Generate squares with alternating colors
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
-        // If flipped, reverse the order of squares
         const rowIndex = flipped ? rows - 1 - i : i;
         const colIndex = flipped ? cols - 1 - j : j;
 
@@ -111,7 +102,13 @@ const Shop = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Box ml={-6}>
+            <Box
+              ml={{
+                xs: "-15%",
+                sm: "-10%",
+                md: "-5%",
+              }}
+            >
               {generateSquares(
                 40,
                 40,
@@ -131,7 +128,13 @@ const Shop = () => {
             >
               {category}
             </Typography>
-            <Box mr={-6}>
+            <Box
+              mr={{
+                xs: "-15%",
+                sm: "-10%",
+                md: "-5%",
+              }}
+            >
               {generateSquares(
                 40,
                 40,
@@ -157,7 +160,7 @@ const Shop = () => {
               return (
                 <Grid
                   size={{
-                    xs: 6,
+                    xs: 12,
                     sm: 6,
                     md: 4,
                   }}
@@ -209,11 +212,7 @@ const Shop = () => {
                         },
                       }}
                     />
-                    <Stack
-                      width="80%"
-                      direction={"row"}
-                      justifyContent={"space-between"}
-                    >
+                    <Stack direction={"row"} gap={5}>
                       <Button
                         style={{
                           backgroundColor: theme.colors.green,

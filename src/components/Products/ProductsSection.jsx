@@ -1,14 +1,14 @@
 import "./ProductsSection.scss";
 import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Pagination, Autoplay } from "swiper/modules";
+import { FreeMode, Navigation, Autoplay } from "swiper/modules";
 import { Link } from "react-router-dom";
 
 import { FaShoppingCart } from "react-icons/fa";
 
 import "swiper/css";
 import "swiper/css/free-mode";
-import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -115,8 +115,9 @@ const ProductsSection = () => {
       </h3>
 
       <Swiper
-        modules={[FreeMode, Pagination, Autoplay]}
+        modules={[FreeMode, Navigation, Autoplay]}
         slidesPerView={3}
+        navigation={{ clickable: true }}
         loop
         freeMode
         breakpoints={{
@@ -130,7 +131,6 @@ const ProductsSection = () => {
             slidesPerView: 3,
           },
         }}
-        pagination={isMobile ? false : { clickable: true }}
         autoplay={{ delay: 5000 }}
         className="products-slider"
       >

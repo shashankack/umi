@@ -1,6 +1,5 @@
 import {
   Box,
-  Container,
   Typography,
   useTheme,
   Collapse,
@@ -113,12 +112,14 @@ const AboutSection = () => {
         <Box
           component="img"
           src={aboutSection}
-          width="100%"
-          height="100%"
-          objectFit="cover"
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
         />
       </Box>
-      <Container maxWidth="xl">
+      <Box width={"80%"} margin="0 auto" position="relative">
         <Typography
           variant="h2"
           mt={-5}
@@ -266,7 +267,7 @@ const AboutSection = () => {
             ))
           )}
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 };

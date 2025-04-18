@@ -86,31 +86,23 @@
     z-index: 10;
     padding: 70px 20px;
 
-    .swiper-pagination {
-      height: 10px;
-      position: absolute;
-      margin-top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 20;
-    }
-
-    .swiper-pagination-bullet {
-      width: 40px;
-      height: 100%;
-      background-color: #f6a09e;
-      opacity: 1;
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #f6a09e;
       transition: all 0.3s ease;
-      border-radius: 20px;
+      z-index: 20;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+
+      &:active {
+        transform: scale(0.96);
+      }
     }
 
-    .swiper-pagination-bullet-active {
-      background-color: #b5d782;
-      transform: scale(1.1);
+    @media screen and (max-width: 1400px) {
+      width: 90%;
     }
   }
 
@@ -127,6 +119,10 @@
 
     @media screen and (max-width: 1512px) {
       width: 350px;
+      height: 500px;
+    }
+    @media screen and (max-width: 1400px) {
+      width: 300px;
       height: 500px;
     }
 

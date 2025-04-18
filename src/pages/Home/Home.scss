@@ -1,0 +1,29 @@
+.text-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  background: #f6a09e;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid #000;
+
+  h1 {
+    font-family: "Stolzl";
+    font-size: 4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    text-align: left;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: move_rtl 3s linear infinite;
+  }
+
+  @keyframes move_rtl {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+}

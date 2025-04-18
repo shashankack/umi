@@ -81,6 +81,8 @@ const ProductsInternal = () => {
         key={i}
         gutterBottom
         sx={{
+          p: `10px 20px`,
+          borderRadius: 3,
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
@@ -365,6 +367,8 @@ const ProductsInternal = () => {
                       boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
                       px: 3,
                       py: 1,
+                      fontFamily: theme.fonts.text,
+                      fontWeight: 200,
                     }}
                   >
                     size: {product.variants.edges[0]?.node.weight}

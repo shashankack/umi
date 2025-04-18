@@ -5,6 +5,8 @@ import step2 from "../../assets/images/vectors/about/step2.png";
 import step3 from "../../assets/images/vectors/about/step3.png";
 import step4 from "../../assets/images/vectors/about/step4.png";
 
+import neko from "../../assets/images/vectors/neko/neko.gif";
+
 const TutorialSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -65,6 +67,24 @@ const TutorialSection = () => {
         </Typography>
       </Box>
 
+      <Grid
+        maxWidth="500px"
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        marginBottom={isMobile ? 0 : -15}
+      >
+        <Box
+          component="img"
+          src={neko}
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+          }}
+        />
+      </Grid>
       <Grid container spacing={5} p={5}>
         {stepsImages.map((step, index) => (
           <Grid
