@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 import sakura from "../../assets/images/vectors/sakura.png";
-import checkered from "../../assets/images/vectors/checkered.png";
 import leaf1 from "../../assets/images/vectors/leaf1.png";
 import leaf2 from "../../assets/images/vectors/leaf2.png";
 import leaf3 from "../../assets/images/vectors/leaf3.png";
