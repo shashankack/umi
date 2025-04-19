@@ -1,5 +1,6 @@
 import {
   Box,
+  Grid,
   Typography,
   useTheme,
   Collapse,
@@ -31,15 +32,33 @@ import matchaField from "../../assets/images/matcha_field.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const paragraphs = [
-  "Umi is a premium matcha brand that is crafted from the finest, single-origin, and single-cultivar tea leaves that are spring 1st flush harvest sourced exclusively from Japan's most renowned matcha-growing regions. Cultivated with meticulous care, our matcha is 100% certified organic, free of pesticides, herbicides and synthetic fertilisers ensuring a clean product that retains its natural purity and vibrant green colour. Each batch is harvested from a single cultivar, allowing for a distinct, consistent flavour profile that reflects the terroir of its origin. With a smooth, umami-rich taste and a silky texture, our matcha is ideal for both traditional ceremonial use and contemporary culinary applications. Perfect for discerning matcha enthusiasts seeking exceptional quality in every sip.",
-  "Our matcha represents a symbolic change within the matcha community. We hope for our matcha to stay with you through life’s highest highs and lowest lows. Made with love by matcha lovers, for matcha lovers.",
-];
-
 const paragraphs2 = [
   "Nestled in the misty hills of Japan, our Matcha farm is a sanctuary of tradition and purity. We cultivate shade-grown tea leaves using time-honored organic practices passed down through generations.",
   "Every leaf is hand-picked to ensure only the youngest, most vibrant greens make it into our Matcha. Our soil is enriched naturally, without chemicals, preserving both the earth and the plant's nutrients. We believe in slow farming — letting nature take its course for deeper flavor and richer antioxidants. From field to stone mill, each step is handled with precision and care.",
   "The result is a velvety, ceremonial-grade Matcha that nourishes body and mind.",
+];
+
+const stats = [
+  {
+    title: "*",
+    description: "100% organic",
+  },
+  {
+    title: "*",
+    description: "Single origin",
+  },
+  {
+    title: "*",
+    description: "Single cultivar",
+  },
+  {
+    title: "*",
+    description: "Spring 1st flush",
+  },
+  {
+    title: "*",
+    description: "Made in Japan",
+  },
 ];
 
 const AboutSection = () => {
@@ -109,15 +128,63 @@ const AboutSection = () => {
         >
           About our matcha
         </Typography>
-        <Box
-          component="img"
-          src={aboutSection}
-          sx={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
+        <Grid
+          container
+          border={1}
+          backgroundColor={theme.colors.beige}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Grid size={12} display={"flex"} justifyContent={"center"} p={3}>
+            <Typography
+              fontSize={isMobile ? "1rem" : "2rem"}
+              color={theme.colors.pink}
+              fontFamily={theme.fonts.text}
+              fontWeight={500}
+            >
+              Kinder rituals that fill your cup
+            </Typography>
+          </Grid>
+          {stats.map((stat, i) => (
+            <Grid
+              p={isMobile ? 0 : 3}
+              key={i}
+              sx={{ backgroundColor: theme.colors.beige }}
+            >
+              <Box
+                key={i}
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Typography
+                  variant="h1"
+                  color={i % 2 === 0 ? theme.colors.pink : theme.colors.green}
+                  fontFamily={theme.fonts.text}
+                  fontWeight={500}
+                  fontSize={{ xs: 20, md: 40 }}
+                  textAlign={"center"}
+                >
+                  {stat.title}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  color={i % 2 === 0 ? theme.colors.green : theme.colors.pink}
+                  fontFamily={theme.fonts.text}
+                  fontWeight={500}
+                  fontSize={{ xs: 10, md: 24 }}
+                  marginBottom={isMobile ? 2 : 0}
+                  textAlign={"center"}
+                  width="70%"
+                >
+                  {stat.description}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
       <Box width={"80%"} margin="0 auto" position="relative">
         <Typography

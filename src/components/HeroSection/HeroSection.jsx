@@ -165,9 +165,10 @@ const HeroSection = ({ theme }) => {
 
     gsap.fromTo(
       homeTextRefs.current,
-      { yPercent: 100, opacity: 0 },
+      { yPercent: 110, opacity: 0 },
       {
         yPercent: 0,
+        delay: 1,
         opacity: 1,
         duration: 0.5,
         stagger: 0.3,
