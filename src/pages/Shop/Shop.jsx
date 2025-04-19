@@ -234,12 +234,11 @@ const Shop = () => {
                         backgroundColor: theme.colors.green,
                         color: theme.colors.beige,
                         border: "none",
-                        padding: "5px 30px",
+                        padding: "5px 50px",
                         borderRadius: "25px",
                         cursor: "pointer",
                         fontFamily: "Stolzl",
                         fontSize: isMobile ? ".6rem" : ".9rem",
-                        width: "100%",
                         textWrap: "nowrap",
                         zIndex: 10,
                       }}
