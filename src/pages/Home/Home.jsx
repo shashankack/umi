@@ -20,8 +20,10 @@ const Home = () => {
             position: "absolute",
             zIndex: 100,
             bottom:
-              window.innerWidth <= 500
-                ? "-8%"
+              window.innerWidth <= 400
+                ? "-9.5%"
+                : window.innerWidth <= 500
+                ? "-8.5%"
                 : window.innerWidth <= 1440
                 ? "-11%"
                 : "-9%",

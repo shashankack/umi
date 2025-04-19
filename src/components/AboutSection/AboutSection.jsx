@@ -33,9 +33,7 @@ import matchaField from "../../assets/images/matcha_field.png";
 gsap.registerPlugin(ScrollTrigger);
 
 const paragraphs2 = [
-  "Nestled in the misty hills of Japan, our Matcha farm is a sanctuary of tradition and purity. We cultivate shade-grown tea leaves using time-honored organic practices passed down through generations.",
-  "Every leaf is hand-picked to ensure only the youngest, most vibrant greens make it into our Matcha. Our soil is enriched naturally, without chemicals, preserving both the earth and the plant's nutrients. We believe in slow farming — letting nature take its course for deeper flavor and richer antioxidants. From field to stone mill, each step is handled with precision and care.",
-  "The result is a velvety, ceremonial-grade Matcha that nourishes body and mind.",
+  "In the quiet hills of Wazuka, Japan where morning mists cling gently to the tea fields - we stood among rows of vibrant green leaves at the farm. This wasn’t just a visit; it was a pilgrimage to the source of purity. Our farm is rooted in integrity, where matcha is grown without herbicides, pesticides, or synthetic fertilizers. Every leaf is nurtured by hand, tana shaded with care, and stone-milled to preserve its rich umami and vivid hue. From the soils of Wazuka to the matcha bowls of India, this journey is a tribute to the beauty of intention. It’s about honouring tradition while embracing a global vision - where every sip carries the story of a farm, a philosophy, and a promise. This is farm to foam and it's only the beginning.",
 ];
 
 const stats = [
@@ -316,28 +314,13 @@ const AboutSection = () => {
                   key={i}
                   sx={{
                     fontFamily: "Stolzl",
-                    fontSize: { xs: 18, md: 26 },
+                    fontSize: { xs: 18, md: 20 },
                     mt: 4,
                   }}
                 >
                   {text}
                 </Typography>
               ))}
-
-              <Collapse in={showMorePara2}>
-                {paragraphs2.slice(1).map((text, i) => (
-                  <Typography
-                    key={i}
-                    sx={{
-                      fontFamily: "Stolzl",
-                      fontSize: { xs: 18, md: 26 },
-                      mt: 4,
-                    }}
-                  >
-                    {text}
-                  </Typography>
-                ))}
-              </Collapse>
 
               <Button
                 variant="text"
@@ -354,6 +337,7 @@ const AboutSection = () => {
                 sx={{
                   fontFamily: "Stolzl",
                   fontSize: { xs: 18, md: 26 },
+                  textAlign: "justify",
                   mt: 4,
                 }}
               >

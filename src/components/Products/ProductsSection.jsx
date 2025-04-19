@@ -108,7 +108,7 @@ const ProductsSection = () => {
           fontSize: isMobile ? "32px" : "30px",
           zIndex: 5,
           textAlign: "center",
-          marginTop: isMobile ? "0" : "100px",
+          marginTop: isMobile ? "50px" : "100px",
         }}
         ref={titleRef}
       >
