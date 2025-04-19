@@ -19,9 +19,10 @@ const Home = () => {
           style={{
             position: "absolute",
             zIndex: 100,
-            bottom: window.innerWidth <= 500 ? "-8%" : "-8%",
+            bottom: window.innerWidth <= 500 ? "-8%"  : window.innerWidth <= 1440 ? "-9%" : "-8%",
             left: "0",
             width: "100%",
+            overflow: "hidden",
           }}
         >
           <CurvedMarquee />

@@ -21,7 +21,7 @@
       z-index: 50;
 
       @media screen and (max-width: 500px) {
-        height: 250px;
+        height: 350px;
       }
 
       img {
@@ -72,8 +72,7 @@
 
       @media screen and (max-width: 500px) {
         padding: 1rem 3rem;
-        font-size: .8rem;
-        
+        font-size: 0.8rem;
       }
 
       &:hover {
@@ -90,29 +89,34 @@
   }
 
   .products-slider {
-    width: 80%;
+    width: 90%;
     height: 100%;
     margin: auto;
     z-index: 10;
-    padding: 70px 20px;
+    padding: 70px 0;
 
     .swiper-button-next,
     .swiper-button-prev {
       color: #f6a09e;
       transition: all 0.3s ease;
       z-index: 20;
+      scale: 0.7;
 
       &:hover {
-        transform: scale(1.2);
+        transform: scale(1.1);
       }
 
       &:active {
-        transform: scale(0.96);
+        transform: scale(1);
+      }
+
+      @media screen and (max-width: 500px) {
+        scale: 0.6;
       }
     }
 
     @media screen and (max-width: 1400px) {
-      width: 90%;
+      width: 100%;
     }
   }
 
@@ -131,9 +135,10 @@
       width: 350px;
       height: 500px;
     }
-    @media screen and (max-width: 1400px) {
+    @media screen and (max-width: 1440px) {
       width: 300px;
-      height: 500px;
+      height: 400px;
+      box-shadow: 4px 6px 0px 0px #f6a09e;
     }
 
     @media screen and (max-width: 500px) {
@@ -145,12 +150,15 @@
       text-align: center;
       font-family: "Stolzl";
       font-weight: 200;
-      font-size: 16px;
       position: absolute;
       width: 50%;
-      top: 30px;
+      top: 60px;
       left: 50%;
       transform: translateX(-50%);
+
+      @media screen and (max-width: 1440px) {
+        top: 30px;
+      }
     }
 
     .rect {
@@ -160,10 +168,17 @@
       left: 0;
       bottom: 0;
       background-color: #b5d782;
-      height: 160px;
+      height: 60px;
 
       @media screen and (max-width: 1512px) {
         height: 120px;
+      }
+
+      @media screen and (max-width: 1440px) {
+        height: 60px;
+      }
+      @media screen and (max-width: 500px) {
+        height: 60px;
       }
     }
 
@@ -186,17 +201,26 @@
     .product-actions {
       position: absolute;
       z-index: 20;
-      bottom: 60px;
       left: 0;
-      height: 100px;
-      padding: 30px 20px 0;
+      bottom: 3%;
       width: 100%;
       display: flex;
+      padding: 0 20px;
       justify-content: space-between;
+      gap: 10px;
+
       align-items: center;
 
       @media screen and (max-width: 1512px) {
-        bottom: 30px;
+        bottom: 10%;
+      }
+
+      @media screen and (max-width: 1440px) {
+        bottom: 3.5%;
+      }
+
+      @media screen and (max-width: 500px) {
+        bottom: 4%;
       }
     }
 
@@ -204,17 +228,6 @@
       font-size: 1.1rem;
       font-weight: bold;
       cursor: default;
-    }
-
-    .learn-more {
-      text-decoration: none;
-      color: inherit;
-      cursor: pointer;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: scale(1.1);
-      }
     }
 
     .cart-icon {
@@ -225,12 +238,5 @@
         scale: 1.2;
       }
     }
-  }
-
-  .marquee {
-    position: absolute;
-    bottom: -150px;
-    width: 100%;
-    z-index: 5;
   }
 }

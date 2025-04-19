@@ -46,8 +46,6 @@ const TutorialSection = () => {
     >
       <Box
         sx={{
-          width: isMobile ? "60%" : isTablet ? "80%" : "40%",
-          height: isMobile ? "50px" : isTablet ? "60px" : "70px",
           backgroundColor: theme.colors.beige,
           color: theme.colors.pink,
           borderRadius: "30px",
@@ -57,6 +55,8 @@ const TutorialSection = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          px: 5,
+          py: 0,
           mt: { xs: 5, sm: 5, md: 5 },
         }}
       >
@@ -70,7 +70,7 @@ const TutorialSection = () => {
               : isSmallDesktop
               ? "2.5rem"
               : isLargeDesktop
-              ? "3rem"
+              ? "2.6rem"
               : "4rem",
 
             mt: isMobile ? "10px" : "15px",
@@ -82,13 +82,13 @@ const TutorialSection = () => {
       </Box>
 
       <Grid
-        maxWidth={isMobile ? "200px" : "300px"}
-        mt={isMobile ? 5 : 0}
+        maxWidth={isMobile ? "150px" : "200px"}
         width="100%"
         display="flex"
         justifyContent="center"
         alignItems="center"
-        marginBottom={isMobile ? 0 : -15}
+        marginTop={isMobile ? 2 : -5}
+        marginBottom={isMobile ? -4 : -15}
       >
         <Box
           component="img"
@@ -100,9 +100,12 @@ const TutorialSection = () => {
           }}
         />
       </Grid>
-      <Grid container spacing={5} p={5}>
+      <Grid container spacing={isMobile ? 1 : 5} p={isMobile ? 1 : 5}>
         {stepsImages.map((step, index) => (
           <Grid
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             key={`step-${index}`}
             size={{
               xs: 6,
@@ -112,7 +115,7 @@ const TutorialSection = () => {
           >
             <Box
               sx={{
-                scale: isMobile ? 0.8 : 1,
+                scale: isMobile ? 0.6 : 0.8,
                 width: "100%",
                 display: "flex",
                 flexDirection: "column",
@@ -136,7 +139,7 @@ const TutorialSection = () => {
               />
               <Typography
                 sx={{
-                  fontSize: { sm: "1.2rem", md: "1.5rem" },
+                  fontSize: { sm: "1.2rem", md: "1.3rem" },
                   fontFamily: "Stolzl",
                   fontWeight: 200,
                   color: theme.colors.beige,

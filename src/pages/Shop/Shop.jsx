@@ -92,14 +92,10 @@ const Shop = () => {
   }, {});
 
   return (
-    <Box
-      sx={{ padding: 1, backgroundColor: theme.colors.pink }}
-      overflow="hidden"
-    >
+    <Box sx={{ backgroundColor: theme.colors.beige }} overflow="hidden" py={isMobile ? 5 : 0}>
       {Object.keys(categories).map((category) => (
         <Box
           key={category}
-          sx={{ marginBottom: 4 }}
           mt={15}
           display="flex"
           flexDirection="column"
@@ -133,10 +129,18 @@ const Shop = () => {
             <Typography
               mt={7}
               variant="h2"
-              fontSize={isMobile ? "2rem" : isSmallDesktop ? "4rem" : "5rem"}
+              fontSize={
+                isMobile
+                  ? "2rem"
+                  : isTablet
+                  ? "3rem"
+                  : isSmallDesktop
+                  ? "4rem"
+                  : "5rem"
+              }
               fontFamily="Genty"
               textTransform="capitalize"
-              color={theme.colors.beige}
+              color={theme.colors.pink}
               sx={{ marginBottom: 6, textShadow: "2px 2px 0 #B5D782" }}
             >
               {category}
@@ -164,118 +168,102 @@ const Shop = () => {
 
           <Grid
             container
-            spacing={4}
-            width="100%"
+            columnSpacing={isMobile ? 5 : 5}
+            rowSpacing={isMobile ? 5 : 5}
             display="flex"
             justifyContent="space-evenly"
+            sx={{
+              scale: isMobile ? 1 : isTablet ? 0.7 : isSmallDesktop ? 0.8 : 0.9,
+            }}
           >
             {categories[category].map((product) => {
               const productId = product.id.split("/").pop();
 
               return (
                 <Grid
-                  item
+                  size={isMobile ? 5 : 4}
                   key={product.id}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  xl={3}
                   display="flex"
                   justifyContent="center"
+                  flexDirection="column"
+                  alignItems="center"
                 >
                   <Box
-                    position="relative"
-                    height="100%"
-                    width={{
-                      xs: "90%",
-                      sm: "85%",
-                      md: "80%",
-                      lg: "75%",
-                      xl: "70%",
+                    component="h2"
+                    style={{
+                      fontFamily: "Stolzl",
+                      color: theme.colors.pink,
+                      textAlign: "center",
+                      fontSize: isMobile ? "1.2rem" : "2rem",
+                      marginBottom: "1rem",
                     }}
                   >
-                    <Box component="img" src={shopBg} width="100%" />
-                    <Box
-                      position="absolute"
-                      top="0"
-                      left="0"
-                      width="100%"
-                      height="100%"
-                      display="flex"
-                      flexDirection="column"
-                      alignItems="center"
-                      justifyContent="center"
-                      zIndex={10}
-                      p={5}
-                      overflow={"hidden"}
-                    >
-                      <Box
-                        component="h2"
-                        style={{
-                          fontFamily: "Stolzl",
-                          color: theme.colors.pink,
-                          textAlign: "center",
-                          fontSize: "1.5rem",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        {product.title}
-                      </Box>
-                      <Box
-                        component="img"
-                        src={product.images.edges[0]?.node.url}
-                        sx={{
-                          width: "80%",
-                          height: "80%",
-                          objectFit: "contain",
-                          transition: "transform 0.3s ease-in-out",
-                          cursor: "pointer",
+                    {product.title}
+                  </Box>
+                  <Box
+                    component="img"
+                    src={product.images.edges[0]?.node.url}
+                    onClick={() => {
+                      window.location.href = `/product/${productId}`;
+                    }}
+                    sx={{
+                      width: "80%",
+                      height: "80%",
+                      objectFit: "contain",
+                      transition: "transform 0.3s ease-in-out",
+                      cursor: "pointer",
 
-                          "&:hover": {
-                            transform: "scale(1.1)",
-                          },
+                      "&:hover": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  />
+                  <Stack
+                    direction={isMobile ? "column" : "row"}
+                    justifyContent="space-around"
+                    alignItems="center"
+                    gap={isMobile ? 0.5 : 5}
+                  >
+                    <Button
+                      style={{
+                        backgroundColor: theme.colors.green,
+                        color: theme.colors.beige,
+                        border: "none",
+                        padding: "10px 30px",
+                        borderRadius: "25px",
+                        cursor: "pointer",
+                        fontFamily: "Stolzl",
+                        fontSize: isMobile ? ".6rem" : ".7rem",
+                        width: "100%",
+                        textWrap: "nowrap",
+                        zIndex: 10,
+                      }}
+                      onClick={() => {
+                        window.location.href = `/product/${productId}`;
+                      }}
+                    >
+                      Product Info
+                    </Button>
+                    <Button
+                      style={{
+                        backgroundColor: theme.colors.pink,
+                        color: theme.colors.beige,
+                        border: "none",
+                        width: "100%",
+                        padding: "10px 30px",
+                        borderRadius: "25px",
+                        cursor: "pointer",
+                        fontFamily: "Stolzl",
+                        zIndex: 10,
+                      }}
+                    >
+                      <ShoppingCartIcon
+                        sx={{
+                          fontSize: isMobile ? "1rem" : "1rem",
                         }}
                       />
-                      <Stack direction={"row"} gap={5}>
-                        <Button
-                          style={{
-                            backgroundColor: theme.colors.green,
-                            color: theme.colors.beige,
-                            border: "none",
-                            padding: "10px 20px",
-                            borderRadius: "25px",
-                            cursor: "pointer",
-                            fontFamily: "Stolzl",
-                            fontSize: ".7rem",
-                            zIndex: 10,
-                          }}
-                          onClick={() => {
-                            window.location.href = `/product/${productId}`;
-                          }}
-                        >
-                          Product Info
-                        </Button>
-                        <Button
-                          style={{
-                            backgroundColor: theme.colors.green,
-                            color: theme.colors.beige,
-                            border: "none",
-                            padding: "10px 30px",
-                            borderRadius: "25px",
-                            cursor: "pointer",
-                            fontFamily: "Stolzl",
-                            fontSize: ".7rem",
-                            zIndex: 10,
-                          }}
-                        >
-                          <ShoppingCartIcon
-                            sx={{ color: theme.colors.beige }}
-                          />
-                        </Button>
-                      </Stack>
-                    </Box>
-                  </Box>
+                    </Button>
+                  </Stack>
                 </Grid>
               );
             })}

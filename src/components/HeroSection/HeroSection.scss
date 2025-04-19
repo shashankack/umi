@@ -85,6 +85,7 @@
     .home-text {
       z-index: 10;
       width: 100%;
+
       .title-wrapper {
         overflow: hidden;
 
@@ -233,6 +234,8 @@
   }
 
   @media screen and (max-width: 500px) {
+    overflow: hidden;
+
     .leaf1 {
       width: 120px;
     }
@@ -246,7 +249,7 @@
     }
 
     .leaf4 {
-      width: 120px;
+      width: 100px;
       right: 0;
       top: 25%;
       left: auto;
@@ -258,9 +261,10 @@
     }
 
     .whisk {
-      width: 150px;
-      right: 10%;
-      bottom: 7%;
+      width: 120px;
+      right: 5%;
+      bottom: 10%;
+      transform: rotate(-20deg) rotateY(180deg);
     }
 
     .hero-content {
@@ -270,12 +274,12 @@
       justify-content: center;
 
       .home-text {
-        margin-top: 40px;
+        margin-top: 120px;
 
         .title-wrapper h2 {
           text-align: center;
           text-shadow: 2px 2px 0px #b5d782;
-          font-size: 3rem;
+          font-size: 2rem;
           margin: 0 auto;
         }
       }
@@ -284,8 +288,10 @@
         margin-top: 50px;
         max-width: 300px;
         height: 450px;
+        margin-top: -30px;
         width: 100%;
         z-index: 10;
+        scale: 0.7;
 
         .product-frame {
           width: 100%;

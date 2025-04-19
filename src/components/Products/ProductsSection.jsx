@@ -62,15 +62,15 @@ const ProductsSection = () => {
       if (svgRef.current) {
         gsap.fromTo(
           svgRef.current,
-          { height: "60%" },
+          { height: "70%" },
           {
-            height: "140%",
+            height: isMobile ? "130%" : "140%",
             ease: "none",
             scrollTrigger: {
               trigger: svgRef.current,
               start: "top bottom",
               end: "top 60% ",
-              scrub: 3,
+              scrub: 1,
             },
           }
         );
@@ -131,7 +131,7 @@ const ProductsSection = () => {
             slidesPerView: 3,
           },
         }}
-        autoplay={{ delay: 5000 }}
+        autoplay={{ delay: 3000 }}
         className="products-slider"
       >
         {products.map((product) => {
@@ -148,6 +148,7 @@ const ProductsSection = () => {
                 <div className="title">
                   <h2
                     style={{
+                      fontSize: isMobile ? "16px" : "18px",
                       color: theme.colors.green,
                     }}
                   >
@@ -156,20 +157,20 @@ const ProductsSection = () => {
                 </div>
                 <div className="rect" />
                 <div className="product-image">
-                  <img src={imageUrl} alt={product.title} />
+                  <img
+                    src={imageUrl}
+                    alt={product.title}
+                    onClick={() =>
+                      (window.location.href = `/product/${productId}`)
+                    }
+                  />
                 </div>
 
                 <div
                   className="product-actions"
                   style={{ color: theme.colors.beige }}
                 >
-                  <div className="price">
-                    {currency} {price}
-                  </div>
-
-                  <Link to={`/product/${productId}`} className="learn-more">
-                    Learn More
-                  </Link>
+                  <div className="price">₹ {price}</div>
 
                   <div className="cart-icon">
                     <FaShoppingCart size={20} />

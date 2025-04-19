@@ -21,12 +21,12 @@ const CurvedMarquee = () => {
   return (
     <div className="curved-marquee">
       {isMobile ? (
-        <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+        <svg viewBox="0 0 550 73">
           <defs>
             <path
               id="curve"
               ref={pathRef}
-              d="M0,140 C700,150 7000,150 1100,10"
+              d="M0,160 C900, 20 640,370 1400,90"
               fill="none"
             />
           </defs>
@@ -35,18 +35,18 @@ const CurvedMarquee = () => {
           <use
             href="#curve"
             stroke="#f79995" // soft pink
-            strokeWidth="25" // thickness of the ribbon
+            strokeWidth="15" // thickness of the ribbon
             fill="none"
             strokeLinecap="round"
           />
 
           {/* Flowing Text */}
-          <text dy="10">
+          <text dy="8">
             <textPath
               ref={textPathRef}
               href="#curve"
               startOffset="0"
-              textLength="5000"
+              textLength="3500"
               spacing="auto"
             >
               * matcha your flow * matcha your flow * matcha your flow * matcha

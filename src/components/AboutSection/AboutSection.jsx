@@ -119,10 +119,10 @@ const AboutSection = () => {
           variant="h2"
           sx={{
             fontFamily: "Genty",
-            fontSize: { xs: "3rem", md: "8rem" },
+            fontSize: { xs: "3rem", md: "4rem" },
+            mb: 2,
             textShadow: "0px 5.475px 0px rgba(0, 0, 0, 0.25)",
             fontWeight: 400,
-            mt: 4,
             textAlign: "center",
           }}
         >
@@ -130,13 +130,12 @@ const AboutSection = () => {
         </Typography>
         <Grid
           container
-          border={1}
           backgroundColor={theme.colors.beige}
           display={"flex"}
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <Grid size={12} display={"flex"} justifyContent={"center"} p={3}>
+          <Grid size={12} display={"flex"} justifyContent={"center"} p={1}>
             <Typography
               fontSize={isMobile ? "1rem" : "2rem"}
               color={theme.colors.pink}
@@ -187,49 +186,78 @@ const AboutSection = () => {
         </Grid>
       </Box>
       <Box width={"80%"} margin="0 auto" position="relative">
-        <Typography
-          variant="h2"
-          mt={-5}
-          mb={20}
-          sx={{
-            fontFamily: "Stolzl",
-            fontSize: isMobile ? 16 : 26,
-            color: theme.colors.beige,
-            textAlign: "justify",
-          }}
-          className="about-text"
-        >
-          Life comes in waves, matcha your flow <br />
-          <br /> Umi: wave <br />
-          <br />
-          Umi is a premium matcha brand that is crafted from the finest,
-          single-origin, and single-cultivar tea leaves that are spring 1st
-          flush harvest sourced exclusively from Japan's most renowned
-          matcha-growing regions. Cultivated with meticulous care, our matcha is
-          100% certified organic, free of pesticides, herbicides and synthetic
-          fertilisers ensuring a clean product that retains its natural purity
-          and vibrant green colour. Each batch is harvested from a single
-          cultivar, allowing for a distinct, consistent flavour profile that
-          reflects the terroir of its origin. With a smooth, umami-rich taste
-          and a silky texture, our matcha is ideal for both traditional
-          ceremonial use and contemporary culinary applications. Perfect for
-          discerning matcha enthusiasts seeking exceptional quality in every
-          sip. Umi is a premium matcha brand crafted from the finest,
-          single-origin, and single-cultivar tea leaves, harvested during the
-          first flush of spring from Japan's most renowned matcha-growing
-          regions. Cultivated with meticulous care, our matcha is 100% certified
-          organic, free of pesticides, herbicides, and synthetic fertilizers,
-          ensuring a clean product that retains its natural purity and vibrant
-          green color. Each batch is harvested from a single cultivar, allowing
-          for a distinct, consistent flavour profile that reflects the terroir
-          of its origin. With a smooth, umami-rich taste and a silky texture,
-          our matcha is ideal for both traditional ceremonial use and
-          contemporary culinary applications—perfect for discerning matcha
-          enthusiasts seeking exceptional quality in every sip. Our matcha
-          represents a symbolic change within the matcha community. We hope for
-          our matcha to stay with you through life’s highest highs and lowest
-          lows. Made with love by matcha lovers, for matcha lovers.
-        </Typography>
+        <Box className="about-text" mt={-5} mb={20}>
+          <Typography
+            variant="h2"
+            sx={{
+              fontFamily: "Stolzl",
+              fontSize: isMobile ? 16 : 26,
+              color: theme.colors.beige,
+              textAlign: "justify",
+            }}
+          >
+            Life comes in waves, matcha your flow <br />
+            <br /> Umi: wave <br />
+            <br />
+            Umi is a premium matcha brand that is crafted from the finest,
+            single-origin, and single-cultivar tea leaves that are spring 1st
+            flush harvest sourced exclusively from Japan's most renowned
+            matcha-growing regions. Cultivated with meticulous care, our matcha
+            is 100% certified organic, free of pesticides, herbicides and
+            synthetic fertilisers ensuring a clean product that retains its
+            natural purity and vibrant green colour. Each batch is harvested
+            from a single cultivar, allowing for a distinct, consistent flavour
+            profile that reflects the terroir of its origin. With a smooth,
+            umami-rich taste and a silky texture, our matcha is ideal for both
+            traditional ceremonial use and contemporary culinary applications.
+          </Typography>
+
+          <Collapse in={showMorePara1}>
+            <Typography
+              variant="h2"
+              sx={{
+                fontFamily: "Stolzl",
+                fontSize: isMobile ? 16 : 26,
+                color: theme.colors.beige,
+                textAlign: "justify",
+                mt: 2,
+              }}
+            >
+              Perfect for discerning matcha enthusiasts seeking exceptional
+              quality in every sip. Umi is a premium matcha brand crafted from
+              the finest, single-origin, and single-cultivar tea leaves,
+              harvested during the first flush of spring from Japan's most
+              renowned matcha-growing regions. Cultivated with meticulous care,
+              our matcha is 100% certified organic, free of pesticides,
+              herbicides, and synthetic fertilizers, ensuring a clean product
+              that retains its natural purity and vibrant green color. Each
+              batch is harvested from a single cultivar, allowing for a
+              distinct, consistent flavour profile that reflects the terroir of
+              its origin. With a smooth, umami-rich taste and a silky texture,
+              our matcha is ideal for both traditional ceremonial use and
+              contemporary culinary applications—perfect for discerning matcha
+              enthusiasts seeking exceptional quality in every sip. Our matcha
+              represents a symbolic change within the matcha community. We hope
+              for our matcha to stay with you through life’s highest highs and
+              lowest lows. Made with love by matcha lovers, for matcha lovers.
+            </Typography>
+          </Collapse>
+
+          <Typography
+            variant="text"
+            sx={{
+              mt: 2,
+              color: theme.colors.pink,
+              textTransform: "none",
+              fontFamily: "Stolzl",
+              background: "none",
+              fontSize: { xs: 12, md: 18 },
+            }}
+            onClick={() => setShowMorePara1((prev) => !prev)}
+          >
+            {showMorePara1 ? "Read less..." : "Read more..."}
+          </Typography>
+        </Box>
         <Box position="relative" height={{ xs: 300, md: 600 }}>
           <Box
             className="cloud"
