@@ -14,7 +14,7 @@ import {
 
 import MenuIcon from "../../assets/images/icons/menu_icon.png";
 import CloseIcon from "../../assets/images/icons/close_icon.png";
-import menuIllustration from "../../assets/images/menu_illustration.png";
+import neko from "../../assets/images/vectors/neko/neko.gif";
 
 import beigeCloud from "../../assets/images/icons/beige_logo.png";
 
@@ -108,6 +108,7 @@ const MobileNavbar = () => {
             justifyContent: "space-between",
             alignItems: "center",
             p: 4,
+            overflow: "hidden",
           }}
         >
           {/* Top Section: Logo & Close Button */}
@@ -184,23 +185,14 @@ const MobileNavbar = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 2,
+              width: 200,
             }}
           >
             <img
-              src={menuIllustration}
+              src={neko}
               alt="Drawer Illustration"
               style={{ width: "100%", maxWidth: 300 }}
             />
-            <Typography
-              fontSize="0.75rem"
-              color={theme.colors.beige}
-              fontFamily={theme.fonts.heading}
-            >
-              Life comes in waves. Match(a) your flow.
-              <br />
-              By matcha lovers, for matcha lovers.
-            </Typography>
           </Box>
         </Box>
       </Drawer>

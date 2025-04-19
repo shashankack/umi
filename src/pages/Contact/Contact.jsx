@@ -41,6 +41,7 @@ const Contact = () => {
       >
         Contact us
       </Typography>
+      
       <Grid
         backgroundColor={theme.colors.beige}
         boxShadow={`4px 4px 0  ${theme.colors.pink}`}

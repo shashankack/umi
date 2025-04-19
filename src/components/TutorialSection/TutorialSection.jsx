@@ -5,7 +5,7 @@ import step2 from "../../assets/images/vectors/about/step2.png";
 import step3 from "../../assets/images/vectors/about/step3.png";
 import step4 from "../../assets/images/vectors/about/step4.png";
 
-import neko from "../../assets/images/vectors/neko/neko.gif";
+import neko from "../../assets/images/vectors/neko/cup.png";
 
 const TutorialSection = () => {
   const theme = useTheme();
@@ -82,12 +82,12 @@ const TutorialSection = () => {
       </Box>
 
       <Grid
-        maxWidth={isMobile ? "150px" : "200px"}
+        maxWidth={isMobile ? "120px" : "200px"}
         width="100%"
         display="flex"
         justifyContent="center"
         alignItems="center"
-        marginTop={isMobile ? 2 : -5}
+        marginTop={isMobile ? 5 : -5}
         marginBottom={isMobile ? -4 : -15}
       >
         <Box
