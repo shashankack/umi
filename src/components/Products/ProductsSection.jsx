@@ -64,12 +64,12 @@ const ProductsSection = () => {
           svgRef.current,
           { height: "70%" },
           {
-            height: isMobile ? "130%" : "140%",
+            height: isMobile ? "130%" : "150%",
             ease: "none",
             scrollTrigger: {
               trigger: svgRef.current,
               start: "top bottom",
-              end: "top 60% ",
+              end: "top 80% ",
               scrub: 1,
             },
           }
@@ -105,9 +105,10 @@ const ProductsSection = () => {
         className="title"
         style={{
           color: theme.colors.pink,
-          fontSize: isMobile ? "32px" : "52px",
+          fontSize: isMobile ? "32px" : "30px",
           zIndex: 5,
           textAlign: "center",
+          marginTop: isMobile ? "0" : "100px",
         }}
         ref={titleRef}
       >

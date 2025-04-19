@@ -16,7 +16,8 @@
     width: 100%;
 
     .image-container {
-      height: 400px;
+      margin-top: -30px;
+      height: 300px;
       z-index: 50;
 
       @media screen and (max-width: 500px) {
@@ -50,9 +51,9 @@
     }
 
     button {
-      margin-top: -60px;
+      margin-top: -40px;
       display: flex;
-      padding: 1rem 5rem;
+      padding: 0.6rem 3rem;
       justify-content: center;
       align-items: center;
       border-radius: 20px;

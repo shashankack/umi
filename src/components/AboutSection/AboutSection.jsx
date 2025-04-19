@@ -79,7 +79,7 @@ const AboutSection = () => {
         ease: "power4.out",
         scrollTrigger: {
           trigger: ".cloud",
-          start: "top+=100 top",
+          start: "top+=600 50%",
           toggleActions: "play none none reverse",
         },
       }

@@ -92,11 +92,15 @@ const Shop = () => {
   }, {});
 
   return (
-    <Box sx={{ backgroundColor: theme.colors.beige }} overflow="hidden" py={isMobile ? 5 : 0}>
+    <Box
+      sx={{ backgroundColor: theme.colors.beige }}
+      overflow="hidden"
+      py={isMobile ? 5 : 0}
+    >
       {Object.keys(categories).map((category) => (
         <Box
           key={category}
-          mt={15}
+          mt={isMobile ? 0 : 10}
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -169,7 +173,7 @@ const Shop = () => {
           <Grid
             container
             columnSpacing={isMobile ? 5 : 5}
-            rowSpacing={isMobile ? 5 : 5}
+            rowSpacing={isMobile ? 5 : 15}
             display="flex"
             justifyContent="space-evenly"
             sx={{
@@ -193,8 +197,9 @@ const Shop = () => {
                     style={{
                       fontFamily: "Stolzl",
                       color: theme.colors.pink,
+                      fontWeight: 200,
                       textAlign: "center",
-                      fontSize: isMobile ? "1.2rem" : "2rem",
+                      fontSize: isMobile ? "1.2rem" : "1.6rem",
                       marginBottom: "1rem",
                     }}
                   >
@@ -229,11 +234,11 @@ const Shop = () => {
                         backgroundColor: theme.colors.green,
                         color: theme.colors.beige,
                         border: "none",
-                        padding: "10px 30px",
+                        padding: "5px 30px",
                         borderRadius: "25px",
                         cursor: "pointer",
                         fontFamily: "Stolzl",
-                        fontSize: isMobile ? ".6rem" : ".7rem",
+                        fontSize: isMobile ? ".6rem" : ".9rem",
                         width: "100%",
                         textWrap: "nowrap",
                         zIndex: 10,
@@ -242,7 +247,7 @@ const Shop = () => {
                         window.location.href = `/product/${productId}`;
                       }}
                     >
-                      Product Info
+                      ₹ {product.variants.edges[0]?.node.price.amount}
                     </Button>
                     <Button
                       style={{

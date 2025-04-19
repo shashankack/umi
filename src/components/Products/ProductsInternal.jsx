@@ -89,7 +89,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.7rem" : "1.4rem",
+          fontSize: isMobile ? "0.7rem" : "1.1rem",
         }}
       >
         {li.textContent}
@@ -195,10 +195,10 @@ const ProductsInternal = () => {
   return (
     <Box
       sx={{
-        height: window.innerWidth <= 1200 ? "110vh" : "100%",
+        height: isMobile ? "100%" : "100%",
         backgroundColor: theme.colors.beige,
         fontFamily: theme.typography.fontFamily,
-        p: isMobile ? 0 : 10,
+        p: isMobile ? 1 : 10,
       }}
     >
       <Box
@@ -326,7 +326,9 @@ const ProductsInternal = () => {
                 </Box>
               </Box>
 
-              <Stack mt={isMobile ? 0 : -10}>{parsedAttributes}</Stack>
+              <Stack mt={isMobile ? 0 : -5} mb={isMobile ? 1.5 : 5}>
+                {parsedAttributes}
+              </Stack>
 
               <Box>
                 <Stack direction="row" gap={3}>
