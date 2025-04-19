@@ -65,7 +65,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.7rem" : "1.4rem",
+          fontSize: isMobile ? "0.7rem" : "1.1rem",
           mb: 2,
         }}
       >
@@ -194,17 +194,11 @@ const ProductsInternal = () => {
 
   return (
     <Box
-      overflow="hidden"
-      height={
-        parsedProductProfile.left.length > 0 ||
-        parsedTastingNotes.left.length > 0
-          ? ""
-          : "100vh"
-      }
       sx={{
+        height: window.innerWidth <= 1200 ? "110vh" : "100%",
         backgroundColor: theme.colors.beige,
         fontFamily: theme.typography.fontFamily,
-        p: { xs: 2, md: 6 },
+        p: isMobile ? 0 : 10,
       }}
     >
       <Box
