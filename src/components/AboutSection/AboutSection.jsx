@@ -32,9 +32,7 @@ import matchaField from "../../assets/images/matcha_field.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const paragraphs2 = [
-  "In the quiet hills of Wazuka, Japan where morning mists cling gently to the tea fields - we stood among rows of vibrant green leaves at the farm. This wasn’t just a visit; it was a pilgrimage to the source of purity. Our farm is rooted in integrity, where matcha is grown without herbicides, pesticides, or synthetic fertilizers. Every leaf is nurtured by hand, tana shaded with care, and stone-milled to preserve its rich umami and vivid hue. From the soils of Wazuka to the matcha bowls of India, this journey is a tribute to the beauty of intention. It’s about honouring tradition while embracing a global vision - where every sip carries the story of a farm, a philosophy, and a promise. This is farm to foam and it's only the beginning.",
-];
+const paragraphs2 = [];
 
 const stats = [
   {
@@ -250,6 +248,7 @@ const AboutSection = () => {
               fontFamily: "Stolzl",
               background: "none",
               fontSize: { xs: 12, md: 18 },
+              cursor: "pointer",
             }}
             onClick={() => setShowMorePara1((prev) => !prev)}
           >
@@ -309,41 +308,77 @@ const AboutSection = () => {
         <Box sx={{ color: theme.colors.beige, mt: { xs: 4, md: 10 } }}>
           {isMobile ? (
             <>
-              {paragraphs2.slice(0, 1).map((text, i) => (
-                <Typography
-                  key={i}
-                  sx={{
-                    fontFamily: "Stolzl",
-                    fontSize: { xs: 18, md: 20 },
-                    mt: 4,
-                  }}
-                >
-                  {text}
-                </Typography>
-              ))}
-
-              <Button
-                variant="text"
-                sx={{ mt: 2, color: theme.colors.beige, textTransform: "none" }}
-                onClick={() => setShowMorePara2((prev) => !prev)}
-              >
-                {showMorePara2 ? "Read less..." : "Read more..."}
-              </Button>
-            </>
-          ) : (
-            paragraphs2.map((text, i) => (
               <Typography
-                key={i}
                 sx={{
                   fontFamily: "Stolzl",
-                  fontSize: { xs: 18, md: 26 },
+                  fontSize: { xs: 14, md: 20 },
                   textAlign: "justify",
                   mt: 4,
                 }}
               >
-                {text}
+                In the quiet hills of Wazuka, Japan where morning mists cling
+                gently to the tea fields - we stood among rows of vibrant green
+                leaves at the farm. This wasn’t just a visit; it was a
+                pilgrimage to the source of purity.
               </Typography>
-            ))
+              <Collapse in={showMorePara2}>
+                <Typography
+                  sx={{
+                    fontFamily: "Stolzl",
+                    fontSize: { xs: 14, md: 20 },
+                    textAlign: "justify",
+                    mt: 2,
+                  }}
+                >
+                  Our farm is rooted in integrity, where matcha is grown without
+                  herbicides, pesticides, or synthetic fertilizers. Every leaf
+                  is nurtured by hand, tana shaded with care, and stone-milled
+                  to preserve its rich umami and vivid hue. From the soils of
+                  Wazuka to the matcha bowls of India, this journey is a tribute
+                  to the beauty of intention. It's about honouring tradition
+                  while embracing a global vision - where every sip carries the
+                  story of a farm, a philosophy, and a promise. This is farm to
+                  foam and it's only the beginning.",
+                </Typography>
+              </Collapse>
+
+              <Typography
+                variant="text"
+                sx={{
+                  mt: 2,
+                  color: theme.colors.pink,
+                  textTransform: "none",
+                  fontFamily: "Stolzl",
+                  background: "none",
+                  fontSize: { xs: 12, md: 18 },
+                }}
+                onClick={() => setShowMorePara2((prev) => !prev)}
+              >
+                {showMorePara2 ? "Read less..." : "Read more..."}
+              </Typography>
+            </>
+          ) : (
+            <Typography
+              sx={{
+                fontFamily: "Stolzl",
+                fontSize: { xs: 18, md: 26 },
+                textAlign: "justify",
+                mt: 4,
+              }}
+            >
+              In the quiet hills of Wazuka, Japan where morning mists cling
+              gently to the tea fields - we stood among rows of vibrant green
+              leaves at the farm. This wasn’t just a visit; it was a pilgrimage
+              to the source of purity. Our farm is rooted in integrity, where
+              matcha is grown without herbicides, pesticides, or synthetic
+              fertilizers. Every leaf is nurtured by hand, tana shaded with
+              care, and stone-milled to preserve its rich umami and vivid hue.
+              From the soils of Wazuka to the matcha bowls of India, this
+              journey is a tribute to the beauty of intention. It’s about
+              honouring tradition while embracing a global vision - where every
+              sip carries the story of a farm, a philosophy, and a promise. This
+              is farm to foam and it's only the beginning.
+            </Typography>
           )}
         </Box>
       </Box>
