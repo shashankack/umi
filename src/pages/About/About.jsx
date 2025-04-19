@@ -1,235 +1,204 @@
 import "./About.scss";
-import neko from "../../assets/images/vectors/neko/neko.gif";
-import aboutText from "../../assets/images/vectors/about/about_text.png";
-import founder from "../../assets/images/founder.jpg";
+
+import founder from "../../assets/images/vectors/about/founder.png";
+import badge from "../../assets/images/vectors/about/badge.png";
+
 import { useTheme } from "@mui/material/styles";
 
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Container, Typography, Button, useMediaQuery } from "@mui/material";
+
+import { useRef, useEffect, useState } from "react";
+
+import gsap from "gsap";
 
 const About = () => {
   const theme = useTheme();
+  const badgeRef = useRef(null);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));  // Check for small screen sizes
+  const [showMore, setShowMore] = useState(false);  // Track the "Read more" toggle state
+
+  useEffect(() => {
+    // Infinite rotation of the badge
+    gsap.to(badgeRef.current, {
+      rotation: 360,
+      repeat: -1, // Infinite repetition
+      duration: 5, // Duration for one full rotation (adjust for speed)
+      ease: "none", // No easing for smooth continuous rotation
+    });
+  }, []);
 
   return (
-    <Grid
-      width="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      flexDirection="column"
-      gap={10}
-      paddingY={{
-        xs: 15,
-        sm: 10,
-        md: 10,
-        lg: 20,
-      }}
-      paddingInline={{
-        xs: 1,
-        sm: 2,
-        md: 10,
-        lg: 20,
-      }}
+    <Container
+      maxWidth="xxl"
       sx={{
+        pt: 20,
+        pb: 5,
+        width: "100vw",
+        height: "100%",
         backgroundColor: theme.colors.green,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 5,
       }}
     >
-      {/* Top */}
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        flexDirection={"row"}
-      >
-        <Grid
-          size={12}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection={{
-            xs: "column-reverse",
-            sm: "row",
-            md: "row",
-            lg: "row",
-          }}
-        >
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 6,
-              lg: 6,
-            }}
-            alignItems="center"
-            display="flex"
-            justifyContent="center"
-          >
-            <Box
-              component={"img"}
-              src={neko}
-              sx={{
-                height: "100%",
-                width: { xs: "60%", md: "100%" },
-                objectFit: "cover",
-              }}
-            />
-          </Grid>
-          <Grid
-            size={{
-              xs: 12,
-              sm: 12,
-              md: 6,
-              lg: 6,
-            }}
-          >
-            <Box
-              component={"img"}
-              src={aboutText}
-              sx={{
-                height: "100%",
-                width: "100%",
-                objectFit: "cover",
-                mt: { xs: 5, md: 0 },
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-
-      {/* Bottom */}
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        flexDirection={{
-          xs: "column",
-          sm: "column",
-          md: "row",
-          lg: "row",
-        }}
-        gap={{
-          xs: 1,
-          sm: 3,
-          md: 7,
-          lg: 10,
-        }}
-        borderRadius={{
-          xs: 1,
-          sm: 3,
-          md: 7,
-          lg: 10,
-        }}
-        p={{
-          xs: 2,
-          sm: 3,
-          md: 7,
-          lg: 10,
-        }}
+      <Typography
+        fontFamily={"Genty"}
+        fontSize={60}
+        fontWeight={200}
+        color={theme.colors.beige}
         sx={{
-          backgroundColor: theme.colors.beige,
-          boxShadow: { xs: "none", md: `8px 8px 0px 0px ${theme.colors.pink}` },
+          textShadow: `3px 3px 0px ${theme.colors.pink}`,
+          textAlign: "center",
+          fontWeight: "bold",
         }}
       >
-        <Grid
-          size={{
-            xs: 6,
-            sm: 12,
-            md: 4,
-            lg: 4,
-          }}
+        About us
+      </Typography>
+      <Box
+        maxWidth={"lg"}
+        backgroundColor={theme.colors.beige}
+        p={5}
+        borderRadius={15}
+        boxShadow={`6px 6px 0 ${theme.colors.pink}`}
+      >
+        <Typography
+          fontFamily={theme.fonts.text}
+          color={theme.colors.pink}
+          fontSize={20}
+          fontWeight={200}
+          mb={3}
+          textAlign="justify"
         >
-          <Box
-            component="img"
-            src={founder}
+          Umi
+          <span
+            style={{
+              color: "#B5D782",
+              marginInline: 10,
+            }}
+          >
+            海
+          </span>
+          comes from the Japanese word ocean.
+        </Typography>
+        <Typography
+          fontFamily={theme.fonts.text}
+          color={theme.colors.pink}
+          fontSize={20}
+          fontWeight={200}
+          mb={3}
+          textAlign="justify"
+        >
+          The concept of Umi is inspired by the famous Japanese painting, "The
+          Great Wave of Kanagawa". Matcha has been a constant in my life through
+          its highest highs and lowest lows and just like that, the great wave
+          depicts life's journey. It is a never-ending process where once we
+          conquer our fear and meet our goal, we'll be met again with other
+          vicious waves, other bigger problems & difficulties.
+        </Typography>
+
+        {/* Conditional rendering of the "Read more" content */}
+        {isMobile && !showMore && (
+          <Button
+            variant="text"
             sx={{
-              width: "100%",
-              objectFit: "cover",
-              borderRadius: 5,
+              color: theme.colors.pink,
+              fontFamily: theme.fonts.text,
+              fontSize: 18,
+              mt: 2,
+              textTransform: "none",
             }}
-          />
-        </Grid>
-        <Grid
-          size={{
-            xs: 12,
-            sm: 12,
-            md: 6,
-            lg: 6,
-          }}
-          height="100%"
-        >
-          <Typography
-            mt={4}
-            textAlign="justify"
-            fontWeight={300}
-            fontFamily={theme.fonts.text}
-            color={theme.colors.green}
-            fontSize={{
-              xs: 14,
-              sm: 14,
-              md: 14,
-              lg: 20,
-            }}
+            onClick={() => setShowMore(true)}
           >
-            Umi 海 comes from the Japanese word ocean.
-          </Typography>
+            Read more...
+          </Button>
+        )}
+
+        {showMore && (
           <Typography
-            textAlign="justify"
-            mt={4}
-            fontWeight={300}
-            fontSize={{
-              xs: 14,
-              sm: 14,
-              md: 14,
-              lg: 20,
-            }}
             fontFamily={theme.fonts.text}
             color={theme.colors.pink}
+            fontSize={20}
+            fontWeight={200}
+            mb={3}
+            textAlign="justify"
           >
-            Umi matcha was inspired by the famous Japanese painting, "The Great
-            Wave of Kanagawa". Matcha has been a constant in my life through its
-            highest highs and lowest lows and just like that, the great wave
-            depicts life's journey. It is a never-ending process where once we
-            conquer our fear and meet our goal, we'll be met again with other
-            vicious waves, other bigger problems & difficulties. However, our
-            tiredness towards the journey will also have it's sweetness, when we
-            reach a calm sea, where it's wave is gentle, and we can feel the
+            However, our tiredness towards the journey will also have its sweetness when we
+            reach a calm sea, where its wave is gentle, and we can feel the
             summer breeze warm our mind, body, and soul. But, with the knowledge
-            that another wave is waiting to be conquered. Umi Matcha represents
-            a symbolic shift within the matcha community.
+            that another wave is waiting to be conquered. Umi Matcha represents a
+            symbolic shift within the matcha community.
           </Typography>
-          <Typography
-            textAlign="justify"
-            mt={4}
-            fontWeight={300}
-            fontFamily={theme.fonts.text}
-            color={theme.colors.pink}
-            fontSize={{
-              xs: 14,
-              sm: 14,
-              md: 14,
-              lg: 20,
+        )}
+
+        {/* Button to collapse the expanded content */}
+        {isMobile && showMore && (
+          <Button
+            variant="text"
+            sx={{
+              color: theme.colors.pink,
+              fontFamily: theme.fonts.text,
+              fontSize: 18,
+              mt: 2,
+              textTransform: "none",
             }}
+            onClick={() => setShowMore(false)}
           >
-            I'm thrilled to have Umi become a part of your daily routine because
-            it's truly the most magical part of mine.
-            <Typography
-              p={5}
-              alignItems={"end"}
-              display="flex"
-              justifyContent={"end"}
-              color={theme.colors.green}
-              fontSize={{
-                xs: 14,
-                sm: 14,
-                md: 14,
-                lg: 20,
-              }}
-            >
-              - Adviti, Founder
-            </Typography>
-          </Typography>
-        </Grid>
-      </Grid>
-    </Grid>
+            Read less...
+          </Button>
+        )}
+
+        <Typography
+          fontFamily={theme.fonts.text}
+          color={theme.colors.pink}
+          fontSize={20}
+          fontWeight={200}
+          mb={3}
+          textAlign="justify"
+        >
+          Life is always better with a matcha in hand. I'm thrilled to have Umi
+          become a part of your daily routine because it's truly the most
+          magical part of mine.
+        </Typography>
+        <Typography
+          fontFamily={theme.fonts.text}
+          color={theme.colors.green}
+          fontSize={20}
+          fontWeight={200}
+          alignItems="end"
+          justifyContent="end"
+          display="flex"
+          width="100%"
+          mb={3}
+          textAlign="justify"
+        >
+          - Adviti, Founder
+        </Typography>
+      </Box>
+
+      <Container
+        style={{
+          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+          width: "auto",
+        }}
+      >
+        <Box width="350px" mt={5} component="img" src={founder} />
+
+        <Box
+          ref={badgeRef}
+          component="img"
+          src={badge}
+          position="absolute"
+          top={20}
+          left={0}
+          width={100}
+        />
+      </Container>
+    </Container>
   );
 };
 
