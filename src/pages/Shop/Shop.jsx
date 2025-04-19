@@ -239,8 +239,11 @@ const Shop = () => {
                         cursor: "pointer",
                         fontFamily: "Stolzl",
                         fontSize: isMobile ? ".6rem" : ".9rem",
-                        textWrap: "nowrap",
                         zIndex: 10,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        whiteSpace: "nowrap",
                       }}
                       onClick={() => {
                         window.location.href = `/product/${productId}`;
