@@ -442,7 +442,7 @@ const ProductsInternal = () => {
             container
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="start"
             mt={10}
             height={"100%"}
           >
@@ -514,11 +514,11 @@ const ProductsInternal = () => {
                         <tr key={i}>
                           <td
                             style={{
-                              padding: "8px 20px",
+                              padding: "14px 40px",
                               backgroundColor: theme.colors.green,
                               color: theme.colors.beige,
                               fontWeight: 500,
-                              fontSize: isMobile ? "0.8rem" : "1rem",
+                              fontSize: isMobile ? "0.8rem" : "1.3rem",
                               textAlign: "left",
                             }}
                           >
@@ -530,7 +530,7 @@ const ProductsInternal = () => {
                               backgroundColor: theme.colors.beige,
                               color: theme.colors.pink,
                               fontWeight: 300,
-                              fontSize: isMobile ? "0.8rem" : "1rem",
+                              fontSize: isMobile ? "0.8rem" : "1.3rem",
                               textAlign: "left",
                             }}
                           >
