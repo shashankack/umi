@@ -20,12 +20,12 @@ const Contact = () => {
   return (
     <Box
       width="100%"
-      height={isMobile ? "100vh" : "100vh"}
+      height={"100vh"}
       py={isMobile ? 10 : 0}
       sx={{ background: theme.colors.green }}
       display="flex"
       alignItems="center"
-      justifyContent="center"
+      justifyContent="end"
       flexDirection="column"
     >
       <Typography
@@ -41,7 +41,7 @@ const Contact = () => {
       >
         Contact us
       </Typography>
-      
+
       <Grid
         backgroundColor={theme.colors.beige}
         boxShadow={`4px 4px 0  ${theme.colors.pink}`}
@@ -50,6 +50,7 @@ const Contact = () => {
         maxWidth={isMobile ? "90%" : isTablet ? "90%" : "60%"}
         maxHeight={isMobile ? "100%" : 500}
         height="100%"
+        mb={isMobile ? -5 : isSmallDesktop ? 20 : 0}
       >
         <Grid
           size={12}

@@ -21,7 +21,7 @@
       z-index: 50;
 
       @media screen and (max-width: 500px) {
-        height: 350px;
+        height: 250px;
       }
 
       img {
@@ -45,7 +45,7 @@
     @media screen and (max-width: 500px) {
       margin-top: 50px;
       h2 {
-        font-size: 3.5rem;
+        font-size: 3rem;
         text-shadow: 1px 4px 0px #b5d782;
       }
     }

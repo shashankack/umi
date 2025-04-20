@@ -64,13 +64,13 @@ const ProductsSection = () => {
           svgRef.current,
           { height: "70%" },
           {
-            height: isMobile ? "130%" : "150%",
+            height: isMobile ? "145%" : "150%",
             ease: "none",
             scrollTrigger: {
               trigger: svgRef.current,
               start: "top bottom",
               end: "top 80% ",
-              scrub: 1,
+              scrub: 4,
             },
           }
         );

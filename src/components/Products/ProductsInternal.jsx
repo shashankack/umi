@@ -442,8 +442,9 @@ const ProductsInternal = () => {
             container
             display="flex"
             justifyContent="space-between"
-            alignItems="start"
+            alignItems="center"
             mt={10}
+            height={"100%"}
           >
             {/* Product Profile */}
             <Grid
@@ -451,6 +452,7 @@ const ProductsInternal = () => {
                 xs: 12,
                 md: 6,
               }}
+              width={"100%"}
               height="100%"
               display={"flex"}
               justifyContent="start"
@@ -467,7 +469,10 @@ const ProductsInternal = () => {
                 product profile
               </Typography>
 
+              {/* Table Grid */}
               <Grid
+                width={"100%"}
+                height="100%"
                 position="relative"
                 display={"flex"}
                 justifyContent="start"
@@ -484,76 +489,57 @@ const ProductsInternal = () => {
                   right={isMobile ? "-19px" : "-24px"}
                 />
 
+                {/* Table for Product Profile */}
                 <Box
-                  py={2}
-                  borderRadius={isMobile ? "10px 0 0 10px" : "27px 0 0 27px"}
-                  height="550px"
                   sx={{
-                    maxWidth: "200px",
+                    backgroundColor: theme.colors.beige,
+                    overflow: "hidden",
+                    borderRadius: isMobile
+                      ? "10px 0 0 10px"
+                      : "28px 0 28px 28px",
                     width: "100%",
                     display: "flex",
-                    gap: 2,
                     flexDirection: "column",
-                    justifyContent: "start",
-                    alignItems: "start",
-                    backgroundColor: theme.colors.green,
                   }}
                 >
-                  {parsedProductProfile.left.map((label, i) => (
-                    <Typography
-                      key={i}
-                      fontSize={
-                        isMobile
-                          ? ".8rem"
-                          : isTablet
-                          ? ".8rem"
-                          : isSmallDesktop
-                          ? "1rem"
-                          : "1.2rem"
-                      }
-                      sx={{
-                        width: "100%",
-                        m: "0 20px",
-                        fontWeight: 500,
-                        color: theme.colors.beige,
-                        fontFamily: theme.fonts.text,
-                      }}
-                    >
-                      {label}
-                    </Typography>
-                  ))}
-                </Box>
-
-                <Box
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="start"
-                  alignItems="start"
-                  py={2}
-                  gap={2}
-                >
-                  {parsedProductProfile.right.map((value, i) => (
-                    <Typography
-                      key={i}
-                      fontSize={
-                        isMobile
-                          ? ".8rem"
-                          : isTablet
-                          ? ".8rem"
-                          : isSmallDesktop
-                          ? "1rem"
-                          : "1.2rem"
-                      }
-                      sx={{
-                        fontWeight: 300,
-                        color: theme.colors.pink,
-                        fontFamily: theme.fonts.text,
-                      }}
-                    >
-                      {value}
-                    </Typography>
-                  ))}
+                  <table
+                    style={{
+                      width: "100%",
+                      borderSpacing: "0",
+                      borderCollapse: "collapse",
+                    }}
+                  >
+                    <tbody>
+                      {parsedProductProfile.left.map((label, i) => (
+                        <tr key={i}>
+                          <td
+                            style={{
+                              padding: "8px 20px",
+                              backgroundColor: theme.colors.green,
+                              color: theme.colors.beige,
+                              fontWeight: 500,
+                              fontSize: isMobile ? "0.8rem" : "1rem",
+                              textAlign: "left",
+                            }}
+                          >
+                            {label}
+                          </td>
+                          <td
+                            style={{
+                              padding: "8px 20px",
+                              backgroundColor: theme.colors.beige,
+                              color: theme.colors.pink,
+                              fontWeight: 300,
+                              fontSize: isMobile ? "0.8rem" : "1rem",
+                              textAlign: "left",
+                            }}
+                          >
+                            {parsedProductProfile.right[i]}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </Box>
               </Grid>
             </Grid>

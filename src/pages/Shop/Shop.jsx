@@ -95,7 +95,7 @@ const Shop = () => {
     <Box
       sx={{ backgroundColor: theme.colors.beige }}
       overflow="hidden"
-      py={isMobile ? 5 : 0}
+      py={isMobile ? 10 : 10}
     >
       {Object.keys(categories).map((category) => (
         <Box
@@ -239,11 +239,15 @@ const Shop = () => {
                         cursor: "pointer",
                         fontFamily: "Stolzl",
                         fontSize: isMobile ? ".6rem" : ".9rem",
-                        zIndex: 10,
+                        zIndex: 20,
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         whiteSpace: "nowrap",
+
+                        "&:hover": {
+                          backgroundColor: theme.colors.pink,
+                        },
                       }}
                       onClick={() => {
                         window.location.href = `/product/${productId}`;

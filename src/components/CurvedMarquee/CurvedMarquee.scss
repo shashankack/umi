@@ -57,4 +57,26 @@
       }
     }
   }
+
+  // Extra Small Mobile (400px)
+  @media (max-width: 400px) {
+    svg {
+      height: 230px;
+    }
+
+    text {
+      font-size: 20px;
+    }
+  }
+
+  // Extra Small Mobile (350px)
+  @media (max-width: 350px) {
+    svg {
+      height: 200px;
+    }
+
+    text {
+      font-size: 18px;
+    }
+  }
 }
