@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import Shop from "./pages/Shop/Shop";
 import { useState } from "react";
 import MobileNavbar from "./components/Navbar/MobileNavbar";
+import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 
 const theme = createTheme({
   colors: {
@@ -27,18 +28,20 @@ const App = () => {
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Router basename="/" window={window}>
-        {isMobile ? <MobileNavbar /> : <Navbar />}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/product/:productId" element={<ProductsInternal />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/shop" element={<Shop />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <NavbarThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Router basename="/" window={window}>
+          {isMobile ? <MobileNavbar /> : <Navbar />}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/product/:productId" element={<ProductsInternal />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/shop" element={<Shop />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </NavbarThemeProvider>
   );
 };
 

@@ -2,7 +2,7 @@ import "./ProductsSection.scss";
 import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Autoplay } from "swiper/modules";
-import { Link } from "react-router-dom";
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
 import { FaShoppingCart } from "react-icons/fa";
 
@@ -26,8 +26,11 @@ const ProductsSection = () => {
   const svgRef = useRef(null);
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
   const [products, setProducts] = useState([]);
+  const { setNavbarTheme } = useNavbarTheme();
 
   useEffect(() => {
+    
+
     const loadProducts = async () => {
       try {
         const data = await fetchShopifyProducts();

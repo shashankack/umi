@@ -15,6 +15,12 @@ import whisk from "../../assets/images/vectors/whisk.png";
 import haruTin from "../../assets/images/products/haru_tin.png";
 import nakaiTin from "../../assets/images/products/nakai_tin.png";
 import matchaLatte from "../../assets/images/products/matcha_latte.png";
+import whiskk from "../../assets/images/products/whisk.png";
+import whiskHolder from "../../assets/images/products/whisk_holder.png";
+import scoop from "../../assets/images/products/scoop.png";
+import bowl from "../../assets/images/products/bowl.png";
+
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
 const HeroSection = ({ theme }) => {
   const imageRef = useRef(null);
@@ -30,6 +36,7 @@ const HeroSection = ({ theme }) => {
   const leaf4Ref = useRef(null);
   const soupBowlRef = useRef(null);
   const whiskRef = useRef(null);
+  const { setNavbarTheme } = useNavbarTheme();
 
   homeTextRefs.current = [];
 
@@ -50,6 +57,26 @@ const HeroSection = ({ theme }) => {
       title: "Instant Matcha Latte",
       image: matchaLatte,
       price: 999.0,
+    },
+    {
+      title: "Umi Bowl Chawan",
+      image: bowl,
+      price: 1949.0,
+    },
+    {
+      title: "Umi Whisk - Chasen",
+      image: whiskk,
+      price: 1049.0,
+    },
+    {
+      title: "Umi Scoop - Chashaku",
+      image: scoop,
+      price: 499.0,
+    },
+    {
+      title: "Umi Whisk Holder",
+      image: whiskHolder,
+      price: 1349.0,
     },
   ];
 
@@ -80,6 +107,8 @@ const HeroSection = ({ theme }) => {
   };
 
   useEffect(() => {
+    setNavbarTheme("beige");
+
     if (!products.length) return;
 
     const positions = getAnimationPositions();

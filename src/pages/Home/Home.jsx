@@ -6,13 +6,52 @@ import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 
 import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
+import { useEffect, useRef } from "react";
 
 const Home = () => {
   const theme = useTheme();
+  const { setNavbarTheme } = useNavbarTheme();
+
+  const heroRef = useRef(null);
+  const productsRef = useRef(null);
+  const aboutRef = useRef(null);
+  const tutorialRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollMid = window.scrollY + window.innerHeight / 4.5;
+
+      if (tutorialRef.current && scrollMid >= tutorialRef.current.offsetTop) {
+        setNavbarTheme("beige");
+      } else if (aboutRef.current && scrollMid >= aboutRef.current.offsetTop) {
+        setNavbarTheme("pink");
+      } else if (
+        productsRef.current &&
+        scrollMid >= productsRef.current.offsetTop
+      ) {
+        setNavbarTheme("pink");
+      } else if (heroRef.current && scrollMid >= heroRef.current.offsetTop) {
+        setNavbarTheme("beige");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [setNavbarTheme]);
+
   return (
     <>
-      <HeroSection theme={theme} />
-      <div className="products-sec" style={{ position: "relative" }}>
+      <div ref={heroRef}>
+        <HeroSection theme={theme} />
+      </div>
+      <div
+        ref={productsRef}
+        className="products-sec"
+        style={{ position: "relative" }}
+      >
         <ProductsSection />
         <div
           className="marquee"
@@ -35,10 +74,12 @@ const Home = () => {
           <CurvedMarquee />
         </div>
       </div>
-      <div className="about-sec">
+      <div className="about-sec" ref={aboutRef}>
         <AboutSection />
       </div>
-      <TutorialSection />
+      <div ref={tutorialRef}>
+        <TutorialSection />
+      </div>
     </>
   );
 };
