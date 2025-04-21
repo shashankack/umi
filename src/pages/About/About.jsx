@@ -5,7 +5,13 @@ import badge from "../../assets/images/vectors/about/badge.png";
 
 import { useTheme } from "@mui/material/styles";
 
-import { Box, Container, Typography, Button, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 
 import { useRef, useEffect, useState } from "react";
 
@@ -14,16 +20,15 @@ import gsap from "gsap";
 const About = () => {
   const theme = useTheme();
   const badgeRef = useRef(null);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));  // Check for small screen sizes
-  const [showMore, setShowMore] = useState(false);  // Track the "Read more" toggle state
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
-    // Infinite rotation of the badge
     gsap.to(badgeRef.current, {
       rotation: 360,
-      repeat: -1, // Infinite repetition
-      duration: 5, // Duration for one full rotation (adjust for speed)
-      ease: "none", // No easing for smooth continuous rotation
+      repeat: -1,
+      duration: 5,
+      ease: "none",
     });
   }, []);
 
@@ -47,6 +52,7 @@ const About = () => {
         fontFamily={"Genty"}
         fontSize={60}
         fontWeight={200}
+        mb={3}
         color={theme.colors.beige}
         sx={{
           textShadow: `3px 3px 0px ${theme.colors.pink}`,
@@ -66,7 +72,7 @@ const About = () => {
         <Typography
           fontFamily={theme.fonts.text}
           color={theme.colors.pink}
-          fontSize={20}
+          fontSize={isMobile ? 16 : 20}
           fontWeight={200}
           mb={3}
           textAlign="justify"
@@ -85,7 +91,7 @@ const About = () => {
         <Typography
           fontFamily={theme.fonts.text}
           color={theme.colors.pink}
-          fontSize={20}
+          fontSize={isMobile ? 16 : 20}
           fontWeight={200}
           mb={3}
           textAlign="justify"
@@ -98,15 +104,14 @@ const About = () => {
           vicious waves, other bigger problems & difficulties.
         </Typography>
 
-        {/* Conditional rendering of the "Read more" content */}
         {isMobile && !showMore && (
           <Button
             variant="text"
             sx={{
-              color: theme.colors.pink,
+              transition: "all .3s ease",
+              color: theme.colors.green,
               fontFamily: theme.fonts.text,
-              fontSize: 18,
-              mt: 2,
+              fontSize: isMobile ? 16 : 20,
               textTransform: "none",
             }}
             onClick={() => setShowMore(true)}
@@ -119,28 +124,27 @@ const About = () => {
           <Typography
             fontFamily={theme.fonts.text}
             color={theme.colors.pink}
-            fontSize={20}
+            fontSize={isMobile ? 16 : 20}
             fontWeight={200}
-            mb={3}
             textAlign="justify"
+            mb={3}
           >
-            However, our tiredness towards the journey will also have its sweetness when we
-            reach a calm sea, where its wave is gentle, and we can feel the
-            summer breeze warm our mind, body, and soul. But, with the knowledge
-            that another wave is waiting to be conquered. Umi Matcha represents a
-            symbolic shift within the matcha community.
+            However, our tiredness towards the journey will also have its
+            sweetness when we reach a calm sea, where its wave is gentle, and we
+            can feel the summer breeze warm our mind, body, and soul. But, with
+            the knowledge that another wave is waiting to be conquered. Umi
+            Matcha represents a symbolic shift within the matcha community.
           </Typography>
         )}
 
-        {/* Button to collapse the expanded content */}
         {isMobile && showMore && (
           <Button
             variant="text"
             sx={{
-              color: theme.colors.pink,
+              transition: "all .3s ease",
+              color: theme.colors.green,
               fontFamily: theme.fonts.text,
-              fontSize: 18,
-              mt: 2,
+              fontSize: isMobile ? 16 : 20,
               textTransform: "none",
             }}
             onClick={() => setShowMore(false)}
@@ -152,7 +156,7 @@ const About = () => {
         <Typography
           fontFamily={theme.fonts.text}
           color={theme.colors.pink}
-          fontSize={20}
+          fontSize={isMobile ? 16 : 20}
           fontWeight={200}
           mb={3}
           textAlign="justify"
@@ -164,7 +168,7 @@ const About = () => {
         <Typography
           fontFamily={theme.fonts.text}
           color={theme.colors.green}
-          fontSize={20}
+          fontSize={isMobile ? 16 : 20}
           fontWeight={200}
           alignItems="end"
           justifyContent="end"

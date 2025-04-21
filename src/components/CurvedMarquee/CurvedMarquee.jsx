@@ -26,21 +26,19 @@ const CurvedMarquee = () => {
             <path
               id="curve"
               ref={pathRef}
-              d="M0,160 C900, 20 640,370 1400,90"
+              d="M0,160 C900, 60 640,370 1400,90"
               fill="none"
             />
           </defs>
 
-          {/* Curved Background Path */}
           <use
             href="#curve"
-            stroke="#f79995" // soft pink
-            strokeWidth="15" // thickness of the ribbon
+            stroke="#f79995"
+            strokeWidth="15"
             fill="none"
             strokeLinecap="round"
           />
 
-          {/* Flowing Text */}
           <text dy="8">
             <textPath
               ref={textPathRef}
@@ -67,16 +65,14 @@ const CurvedMarquee = () => {
             />
           </defs>
 
-          {/* Curved Background Path */}
           <use
             href="#curve"
-            stroke="#f79995" // soft pink
-            strokeWidth="55" // thickness of the ribbon
+            stroke="#f79995"
+            strokeWidth="55"
             fill="none"
             strokeLinecap="round"
           />
 
-          {/* Flowing Text */}
           <text dy="10">
             <textPath
               ref={textPathRef}

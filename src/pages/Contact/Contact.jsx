@@ -20,12 +20,12 @@ const Contact = () => {
   return (
     <Box
       width="100%"
-      height={"100vh"}
+      height="100vh"
       py={isMobile ? 10 : 0}
       sx={{ background: theme.colors.green }}
       display="flex"
       alignItems="center"
-      justifyContent="end"
+      justifyContent={isMobile ? "end" : "center"}
       flexDirection="column"
     >
       <Typography
@@ -51,6 +51,7 @@ const Contact = () => {
         maxHeight={isMobile ? "100%" : 500}
         height="100%"
         mb={isMobile ? -5 : isSmallDesktop ? 20 : 0}
+        gap={0}
       >
         <Grid
           size={12}
@@ -64,7 +65,7 @@ const Contact = () => {
             color={theme.colors.pink}
             fontWeight={400}
             fontSize={isMobile ? 20 : 30}
-            mt={6}
+            mt={isMobile ? 0 : 6}
             width={"80%"}
             textAlign="center"
           >
@@ -76,12 +77,13 @@ const Contact = () => {
           width="100%"
           height="80%"
           flexDirection={isMobile ? "column-reverse" : "row"}
-          alignItems={isMobile ? "center" : ""}
+          justifyContent="space-around"
+          alignItems={isMobile ? "start" : ""}
         >
           <Grid size={isMobile ? 12 : 6}>
             <Stack
-              gap={4}
-              padding={5}
+              gap={isMobile ? 2 : 4}
+              padding={isMobile ? 1 : 5}
               alignItems={isMobile ? "center" : "start"}
               justifyContent="center"
               height="100%"
@@ -96,7 +98,7 @@ const Contact = () => {
                   fontWeight: 400,
                   textTransform: "none",
                   boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 16 : 20,
+                  fontSize: isMobile ? 14 : 20,
                   transition: "all .3s ease",
 
                   "&:hover": {
@@ -121,7 +123,7 @@ const Contact = () => {
                   fontWeight: 400,
                   textTransform: "none",
                   boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 16 : 20,
+                  fontSize: isMobile ? 14 : 20,
                   transition: "all .3s ease",
 
                   "&:hover": {
@@ -149,7 +151,7 @@ const Contact = () => {
                   fontWeight: 400,
                   textTransform: "none",
                   boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 16 : 20,
+                  fontSize: isMobile ? 14 : 20,
                   transition: "all .3s ease",
 
                   "&:hover": {

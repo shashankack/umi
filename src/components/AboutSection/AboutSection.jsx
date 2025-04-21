@@ -4,7 +4,6 @@ import {
   Typography,
   useTheme,
   Collapse,
-  Button,
   useMediaQuery,
   IconButton,
 } from "@mui/material";
