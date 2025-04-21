@@ -180,7 +180,7 @@ const AboutSection = () => {
           ))}
         </Grid>
       </Box>
-      <Box width={"80%"} margin="0 auto" position="relative">
+      <Box width={isMobile ? "95%" : "80%"} margin="0 auto" position="relative">
         <Box className="about-text" mt={-5} mb={20}>
           <Typography
             variant="h2"

@@ -65,7 +65,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.7rem" : "1.1rem",
+          fontSize: isMobile ? "0.7rem" : "1rem",
           mb: 2,
         }}
       >
@@ -89,7 +89,8 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.7rem" : "1.1rem",
+          fontSize: isMobile ? "0.7rem" : "1rem",
+          mt: 2,
         }}
       >
         {li.textContent}
@@ -104,18 +105,13 @@ const ProductsInternal = () => {
     const doc = parser.parseFromString(product.descriptionHtml, "text/html");
     const attributes = doc.querySelectorAll("ul.highlighted-attributes li");
 
-    console.log(
-      "Parsed highlighted attributes:",
-      Array.from(attributes).map((li) => li.textContent)
-    );
     return Array.from(attributes).map((li, i) => (
       <Box key={i} mb={2} gap={2}>
         <Typography
           sx={{
             color: theme.colors.pink,
             backgroundColor: theme.colors.beige,
-            fontSize: isMobile ? "0.7rem" : "1.4rem",
-
+            fontSize: isMobile ? "0.7rem" : "1rem",
             p: `10px 20px`,
             borderRadius: 3,
             boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
@@ -205,12 +201,11 @@ const ProductsInternal = () => {
         sx={{
           backgroundColor: theme.colors.green,
           borderRadius: 6,
-          p: 4,
-          mt: { xs: 6, md: 12 },
+          p: isMobile ? 1 : 4,
+          mt: isMobile ? 15 : 10,
         }}
       >
         <Grid container spacing={4}>
-          {/* Left Section - Image + Thumbnails */}
           <Grid
             size={{
               xs: 12,
@@ -231,16 +226,17 @@ const ProductsInternal = () => {
               sx={{
                 background: theme.colors.beige,
                 width: "100%",
-                p: 4,
+                p: 2,
                 borderRadius: 4,
-                boxShadow: `3px 12px 0px -3px ${theme.colors.pink};`,
+                boxShadow: `3px 3px 0px 0px ${theme.colors.pink};`,
               }}
             >
               <Box
                 component="img"
                 src={selectedImage}
                 sx={{
-                  height: isMobile ? "300px" : "450px",
+                  height: "100%",
+                  width: "100%",
                   objectFit: "cover",
                   borderRadius: 2,
                 }}
@@ -271,7 +267,6 @@ const ProductsInternal = () => {
                       onClick={() => handleThumbnailClick(image.node.url)}
                       sx={{
                         width: "100%",
-                        height: "100%",
                         objectFit: "contain",
                         borderRadius: 1,
                         cursor: "pointer",
@@ -287,7 +282,6 @@ const ProductsInternal = () => {
             </Box>
           </Grid>
 
-          {/* Right Section - Details */}
           <Grid
             size={{
               xs: 12,
@@ -298,15 +292,16 @@ const ProductsInternal = () => {
             <Box
               sx={{ color: theme.colors.beige }}
               height={"100%"}
-              justifyContent={"space-between"}
+              justifyContent={"start"}
+              gap={2}
               alignItems={"start"}
               display={"flex"}
               flexDirection={"column"}
+              p={1}
             >
               <Box>
                 <Typography
-                  fontSize={isMobile ? "1.7rem" : "2.5rem"}
-                  gutterBottom
+                  fontSize={isMobile ? "2rem" : "2.5rem"}
                   sx={{
                     fontFamily: "Genty",
                     fontWeight: 200,
@@ -346,7 +341,7 @@ const ProductsInternal = () => {
                     <Typography
                       variant="h5"
                       sx={{
-                        fontSize: isMobile ? "0.7rem" : "1.4rem",
+                        fontSize: isMobile ? "0.7rem" : "1.15rem",
                         backgroundColor: theme.colors.beige,
                         color: theme.colors.pink,
                         borderRadius: 2,
@@ -383,7 +378,7 @@ const ProductsInternal = () => {
                     onChange={handleQuantityChange}
                     size="small"
                     sx={{
-                      fontSize: isMobile ? "0.7rem" : "1.4rem",
+                      fontSize: isMobile ? "0.7rem" : "1rem",
                       padding: "5px 20px",
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
@@ -413,7 +408,7 @@ const ProductsInternal = () => {
                       fontFamily: theme.fonts.text,
                       fontWeight: 400,
                       textAlign: "justify",
-                      fontSize: isMobile ? "0.7rem" : "1.4rem",
+                      fontSize: isMobile ? "0.7rem" : "1rem",
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
                       boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
@@ -435,7 +430,6 @@ const ProductsInternal = () => {
         </Grid>
       </Box>
 
-      {/* Bottom Section - SVG + Extra */}
       {parsedProductProfile.left.length > 0 &&
         parsedTastingNotes.left.length > 0 && (
           <Grid
@@ -445,6 +439,7 @@ const ProductsInternal = () => {
             alignItems="start"
             mt={10}
             height={"100%"}
+            overflow={"hidden"}
           >
             {/* Product Profile */}
             <Grid
@@ -472,10 +467,11 @@ const ProductsInternal = () => {
               {/* Table Grid */}
               <Grid
                 width={"100%"}
-                height="100%"
+                height={550}
                 position="relative"
                 display={"flex"}
-                justifyContent="start"
+                justifyContent="center"
+                alignItems={"center"}
                 border={`4px solid ${theme.colors.pink}`}
                 borderRadius={isMobile ? 4 : 8}
                 gap={2}
@@ -498,6 +494,7 @@ const ProductsInternal = () => {
                       ? "10px 0 0 10px"
                       : "28px 0 28px 28px",
                     width: "100%",
+                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
                   }}
@@ -505,6 +502,7 @@ const ProductsInternal = () => {
                   <table
                     style={{
                       width: "100%",
+                      height: "100%",
                       borderSpacing: "0",
                       borderCollapse: "collapse",
                     }}
@@ -518,7 +516,7 @@ const ProductsInternal = () => {
                               backgroundColor: theme.colors.green,
                               color: theme.colors.beige,
                               fontWeight: 500,
-                              fontSize: isMobile ? "0.8rem" : "1.3rem",
+                              fontSize: isMobile ? "0.8rem" : "1rem",
                               textAlign: "left",
                             }}
                           >
@@ -526,11 +524,11 @@ const ProductsInternal = () => {
                           </td>
                           <td
                             style={{
-                              padding: "8px 20px",
+                              padding: "8px 60px 8px 10px",
                               backgroundColor: theme.colors.beige,
                               color: theme.colors.pink,
                               fontWeight: 300,
-                              fontSize: isMobile ? "0.8rem" : "1.3rem",
+                              fontSize: isMobile ? "0.8rem" : "1rem",
                               textAlign: "left",
                             }}
                           >
@@ -573,7 +571,7 @@ const ProductsInternal = () => {
                 alignItems={"center"}
                 flexDirection={"column"}
                 width="100%"
-                height="550px"
+                height={550}
                 backgroundColor={theme.colors.green}
               >
                 <Box
