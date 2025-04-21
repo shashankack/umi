@@ -1,5 +1,6 @@
 .hero-section {
   width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -233,6 +234,8 @@
   }
 
   @media screen and (max-width: 500px) {
+    height: 100vh;
+
     .leaf1 {
       width: 120px;
     }
