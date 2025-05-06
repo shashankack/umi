@@ -126,6 +126,79 @@ export async function addToCart(checkoutId, variantId, quantity) {
   return json.data.checkoutLineItemsAdd.checkout;
 }
 
+export async function removeFromCart(checkoutId, lineItemIds) {
+  const mutation = `
+    mutation {
+      checkoutLineItemsRemove(checkoutId: "${checkoutId}", lineItemIds: ${JSON.stringify(
+    lineItemIds
+  )}) {
+        checkout {
+          id
+          lineItems(first: 5) {
+            edges {
+              node {
+                id
+                title
+                quantity
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": STOREFRONT_ACCESS_TOKEN,
+    },
+    body: JSON.stringify({ query: mutation }),
+  });
+
+  const json = await res.json();
+  return json.data.checkoutLineItemsRemove.checkout;
+}
+
+export async function updateCartItemQuantity(checkoutId, lineItemId, quantity) {
+  const mutation = `
+    mutation {
+      checkoutLineItemsUpdate(checkoutId: "${checkoutId}", lineItems: [
+        {
+          id: "${lineItemId}"
+          quantity: ${quantity}
+        }
+      ]) {
+        checkout {
+          id
+          lineItems(first: 5) {
+            edges {
+              node {
+                id
+                title
+                quantity
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": STOREFRONT_ACCESS_TOKEN,
+    },
+    body: JSON.stringify({ query: mutation }),
+  });
+
+  const json = await res.json();
+  return json.data.checkoutLineItemsUpdate.checkout;
+}
+
 export async function getCheckoutDetails(checkoutId) {
   const query = `
     query {
@@ -161,4 +234,42 @@ export async function getCheckoutDetails(checkoutId) {
 
   const json = await res.json();
   return json.data.checkout;
+}
+
+export async function searchProducts(keyword) {
+  const query = `
+    query {
+      products(first: 10, query: "title:*${keyword}*") {
+        edges {
+          node {
+            id
+            title
+            images(first: 1) {
+              edges {
+                node {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Shopify-Storefront-Access-Token": STOREFRONT_ACCESS_TOKEN,
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  const json = await res.json();
+  return json.data.products.edges.map((edge) => ({
+    id: edge.node.id.split("/").pop(),
+    title: edge.node.title,
+    image: edge.node.images.edges[0]?.node.url || null,
+  }));
 }

@@ -2,23 +2,65 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import beigeLogo from "../../assets/images/icons/beige_logo.png";
 import pinkLogo from "../../assets/images/icons/pink_logo.png";
-import { Box, Stack, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Input,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
-import { HiShoppingCart } from "react-icons/hi";
-import { FaSearch } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import { FaSearch, FaUser } from "react-icons/fa";
+import { searchProducts } from "../../utils/shopify";
 
 const TestNavbar = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  const theme = useTheme();
+  const { navbarTheme } = useNavbarTheme();
+
+  const logo = navbarTheme === "pink" ? pinkLogo : beigeLogo;
+
   const logoRef = useRef(null);
   const leftLinksRef = useRef(null);
   const rightLinksRef = useRef(null);
   const prevScrollY = useRef(window.scrollY);
   const navVisible = useRef(true);
-  const [isVisible, setIsVisible] = useState(true);
-  const theme = useTheme();
-  const { navbarTheme } = useNavbarTheme();
-  const logo = navbarTheme === "pink" ? pinkLogo : beigeLogo;
+
+  const navLinkStyles = {
+    "& a": {
+      padding: "2px 15px",
+      borderRadius: "5px",
+      boxShadow: `3px 3px 0 0 ${theme.colors.green}`,
+      backgroundColor:
+        navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
+      textDecoration: "none",
+      color: navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
+      transition: "color 0.3s ease",
+      "&:hover": {
+        color: theme.colors.green,
+      },
+    },
+  };
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchValue.length > 1) {
+        searchProducts(searchValue).then(setFilteredProducts);
+      } else {
+        setFilteredProducts([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchValue]);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -189,22 +231,7 @@ const TestNavbar = () => {
           fontFamily="Stolzl"
           color="#FDF8CE"
           justifyContent={"end"}
-          sx={{
-            "& a": {
-              padding: "2px 15px",
-              borderRadius: "5px",
-              boxShadow: `3px 3px 0 0 ${theme.colors.green}`,
-              backgroundColor:
-                navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
-              textDecoration: "none",
-              color:
-                navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
-              transition: "color 0.3s ease",
-              "&:hover": {
-                color: theme.colors.green,
-              },
-            },
-          }}
+          sx={navLinkStyles}
         >
           <a href="/">
             <FaUser />
@@ -239,28 +266,147 @@ const TestNavbar = () => {
           fontFamily="Stolzl"
           color="#FDF8CE"
           justifyContent={"start"}
-          sx={{
-            "& a": {
-              textDecoration: "none",
-              padding: "2px 15px",
-              borderRadius: "5px",
-              boxShadow: `3px 3px 0 0 ${theme.colors.green}`,
-              backgroundColor:
-                navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
-              color:
-                navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
-              transition: "color 0.3s ease",
-              "&:hover": {
-                color: theme.colors.green,
-              },
-            },
-          }}
+          sx={navLinkStyles}
         >
           <a href="/contact">contact</a>
           <a href="/about">about</a>
-          <a href="/shop">
-            <HiShoppingCart />
-          </a>
+          <Box position="relative">
+            <IconButton
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              sx={{
+                padding: "2px 15px",
+                borderRadius: "5px",
+                boxShadow: `3px 3px 0 0 ${theme.colors.green}`,
+                backgroundColor:
+                  navbarTheme === "pink"
+                    ? theme.colors.pink
+                    : theme.colors.beige,
+                textDecoration: "none",
+                color:
+                  navbarTheme === "pink"
+                    ? theme.colors.beige
+                    : theme.colors.pink,
+                transition: "color 0.3s ease",
+                "&:hover": {
+                  color: theme.colors.green,
+                  bgcolor:
+                    navbarTheme === "pink"
+                      ? theme.colors.pink
+                      : theme.colors.beige,
+                },
+              }}
+            >
+              {isSearchOpen ? <IoClose /> : <FaSearch />}
+            </IconButton>
+            {isSearchOpen && (
+              <Box
+                sx={{
+                  transition: "all 0.3s ease",
+                  boxShadow: `3px 3px 0 0 ${theme.colors.green}`,
+                }}
+                position="absolute"
+                top={40}
+                right={0}
+                bgcolor={
+                  navbarTheme === "pink"
+                    ? theme.colors.pink
+                    : theme.colors.beige
+                }
+                p={2}
+                borderRadius={2}
+                boxShadow={3}
+                width={300}
+              >
+                <Input
+                  placeholder="Search products..."
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  fullWidth
+                  disableUnderline
+                  sx={{
+                    backgroundColor:
+                      navbarTheme === "pink"
+                        ? theme.colors.pink
+                        : theme.colors.beige,
+                    color:
+                      navbarTheme === "pink"
+                        ? theme.colors.beige
+                        : theme.colors.pink,
+                    borderRadius: 2,
+                    border: `2px solid ${theme.colors.green}`,
+                    padding: "0 12px",
+                    "&.Mui-focused": {
+                      borderColor:
+                        navbarTheme === "pink"
+                          ? theme.colors.beige
+                          : theme.colors.pink,
+                    },
+                  }}
+                />
+                <Box mt={1} maxHeight={200} overflow="auto">
+                  {filteredProducts.map((product) => (
+                    <Box>
+                      <Box
+                        key={product.id}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        py={0.5}
+                        sx={{
+                          width: "100%",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                        }}
+                        onClick={() =>
+                          (window.location.href = `/product/${product.id}`)
+                        }
+                      >
+                        {product.image && (
+                          <Box
+                            bgcolor={theme.colors.beige}
+                            borderRadius={2}
+                          >
+                            <img
+                              src={product.image}
+                              alt={product.title}
+                              width={50}
+                              height={50}
+                              style={{ borderRadius: 4, objectFit: "cover" }}
+                            />
+                          </Box>
+                        )}
+                        <Typography
+                          fontSize="12px"
+                          fontFamily={"Stolzl"}
+                          color={
+                            navbarTheme === "pink"
+                              ? theme.colors.beige
+                              : theme.colors.pink
+                          }
+                          sx={{
+                            transition: "all 0.3s ease",
+
+                            "&:hover": {
+                              letterSpacing: "0.5px",
+                            },
+                          }}
+                        >
+                          {product.title}
+                        </Typography>
+                      </Box>
+                      <Divider
+                        sx={{
+                          width: "100%",
+                          border: `1.2px solid ${theme.colors.green}`,
+                          borderRadius: 2,
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
         </Stack>
       </Box>
     </Box>
