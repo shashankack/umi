@@ -161,7 +161,13 @@ const TutorialSection = () => {
           gap: 2,
         }}
       >
-        <Box sx={{ flex: 1, height: "6px", backgroundColor: "#fdf8ce" }}></Box>
+        <Box
+          sx={{
+            flex: 1,
+            height: isMobile ? "3px" : "6px",
+            backgroundColor: "#fdf8ce",
+          }}
+        ></Box>
         <Typography
           sx={{
             whiteSpace: "nowrap",
@@ -173,13 +179,19 @@ const TutorialSection = () => {
         >
           video tutorial
         </Typography>
-        <Box sx={{ flex: 1, height: "6px", backgroundColor: "#fdf8ce" }}></Box>
+        <Box
+          sx={{
+            flex: 1,
+            height: isMobile ? "3px" : "6px",
+            backgroundColor: "#fdf8ce",
+          }}
+        ></Box>
       </Box>
 
       <Box
         component="iframe"
         width={isMobile ? "100%" : "60%"}
-        height={isMobile ? "300px" : "500px"}
+        height={isMobile ? "250px" : "500px"}
         src="https://www.youtube.com/embed/13uVij4DsZk?si=OC0gX3Ow6-t2ra4z"
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

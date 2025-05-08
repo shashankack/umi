@@ -362,10 +362,7 @@ const TestNavbar = () => {
                         }
                       >
                         {product.image && (
-                          <Box
-                            bgcolor={theme.colors.beige}
-                            borderRadius={2}
-                          >
+                          <Box bgcolor={theme.colors.beige} borderRadius={2}>
                             <img
                               src={product.image}
                               alt={product.title}
