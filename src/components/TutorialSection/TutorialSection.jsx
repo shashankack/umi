@@ -192,7 +192,7 @@ const TutorialSection = () => {
         component="iframe"
         width={isMobile ? "100%" : "60%"}
         height={isMobile ? "250px" : "500px"}
-        src="https://www.youtube.com/embed/13uVij4DsZk?si=OC0gX3Ow6-t2ra4z"
+        src="https://www.youtube-nocookie.com/embed/13uVij4DsZk?si=OC0gX3Ow6-t2ra4z"
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"

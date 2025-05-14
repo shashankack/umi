@@ -65,7 +65,7 @@ const Contact = () => {
             color={theme.colors.pink}
             fontWeight={400}
             fontSize={isMobile ? 20 : 30}
-            mt={isMobile ? 0 : 6}
+            mt={isMobile ? 10 : 6}
             width={"80%"}
             textAlign="center"
           >

@@ -6,6 +6,8 @@ import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
 import { FaShoppingCart } from "react-icons/fa";
 
+import { useCart } from "../../context/CartContext";
+
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -26,11 +28,9 @@ const ProductsSection = () => {
   const svgRef = useRef(null);
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
   const [products, setProducts] = useState([]);
-  const { setNavbarTheme } = useNavbarTheme();
+  const { addItem } = useCart();
 
   useEffect(() => {
-    
-
     const loadProducts = async () => {
       try {
         const data = await fetchShopifyProducts();
@@ -143,7 +143,7 @@ const ProductsSection = () => {
           const imageUrl = product.images.edges[0]?.node.url;
           const price = product.variants.edges[0]?.node.price.amount;
           const currency = product.variants.edges[0]?.node.price.currencyCode;
-
+          const variantId = product.variants.edges[0]?.node.id;
           const productId = product.id.split("/").pop();
 
           return (
@@ -176,7 +176,11 @@ const ProductsSection = () => {
                 >
                   <div className="price">₹ {price}</div>
 
-                  <div className="cart-icon">
+                  <div
+                    className="cart-icon"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => addItem(variantId, 1)}
+                  >
                     <FaShoppingCart size={20} />
                   </div>
                 </div>

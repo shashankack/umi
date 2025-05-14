@@ -9,6 +9,8 @@ import Shop from "./pages/Shop/Shop";
 import { useState } from "react";
 import MobileNavbar from "./components/Navbar/MobileNavbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
+import { CartProvider } from "./context/CartContext";
+import CartUI from "./components/CartUi";
 
 const theme = createTheme({
   colors: {
@@ -30,16 +32,22 @@ const App = () => {
   return (
     <NavbarThemeProvider>
       <ThemeProvider theme={theme}>
-        <Router basename="/" window={window}>
-          {isMobile ? <MobileNavbar /> : <Navbar />}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/product/:productId" element={<ProductsInternal />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/shop" element={<Shop />} />
-          </Routes>
-        </Router>
+        <CartProvider>
+          <Router basename="/" window={window}>
+            {isMobile ? <MobileNavbar /> : <Navbar />}
+            <CartUI />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route
+                path="/product/:productId"
+                element={<ProductsInternal />}
+              />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/shop" element={<Shop />} />
+            </Routes>
+          </Router>
+        </CartProvider>
       </ThemeProvider>
     </NavbarThemeProvider>
   );
