@@ -1,4 +1,12 @@
-import { Box, Typography, useTheme, useMediaQuery, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Stack,
+  Grid,
+  Divider,
+} from "@mui/material";
 
 import step1 from "../../assets/images/vectors/about/step1.png";
 import step2 from "../../assets/images/vectors/about/step2.png";
@@ -10,86 +18,47 @@ import neko from "../../assets/images/vectors/neko/cup.png";
 const TutorialSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const stepsImages = [
+
+  const stepsData = [
     {
       image: step1,
-      text: "Sift 1-2 tsp of umi matcha into a bowl.",
+      text: "Sift 1-2 tsp of <br />umi matcha into <br />a bowl.",
     },
     {
       image: step2,
-      text: "Add 80ml of warm water and whisk until smooth.",
+      text: "Add 80ml of warm <br />water and whisk <br />until smooth.",
     },
     {
       image: step3,
-      text: "Pour milk of your choice.",
+      text: "Pour milk of <br />your choice.",
     },
     {
       image: step4,
-      text: "Add sweetner of your choice.",
+      text: "Add sweetner of <br />your choice.",
     },
   ];
 
   return (
-    <Box
-      sx={{
-        backgroundColor: theme.colors.pink,
-        py: { sm: 6, md: 10 },
-        px: { sm: 2, md: 4 },
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: { sm: 6, md: 12 },
-      }}
+    <Stack
+      overflow="hidden"
+      width="100%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      bgcolor={theme.colors.pink}
+      gap={isMobile ? 4 : 6}
     >
-      <Box
-        sx={{
-          backgroundColor: theme.colors.beige,
-          color: theme.colors.pink,
-          borderRadius: "30px",
-          boxShadow: isMobile
-            ? "3px 4px 0px 0px #b5d782"
-            : "6px 7px 0px 0px #b5d782",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          px: 5,
-          py: 0,
-          mt: { xs: 5, sm: 5, md: 5 },
-        }}
+      <Typography
+        fontFamily={theme.fonts.title}
+        variant="h2"
+        color={theme.colors.beige}
+        fontSize={isMobile ? "8vw" : "4vw"}
+        mt={10}
       >
-        <Typography
-          sx={{
-            fontFamily: "Genty",
-            fontSize: isMobile
-              ? "1.5rem"
-              : isTablet
-              ? "2rem"
-              : isSmallDesktop
-              ? "2.5rem"
-              : isLargeDesktop
-              ? "2.6rem"
-              : "4rem",
+        Brew it the Umi way
+      </Typography>
 
-            mt: isMobile ? "10px" : "15px",
-            fontWeight: 400,
-          }}
-        >
-          Brew it the Umi way
-        </Typography>
-      </Box>
-
-      <Grid
-        maxWidth={isMobile ? "120px" : "200px"}
-        width="100%"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        marginTop={isMobile ? 5 : -5}
-        marginBottom={isMobile ? -4 : -15}
-      >
+      <Box mx="auto" height={isMobile ? 150 : 300}>
         <Box
           component="img"
           src={neko}
@@ -99,112 +68,98 @@ const TutorialSection = () => {
             objectFit: "contain",
           }}
         />
-      </Grid>
-      <Grid container spacing={isMobile ? 1 : 5} p={isMobile ? 1 : 5}>
-        {stepsImages.map((step, index) => (
-          <Grid
-            display="flex"
-            justifyContent="center"
+      </Box>
+      <Stack
+        width="100%"
+        justifyContent="space-around"
+        direction={isMobile ? "column" : "row"}
+        gap={isMobile ? 5 : 0}
+      >
+        {stepsData.map((step, index) => (
+          <Stack
+            key={index}
+            direction={!isMobile ? "column" : "row"}
             alignItems="center"
-            key={`step-${index}`}
-            size={{
-              xs: 6,
-              sm: 6,
-              md: 3,
-            }}
+            justifyContent={isMobile ? "center" : "start"}
+            gap={isMobile ? 0 : 2}
           >
-            <Box
-              sx={{
-                scale: isMobile ? 0.6 : 0.8,
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 3,
-                textAlign: "center",
-                px: { sm: 0, md: 2 },
-                py: { sm: 0, md: 2 },
-              }}
-            >
+            <Box height={isMobile ? 70 : 150} width={isMobile ? "30%" : "auto"}>
               <Box
                 component="img"
                 src={step.image}
-                alt={`step-${index + 1}`}
                 sx={{
-                  width: { xs: 130, sm: 150, md: 200 },
-                  height: { xs: 130, sm: 150, md: 200 },
+                  width: "100%",
+                  height: "100%",
                   objectFit: "contain",
                 }}
               />
-              <Typography
-                sx={{
-                  fontSize: { sm: "1.2rem", md: "1.3rem" },
-                  fontFamily: "Stolzl",
-                  fontWeight: 200,
-                  color: theme.colors.beige,
-                }}
-              >
-                {step.text}
-              </Typography>
             </Box>
-          </Grid>
+            <Typography
+              width={isMobile ? "40%" : "100%"}
+              textAlign={isMobile ? "start" : "center"}
+              fontSize={isMobile ? "4vw" : "1vw"}
+              fontFamily={theme.fonts.text}
+              color={theme.colors.beige}
+              dangerouslySetInnerHTML={{ __html: step.text }}
+            />
+          </Stack>
         ))}
-      </Grid>
+      </Stack>
 
       <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 2,
-        }}
+        width="100%"
+        my={10}
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
       >
-        <Box
+        <Divider
+          width="100%"
           sx={{
-            flex: 1,
-            height: isMobile ? "3px" : "6px",
-            backgroundColor: "#fdf8ce",
+            border: `2px solid ${theme.colors.beige}`,
           }}
-        ></Box>
+        />
         <Typography
-          sx={{
-            whiteSpace: "nowrap",
-            fontFamily: "Stolzl",
-            fontWeight: 200,
-            fontSize: { sm: "1.6rem", md: "3rem" },
-            color: "#fdf8ce",
-          }}
+          variant="h4"
+          whiteSpace="nowrap"
+          mx={5}
+          fontFamily={theme.fonts.text}
+          color={theme.colors.beige}
         >
           video tutorial
         </Typography>
-        <Box
+        <Divider
+          width="100%"
           sx={{
-            flex: 1,
-            height: isMobile ? "3px" : "6px",
-            backgroundColor: "#fdf8ce",
+            border: `2px solid ${theme.colors.beige}`,
           }}
-        ></Box>
+        />
       </Box>
-
       <Box
-        component="iframe"
-        width={isMobile ? "100%" : "60%"}
-        height={isMobile ? "250px" : "500px"}
-        src="https://www.youtube-nocookie.com/embed/13uVij4DsZk?si=OC0gX3Ow6-t2ra4z"
-        title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-        p={2}
-        sx={{
-          borderRadius: "20px",
-          bosmhadow: "-5px 10px 5px 1px rgba(0, 0, 0, 0.1)",
-          border: "none",
-        }}
-      />
-    </Box>
+        mb={10}
+        width={isMobile ? "97%" : "80vw"}
+        height={isMobile ? " 40vh" : "60vh"}
+        display="flex"
+        justifyContent="center"
+        overflow="hidden"
+      >
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube-nocookie.com/embed/13uVij4DsZk?si=04sgpl12Syb3EGRR"
+          title="YouTube video player"
+          frameborder="none"
+          style={{
+            border: isMobile ? "none" : `4px solid ${theme.colors.beige}`,
+            borderRadius: 25,
+          }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </Box>
+    </Stack>
   );
 };
 

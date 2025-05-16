@@ -23,6 +23,7 @@ const theme = createTheme({
   fonts: {
     text: "Stolzl",
     heading: "Gliker",
+    title: "Genty",
   },
 });
 
