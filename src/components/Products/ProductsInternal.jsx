@@ -36,7 +36,6 @@ const ProductsInternal = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
   const handleThumbnailClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -147,7 +146,6 @@ const ProductsInternal = () => {
     return { left, right };
   }, [product?.descriptionHtml]);
 
-  // Memoizing the parsed tasting-notes table (for right grid)
   const parsedTastingNotes = useMemo(() => {
     if (!product?.descriptionHtml) return { left: [], right: [] };
 

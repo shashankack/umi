@@ -149,14 +149,13 @@ const TutorialSection = () => {
           height="100%"
           src="https://www.youtube-nocookie.com/embed/13uVij4DsZk?si=04sgpl12Syb3EGRR"
           title="YouTube video player"
-          frameborder="none"
           style={{
             border: isMobile ? "none" : `4px solid ${theme.colors.beige}`,
             borderRadius: 25,
           }}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
         ></iframe>
       </Box>
     </Stack>

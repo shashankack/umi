@@ -91,23 +91,32 @@ export async function createCart() {
 
 export async function addToCart(cartId, variantId, quantity) {
   const query = `
-    mutation AddToCart($cartId: ID!, $variantId: ID!, $quantity: Int!) {
-      cartLinesAdd(cartId: $cartId, lines: [
-        {
-          quantity: $quantity,
-          merchandiseId: $variantId
-        }
-      ]) {
-        cart {
-          id
-          lines(first: 10) {
-            edges {
-              node {
-                id
-                quantity
-                merchandise {
-                  ... on ProductVariant {
-                    id
+  mutation AddToCart($cartId: ID!, $variantId: ID!, $quantity: Int!) {
+    cartLinesAdd(cartId: $cartId, lines: [
+      {
+        quantity: $quantity,
+        merchandiseId: $variantId
+      }
+    ]) {
+      cart {
+        id
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              quantity
+              cost {
+                subtotalAmount {
+                  amount
+                  currencyCode
+                }
+              }
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  product {
+                    title
                   }
                 }
               }
@@ -116,7 +125,9 @@ export async function addToCart(cartId, variantId, quantity) {
         }
       }
     }
-  `;
+  }
+`;
+
   const variables = { cartId, variantId, quantity };
   const data = await shopifyFetch(query, variables);
   return data.cartLinesAdd.cart;

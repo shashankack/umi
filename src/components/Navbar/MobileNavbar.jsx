@@ -1,3 +1,7 @@
+import gsap from "gsap";
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
+import { searchProducts, fetchShopifyProducts } from "../../utils/shopify";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import {
   AppBar,
@@ -12,27 +16,30 @@ import {
   useTheme,
   Input,
   Divider,
+  useMediaQuery,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 
 import { FaSearch, FaUser } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-
+import navbarBg from "../../assets/images/navbar_bg.png";
 import beigeMenu from "../../assets/images/icons/beige_menu.png";
 import pinkMenu from "../../assets/images/icons/pink_menu.png";
-
 import CloseIcon from "../../assets/images/icons/close_icon.png";
 import neko from "../../assets/images/vectors/neko/neko.gif";
-
 import beigeLogo from "../../assets/images/icons/beige_logo.png";
 import pinkLogo from "../../assets/images/icons/pink_logo.png";
-
-import gsap from "gsap";
-import { useNavbarTheme } from "../../context/NavbarThemeContext";
-import { searchProducts } from "../../utils/shopify";
 
 const MobileNavbar = () => {
   const theme = useTheme();
   const { navbarTheme } = useNavbarTheme();
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [variantMenuOpen, setVariantMenuOpen] = useState(false);
+  const [variants, setVariants] = useState([]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -46,7 +53,23 @@ const MobileNavbar = () => {
 
   const logo = navbarTheme === "pink" ? pinkLogo : beigeLogo;
 
-  console.log("Navbar theme:", navbarTheme);
+  const navLinks = [
+    { label: "Home", to: "/" },
+    // { label: "Shop", to: "/shop" },
+    { label: "About", to: "/about" },
+    { label: "Contact", to: "/contact" },
+    { label: "Brewing", to: "/?scrollTo=brewing" },
+    { label: "Our Matcha", to: "/?scrollTo=matcha" },
+  ];
+
+  const handleVariantMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setVariantMenuOpen(true);
+  };
+  const handleVariantMenuClose = () => {
+    setAnchorEl(null);
+    setVariantMenuOpen(false);
+  };
 
   const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
 
@@ -73,6 +96,18 @@ const MobileNavbar = () => {
   }, [searchValue]);
 
   useEffect(() => {
+    const fetchVariants = async () => {
+      const data = await fetchShopifyProducts();
+      const list = data.flatMap((product) =>
+        product.variants.edges.map((v) => ({
+          title: product.title,
+          variantId: v.node.id,
+          productType: product.productType?.toLowerCase() || "matcha", // fallback
+        }))
+      );
+      setVariants(list);
+    };
+
     const handleScroll = () => {
       const currentScroll = window.scrollY;
 
@@ -94,6 +129,7 @@ const MobileNavbar = () => {
       }
     };
 
+    fetchVariants();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -132,11 +168,16 @@ const MobileNavbar = () => {
             component="img"
             src={logo}
             alt="Logo"
-            style={{
-              height: 70,
-              transform: isMenuOpen ? "scale(0.5)" : "scale(1)",
+            sx={{
+              height: isMobile ? 70 : 100,
+              transform: isMenuOpen ? "scale(0)" : "scale(1)",
               filter: isMenuOpen ? "brightness(.5)" : "none",
-              transition: "all .5s ease",
+              transition: "all .3s ease",
+
+              "&:hover": {
+                cursor: "pointer",
+                transform: "scale(1.05)",
+              },
             }}
             onClick={() => (window.location.href = "/")}
           />
@@ -283,12 +324,27 @@ const MobileNavbar = () => {
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="left" open={isMenuOpen} onClose={handleMenuToggle}>
+      <Drawer
+        anchor="left"
+        open={isMenuOpen}
+        onClose={handleMenuToggle}
+        sx={{
+          "& .MuiDrawer-paper": {
+            backgroundImage: `url(${navbarBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            width: isMobile ? "100vw" : "30vw",
+            height: "101vh",
+            borderRadius: 0,
+            boxShadow: "none",
+          },
+        }}
+      >
         <Box
           sx={{
-            width: "100vw",
+            width: isMobile ? "100vw" : "30vw",
             height: "100vh",
-            backgroundColor: theme.colors.green,
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
@@ -313,14 +369,14 @@ const MobileNavbar = () => {
               ml={-2}
             >
               <IconButton onClick={handleMenuToggle} size="large">
-                <img src={CloseIcon} alt="Close" style={{ height: 30 }} />
+                <img src={CloseIcon} alt="Close" style={{ height: 35 }} />
               </IconButton>
             </Box>
             <Box
               component="img"
               src={beigeLogo}
               sx={{
-                height: 70,
+                height: 100,
               }}
             />
             <Box
@@ -340,25 +396,23 @@ const MobileNavbar = () => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              textShadow: `1.698px 1.698px 0px #F6A09E`,
             }}
           >
-            {[
-              { label: "Home", to: "/" },
-              { label: "Shop", to: "/shop" },
-              { label: "Contact", to: "/contact" },
-              { label: "About", to: "/about" },
-              { label: "Brewing", to: "/brewing" },
-            ].map(({ label, to }) => (
+            {navLinks.map(({ label, to }) => (
               <ListItem
                 key={label}
                 disableGutters
-                onClick={handleMenuToggle}
-                component={"a"}
-                href={to}
+                onClick={() => {
+                  setIsMenuOpen(false); // close drawer first
+
+                  setTimeout(() => {
+                    navigate(to);
+                  }, 300); // delay to allow close animation
+                }}
                 sx={{
                   textDecoration: "none",
                   justifyContent: "center",
+                  cursor: "pointer",
                 }}
               >
                 <ListItemText
@@ -384,7 +438,7 @@ const MobileNavbar = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              width: 200,
+              width: 140,
             }}
           >
             <img

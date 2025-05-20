@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
   const [lineItems, setLineItems] = useState([]);
   const [checkoutUrl, setCheckoutUrl] = useState("#");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Optional: error handling
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const initCart = async () => {
@@ -29,7 +29,7 @@ export const CartProvider = ({ children }) => {
           setCartId(cart.id);
           setLineItems(cart.lines.edges.map((edge) => edge.node));
           setCheckoutUrl(cart.checkoutUrl);
-          console.log("Loaded cart from sessionStorage", cart);
+          // console.log("Loaded cart from sessionStorage", cart);
         } else {
           const cart = await createCart();
           if (!cart || !cart.id) throw new Error("Cart creation failed");
@@ -52,6 +52,29 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const addItem = async (variantId, quantity = 1) => {
+    // Optimistic update
+    setLineItems((prev) => {
+      const existingItem = prev.find(
+        (item) => item.merchandise.id === variantId
+      );
+      if (existingItem) {
+        return prev.map((item) =>
+          item.merchandise.id === variantId
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+        return [
+          ...prev,
+          {
+            id: `temp-${variantId}`, // Temporary ID until API returns real one
+            quantity,
+            merchandise: { id: variantId },
+          },
+        ];
+      }
+    });
+
     try {
       const cart = await addToCart(cartId, variantId, quantity);
       if (cart?.lines?.edges) {
@@ -64,6 +87,9 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeItem = async (lineItemId) => {
+    // Optimistic update
+    setLineItems((prev) => prev.filter((item) => item.id !== lineItemId));
+
     try {
       const cart = await removeFromCart(cartId, lineItemId);
       if (cart?.lines?.edges) {
@@ -76,6 +102,13 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = async (lineItemId, quantity) => {
+    // Optimistic update
+    setLineItems((prev) =>
+      prev.map((item) =>
+        item.id === lineItemId ? { ...item, quantity } : item
+      )
+    );
+
     try {
       const cart = await updateCartItemQuantity(cartId, lineItemId, quantity);
       if (cart?.lines?.edges) {

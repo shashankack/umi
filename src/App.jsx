@@ -11,6 +11,7 @@ import MobileNavbar from "./components/Navbar/MobileNavbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 import { CartProvider } from "./context/CartContext";
 import CartUI from "./components/CartUi";
+import Footer from "./components/Footer";
 
 const theme = createTheme({
   colors: {
@@ -35,7 +36,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CartProvider>
           <Router basename="/" window={window}>
-            {isMobile ? <MobileNavbar /> : <Navbar />}
+            <MobileNavbar />
             <CartUI />
             <Routes>
               <Route path="/" element={<Home />} />
@@ -47,6 +48,7 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/shop" element={<Shop />} />
             </Routes>
+            <Footer />
           </Router>
         </CartProvider>
       </ThemeProvider>

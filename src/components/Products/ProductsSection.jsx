@@ -2,7 +2,6 @@ import "./ProductsSection.scss";
 import { useTheme } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Autoplay } from "swiper/modules";
-import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
 import { FaShoppingCart } from "react-icons/fa";
 

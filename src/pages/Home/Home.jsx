@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import "./Home.scss";
 import { useTheme } from "@mui/material/styles";
 import HeroSection from "../../components/HeroSection/HeroSection";
@@ -13,18 +14,37 @@ const Home = () => {
   const theme = useTheme();
   const { setNavbarTheme } = useNavbarTheme();
 
+  const { search } = useLocation();
+
   const heroRef = useRef(null);
   const productsRef = useRef(null);
-  const aboutRef = useRef(null);
-  const tutorialRef = useRef(null);
+  const ourMatchaRef = useRef(null);
+  const brewingRef = useRef(null);
 
   useEffect(() => {
+    const params = new URLSearchParams(search);
+    const target = params.get("scrollTo");
+
+    if (target === "matcha") {
+      setTimeout(() => {
+        ourMatchaRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 400);
+    }
+    if (target === "brewing") {
+      setTimeout(() => {
+        brewingRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 400);
+    }
+
     const handleScroll = () => {
       const scrollMid = window.scrollY + window.innerHeight / 4.5;
 
-      if (tutorialRef.current && scrollMid >= tutorialRef.current.offsetTop) {
+      if (brewingRef.current && scrollMid >= brewingRef.current.offsetTop) {
         setNavbarTheme("beige");
-      } else if (aboutRef.current && scrollMid >= aboutRef.current.offsetTop) {
+      } else if (
+        ourMatchaRef.current &&
+        scrollMid >= ourMatchaRef.current.offsetTop
+      ) {
         setNavbarTheme("pink");
       } else if (
         productsRef.current &&
@@ -60,7 +80,7 @@ const Home = () => {
             zIndex: 100,
             bottom:
               window.innerWidth <= 400
-                ? "-9.5%"
+                ? "-9%"
                 : window.innerWidth <= 500
                 ? "-8.5%"
                 : window.innerWidth <= 1440
@@ -74,10 +94,10 @@ const Home = () => {
           <CurvedMarquee />
         </div>
       </div>
-      <div className="about-sec" ref={aboutRef}>
+      <div className="about-sec" ref={ourMatchaRef}>
         <AboutSection />
       </div>
-      <div ref={tutorialRef}>
+      <div ref={brewingRef}>
         <TutorialSection />
       </div>
     </>

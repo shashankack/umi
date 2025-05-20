@@ -7,14 +7,23 @@ import {
   Button,
   Stack,
   Divider,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
+
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+
 import { useCart } from "../context/CartContext";
+import { useNavbarTheme } from "../context/NavbarThemeContext";
 
 const CartUI = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { navbarTheme } = useNavbarTheme();
   const [open, setOpen] = useState(false);
   const { lineItems, removeItem, updateQuantity, checkoutUrl, loading } =
     useCart();
@@ -23,6 +32,12 @@ const CartUI = () => {
 
   if (loading || lineItems.length === 0) return null;
 
+  const iconStyles = {
+    fontSize: isMobile ? "4vw" : "2vw",
+    color: navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
+    transition: "all 0.3s ease",
+  };
+
   return (
     <>
       <Box
@@ -30,14 +45,29 @@ const CartUI = () => {
           position: "fixed",
           bottom: 24,
           right: 24,
-          zIndex: 1300,
-          bgcolor: "#fff",
+          zIndex: 2000,
+          bgcolor:
+            navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
           borderRadius: "50%",
-          boxShadow: 3,
+          boxShadow: `4px 4px 0px 0px ${theme.colors.green}`,
+          padding: 1,
+          transition: "all 0.3s ease",
+
+          "&:hover": {
+            transform: "scale(1.05)",
+            boxShadow:
+              navbarTheme === "pink"
+                ? `4px 4px 0px 0px ${theme.colors.beige}`
+                : `4px 4px 0px 0px ${theme.colors.pink}`,
+          },
         }}
       >
-        <IconButton onClick={toggleDrawer} size="large">
-          <ShoppingCartIcon />
+        <IconButton onClick={toggleDrawer} size="large" disableRipple>
+          {open ? (
+            <CloseIcon sx={iconStyles} />
+          ) : (
+            <ShoppingCartIcon sx={iconStyles} />
+          )}
         </IconButton>
       </Box>
 
