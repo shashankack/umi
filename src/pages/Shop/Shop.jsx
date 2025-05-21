@@ -40,6 +40,45 @@ const Shop = () => {
 
   const features = [feature1, feature2, feature3, feature4, feature5, feature6];
 
+  const leftButtonStyles = {
+    backgroundColor: theme.colors.pink,
+    color: theme.colors.beige,
+    border: "none",
+    padding: isMobile ? "10px 30px" : "10px 60px",
+    borderRadius: "25px 0 0 25px",
+    cursor: "pointer",
+    fontFamily: "Stolzl",
+    fontSize: isMobile ? "3vw" : ".9vw",
+    whiteSpace: "nowrap",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: theme.colors.green,
+    },
+  };
+
+  const rightButtonStyles = {
+    backgroundColor: theme.colors.pink,
+    color: theme.colors.beige,
+    border: "none",
+    width: "100%",
+    padding: "10px 10px",
+    borderRadius: "0 25px 25px 0",
+    cursor: "pointer",
+    fontFamily: "Stolzl",
+  };
+
+  const titleStyles = {
+    mt: isMobile ? 4 : 7,
+    marginBottom: isMobile ? 4 : 0,
+    width: "100%",
+    textAlign: "center",
+    fontSize: isMobile ? "10vw" : "4vw",
+    fontFamily: "Genty",
+    textTransform: "capitalize",
+    color: theme.colors.pink,
+    textShadow: `2px 2px 0 ${theme.colors.green}`,
+  };
+
   useEffect(() => {
     const marquee = marqueeRef.current;
 
@@ -140,15 +179,15 @@ const Shop = () => {
           <Box
             component="svg"
             width="500"
-            height="170"
-            viewBox="0 0 500 170"
+            height="210"
+            viewBox="0 0 500 210"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               opacity="0.8"
-              d="M500 169.829C462.34 167.888 460.058 150.023 418.087 150.022C373.701 150.023 373.7 170 329.313 170C284.927 170 284.926 150.023 240.539 150.022C196.152 150.023 196.135 170 151.748 170C107.361 170 107.36 150.023 62.9736 150.022C29.3902 150.023 21.2036 161.452 0 167.018V0H500V169.829Z"
-              fill={theme.colors.green}
+              d="M500 209.789C462.34 207.392 460.058 185.321 418.087 185.321C373.701 185.321 373.7 210 329.313 210C284.927 210 284.926 185.321 240.539 185.321C196.152 185.321 196.135 210 151.748 210C107.361 210 107.36 185.321 62.9736 185.321C29.3903 185.321 21.2036 199.441 0 206.315V0H500V209.789Z"
+              fill="#B5D782"
             />
           </Box>
         ) : (
@@ -171,7 +210,7 @@ const Shop = () => {
         <Box
           sx={{
             position: "absolute",
-            bottom: 100,
+            bottom: isMobile ? 34 : 100,
             left: 0,
             width: "100vw",
             overflow: "hidden",
@@ -188,7 +227,7 @@ const Shop = () => {
               <Typography
                 key={i}
                 color={theme.colors.beige}
-                fontSize="2vw"
+                fontSize={isMobile ? "4vw" : "2vw"}
                 fontWeight={500}
                 fontFamily={theme.fonts.text}
               >
@@ -211,27 +250,7 @@ const Shop = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography
-              mt={7}
-              variant="h2"
-              width="100%"
-              textAlign="center"
-              fontSize={
-                isMobile
-                  ? "2rem"
-                  : isTablet
-                  ? "3rem"
-                  : isSmallDesktop
-                  ? "4rem"
-                  : "5rem"
-              }
-              fontFamily="Genty"
-              textTransform="capitalize"
-              color={theme.colors.pink}
-              sx={{ marginBottom: 6, textShadow: "2px 2px 0 #B5D782" }}
-            >
-              Matcha
-            </Typography>
+            <Typography sx={titleStyles}>Matcha</Typography>
 
             <Grid
               container
@@ -240,15 +259,7 @@ const Shop = () => {
               rowSpacing={isMobile ? 5 : 15}
               display="flex"
               justifyContent="space-evenly"
-              sx={{
-                scale: isMobile
-                  ? 1
-                  : isTablet
-                  ? 0.7
-                  : isSmallDesktop
-                  ? 0.8
-                  : 0.9,
-              }}
+              p={isMobile ? 0 : 12}
             >
               {categories["matcha"].map((product) => {
                 const productId = product.id.split("/").pop();
@@ -267,17 +278,17 @@ const Shop = () => {
                   >
                     <Box
                       component="h2"
-                      style={{
+                      sx={{
                         fontFamily: "Stolzl",
                         color: theme.colors.pink,
                         fontWeight: 200,
                         textAlign: "center",
-                        fontSize: isMobile ? "1.2rem" : "1.6rem",
+                        fontSize: isMobile ? "3.6vw" : "1.6vw",
                       }}
                     >
                       {product.title}
                     </Box>
-                    <Box width="60%">
+                    <Box width={isMobile ? "40vw" : "60%"}>
                       <Box
                         component="img"
                         src={product.images.edges[0]?.node.url}
@@ -288,7 +299,7 @@ const Shop = () => {
                           width: "100%",
                           height: "100%",
                           objectFit: "contain",
-                          transition: "transform 0.3s ease",
+                          transition: "all 0.3s ease",
                           cursor: "pointer",
                           "&:hover": {
                             transform: "scale(1.05)",
@@ -296,26 +307,9 @@ const Shop = () => {
                         }}
                       />
                     </Box>
-                    <ButtonGroup>
+                    <ButtonGroup sx={{ width: isMobile ? "100%" : "auto" }}>
                       <Button
-                        sx={{
-                          backgroundColor: theme.colors.green,
-                          color: theme.colors.beige,
-                          border: "none",
-                          padding: "10px 60px",
-                          borderRadius: "25px 0 0 25px",
-                          cursor: "pointer",
-                          fontFamily: "Stolzl",
-                          fontSize: isMobile ? ".6rem" : ".9vw",
-                          zIndex: 20,
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          whiteSpace: "nowrap",
-                          "&:hover": {
-                            backgroundColor: theme.colors.pink,
-                          },
-                        }}
+                        sx={leftButtonStyles}
                         onClick={() => {
                           window.location.href = `/product/${productId}`;
                         }}
@@ -330,8 +324,8 @@ const Shop = () => {
                             color: theme.colors.beige,
                             borderRadius: "0 25px 25px 0",
                             display: "flex",
+                            justifyContent: "space-between",
                             alignItems: "center",
-                            px: 1,
                           }}
                         >
                           <IconButton
@@ -348,9 +342,15 @@ const Shop = () => {
                             size="small"
                             sx={{ color: theme.colors.beige }}
                           >
-                            <RemoveIcon fontSize="small" />
+                            <RemoveIcon
+                              sx={{
+                                fontSize: isMobile ? "4vw" : "1.4vw",
+                                m: 0,
+                                p: 0,
+                              }}
+                            />
                           </IconButton>
-                          <Typography sx={{ mx: 1 }}>
+                          <Typography fontSize={isMobile ? "3.4vw" : "1vw"}>
                             {lineItem.quantity}
                           </Typography>
                           <IconButton
@@ -360,29 +360,25 @@ const Shop = () => {
                             size="small"
                             sx={{ color: theme.colors.beige }}
                           >
-                            <AddIcon fontSize="small" />
+                            <AddIcon
+                              sx={{
+                                fontSize: isMobile ? "4vw" : "1.4vw",
+                                m: 0,
+                                p: 0,
+                              }}
+                            />
                           </IconButton>
                         </Box>
                       ) : (
                         <Button
-                          sx={{
-                            backgroundColor: theme.colors.pink,
-                            color: theme.colors.beige,
-                            border: "none",
-                            width: "100%",
-                            padding: "10px 10px",
-                            borderRadius: "0 25px 25px 0",
-                            cursor: "pointer",
-                            fontFamily: "Stolzl",
-                            zIndex: 10,
-                          }}
+                          sx={rightButtonStyles}
                           onClick={() => {
                             if (variantId) addItem(variantId, 1);
                           }}
                         >
                           <ShoppingCartIcon
                             sx={{
-                              fontSize: isMobile ? "1rem" : "1.2vw",
+                              fontSize: isMobile ? "4vw" : "1.2vw",
                             }}
                           />
                         </Button>
@@ -392,7 +388,13 @@ const Shop = () => {
                 );
               })}
             </Grid>
-            <Stack width="40%" direction="row" height="10vh" my={10}>
+            <Stack
+              width={isMobile ? "90%" : "40%"}
+              direction="row"
+              height="10vh"
+              spacing={isMobile ? 2 : 0}
+              my={10}
+            >
               {features.map((feature, index) => (
                 <Box key={index} width="100%">
                   <Box
@@ -423,43 +425,15 @@ const Shop = () => {
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography
-                mt={7}
-                variant="h2"
-                width="100%"
-                textAlign="center"
-                fontSize={
-                  isMobile
-                    ? "2rem"
-                    : isTablet
-                    ? "3rem"
-                    : isSmallDesktop
-                    ? "4rem"
-                    : "5rem"
-                }
-                fontFamily="Genty"
-                textTransform="capitalize"
-                color={theme.colors.pink}
-                sx={{ textShadow: "2px 2px 0 #B5D782" }}
-              >
-                {category}
-              </Typography>
+              <Typography sx={titleStyles}>{category}</Typography>
 
               <Grid
                 container
                 columnSpacing={isMobile ? 5 : 5}
-                rowSpacing={isMobile ? 5 : 10}
+                rowSpacing={isMobile ? 5 : 15}
                 display="flex"
                 justifyContent="space-evenly"
-                sx={{
-                  scale: isMobile
-                    ? 1
-                    : isTablet
-                    ? 0.7
-                    : isSmallDesktop
-                    ? 0.8
-                    : 0.9,
-                }}
+                p={isMobile ? 0 : 12}
               >
                 {categories[category].map((product) => {
                   const productId = product.id.split("/").pop();
@@ -478,18 +452,17 @@ const Shop = () => {
                     >
                       <Box
                         component="h2"
-                        style={{
+                        sx={{
                           fontFamily: "Stolzl",
                           color: theme.colors.pink,
                           fontWeight: 200,
                           textAlign: "center",
-                          fontSize: isMobile ? "1.2rem" : "1.6rem",
-                          marginBottom: "1rem",
+                          fontSize: isMobile ? "3.6vw" : "1.6vw",
                         }}
                       >
                         {product.title}
                       </Box>
-                      <Box width="60%">
+                      <Box width={isMobile ? "40vw" : "60%"}>
                         <Box
                           component="img"
                           src={product.images.edges[0]?.node.url}
@@ -500,34 +473,17 @@ const Shop = () => {
                             width: "100%",
                             height: "100%",
                             objectFit: "contain",
-                            transition: "transform 0.3s ease-in-out",
+                            transition: "all 0.3s ease",
                             cursor: "pointer",
                             "&:hover": {
-                              transform: "scale(1.1)",
+                              transform: "scale(1.05)",
                             },
                           }}
                         />
                       </Box>
-                      <ButtonGroup>
+                      <ButtonGroup sx={{ width: isMobile ? "100%" : "auto" }}>
                         <Button
-                          sx={{
-                            backgroundColor: theme.colors.green,
-                            color: theme.colors.beige,
-                            border: "none",
-                            padding: "10px 60px",
-                            borderRadius: "25px 0 0 25px",
-                            cursor: "pointer",
-                            fontFamily: "Stolzl",
-                            fontSize: isMobile ? ".6rem" : ".9vw",
-                            zIndex: 20,
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            whiteSpace: "nowrap",
-                            "&:hover": {
-                              backgroundColor: theme.colors.pink,
-                            },
-                          }}
+                          sx={leftButtonStyles}
                           onClick={() => {
                             window.location.href = `/product/${productId}`;
                           }}
@@ -543,7 +499,6 @@ const Shop = () => {
                               borderRadius: "0 25px 25px 0",
                               display: "flex",
                               alignItems: "center",
-                              px: 1,
                             }}
                           >
                             <IconButton
@@ -560,9 +515,15 @@ const Shop = () => {
                               size="small"
                               sx={{ color: theme.colors.beige }}
                             >
-                              <RemoveIcon fontSize="small" />
+                              <RemoveIcon
+                                sx={{
+                                  fontSize: isMobile ? "4vw" : "1.4vw",
+                                  m: 0,
+                                  p: 0,
+                                }}
+                              />
                             </IconButton>
-                            <Typography sx={{ mx: 1 }}>
+                            <Typography fontSize={isMobile ? "3.4vw" : "1vw"}>
                               {lineItem.quantity}
                             </Typography>
                             <IconButton
@@ -575,29 +536,25 @@ const Shop = () => {
                               size="small"
                               sx={{ color: theme.colors.beige }}
                             >
-                              <AddIcon fontSize="small" />
+                              <AddIcon
+                                sx={{
+                                  fontSize: isMobile ? "4vw" : "1.4vw",
+                                  m: 0,
+                                  p: 0,
+                                }}
+                              />
                             </IconButton>
                           </Box>
                         ) : (
                           <Button
-                            sx={{
-                              backgroundColor: theme.colors.pink,
-                              color: theme.colors.beige,
-                              border: "none",
-                              width: "100%",
-                              padding: "10px 10px",
-                              borderRadius: "0 25px 25px 0",
-                              cursor: "pointer",
-                              fontFamily: "Stolzl",
-                              zIndex: 10,
-                            }}
+                            sx={rightButtonStyles}
                             onClick={() => {
                               if (variantId) addItem(variantId, 1);
                             }}
                           >
                             <ShoppingCartIcon
                               sx={{
-                                fontSize: isMobile ? "1rem" : "1.2vw",
+                                fontSize: isMobile ? "4vw" : "1.2vw",
                               }}
                             />
                           </Button>
@@ -612,7 +569,7 @@ const Shop = () => {
         )}
       </Stack>
 
-      <Box position="relative">
+      <Box position="relative" mt={isMobile ? 6 : 0}>
         {isMobile ? (
           <Box
             component="svg"

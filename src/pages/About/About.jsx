@@ -1,17 +1,9 @@
-import "./About.scss";
-
 import founder from "../../assets/images/vectors/about/founder.png";
 import badge from "../../assets/images/vectors/about/badge.png";
 
 import { useTheme } from "@mui/material/styles";
 
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Stack, Typography, Button, useMediaQuery } from "@mui/material";
 
 import { useRef, useEffect, useState } from "react";
 
@@ -33,25 +25,12 @@ const About = () => {
   }, []);
 
   return (
-    <Container
-      maxWidth="xxl"
-      sx={{
-        pt: 15,
-        pb: 5,
-        width: "100vw",
-        height: "100%",
-        backgroundColor: theme.colors.green,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <Stack bgcolor={theme.colors.green} minHeight="100vh" pb={5}>
       <Typography
+        mt={isMobile ? 14 : 18}
         fontFamily={"Genty"}
-        fontSize={60}
+        fontSize={isMobile ? "12vw" : "2vw"}
         fontWeight={200}
-        mb={3}
         color={theme.colors.beige}
         sx={{
           textShadow: `3px 3px 0px ${theme.colors.pink}`,
@@ -61,25 +40,25 @@ const About = () => {
       >
         About us
       </Typography>
-      <Box
-        gap={5}
-        mb={10}
+      <Stack
+        gap={isMobile ? 5 : 0}
         display="flex"
-        flexDirection={isMobile ? "column-reverse" : "column"}
         alignItems="center"
-        justifyContent="center"
+        justifyContent="space-evenly"
+        flexDirection={isMobile ? "column-reverse" : "row"}
       >
         <Box
-          maxWidth={"lg"}
-          backgroundColor={theme.colors.beige}
-          p={5}
-          borderRadius={15}
-          boxShadow={`6px 6px 0 ${theme.colors.pink}`}
+          width={isMobile ? "90vw" : "50vw"}
+          backgroundColor={theme.colors.green}
+          py={isMobile ? 5 : 2}
+          px={isMobile ? 3 : 5}
+          borderRadius={5}
+          boxShadow={`4px 4px 0 ${theme.colors.green}`}
         >
           <Typography
             fontFamily={theme.fonts.text}
-            color={theme.colors.pink}
-            fontSize={isMobile ? 16 : 20}
+            color={theme.colors.beige}
+            fontSize={isMobile ? "3vw" : "1vw"}
             fontWeight={200}
             mb={3}
             textAlign="justify"
@@ -87,7 +66,7 @@ const About = () => {
             Umi
             <span
               style={{
-                color: "#B5D782",
+                color: theme.colors.beige,
                 marginInline: 10,
               }}
             >
@@ -97,8 +76,8 @@ const About = () => {
           </Typography>
           <Typography
             fontFamily={theme.fonts.text}
-            color={theme.colors.pink}
-            fontSize={isMobile ? 16 : 20}
+            color={theme.colors.beige}
+            fontSize={isMobile ? "3vw" : "1vw"}
             fontWeight={200}
             mb={3}
             textAlign="justify"
@@ -116,9 +95,9 @@ const About = () => {
               variant="text"
               sx={{
                 transition: "all .3s ease",
-                color: theme.colors.green,
+                color: theme.colors.pink,
                 fontFamily: theme.fonts.text,
-                fontSize: isMobile ? 12 : 20,
+                fontSize: isMobile ? "3vw" : "1vw",
                 textTransform: "none",
               }}
               onClick={() => setShowMore(true)}
@@ -127,11 +106,11 @@ const About = () => {
             </Button>
           )}
 
-          {showMore && (
+          {(!isMobile || showMore) && (
             <Typography
               fontFamily={theme.fonts.text}
-              color={theme.colors.pink}
-              fontSize={isMobile ? 16 : 20}
+              color={theme.colors.beige}
+              fontSize={isMobile ? "3vw" : "1vw"}
               fontWeight={200}
               textAlign="justify"
               mb={3}
@@ -154,9 +133,9 @@ const About = () => {
               variant="text"
               sx={{
                 transition: "all .3s ease",
-                color: theme.colors.green,
+                color: theme.colors.pink,
                 fontFamily: theme.fonts.text,
-                fontSize: isMobile ? 12 : 20,
+                fontSize: isMobile ? "3vw" : "1vw",
                 textTransform: "none",
               }}
               onClick={() => setShowMore(false)}
@@ -167,43 +146,46 @@ const About = () => {
 
           <Typography
             fontFamily={theme.fonts.text}
-            color={theme.colors.green}
-            fontSize={isMobile ? 16 : 20}
+            color={theme.colors.beige}
+            fontSize={isMobile ? "3vw" : "1vw"}
             fontWeight={200}
             alignItems="end"
             justifyContent="end"
             display="flex"
             width="100%"
-            mb={3}
             textAlign="justify"
           >
             - Adviti, Founder
           </Typography>
         </Box>
 
-        <Container
-          style={{
-            position: "relative",
-            alignItems: "center",
-            justifyContent: "center",
-            display: "flex",
-            width: "auto",
-          }}
+        <Box
+          width={isMobile ? "80vw" : "26vw"}
+          height="100%"
+          position="relative"
         >
-          <Box width="350px" mt={5} component="img" src={founder} />
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+            component="img"
+            src={founder}
+          />
 
           <Box
             ref={badgeRef}
             component="img"
             src={badge}
             position="absolute"
-            top={20}
-            left={0}
-            width={100}
+            top={-20}
+            left={-20}
+            width={isMobile ? "20vw" : "8vw"}
           />
-        </Container>
-      </Box>
-    </Container>
+        </Box>
+      </Stack>
+    </Stack>
   );
 };
 

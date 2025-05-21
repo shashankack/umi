@@ -334,7 +334,8 @@ const MobileNavbar = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            width: isMobile ? "100vw" : "30vw",
+            width: isMobile ? "103vw" : "30vw",
+            ml: -1,
             height: "101vh",
             borderRadius: 0,
             boxShadow: "none",
@@ -349,7 +350,7 @@ const MobileNavbar = () => {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
-            p: 4,
+            p: 3,
             overflow: "hidden",
           }}
         >
@@ -403,11 +404,11 @@ const MobileNavbar = () => {
                 key={label}
                 disableGutters
                 onClick={() => {
-                  setIsMenuOpen(false); // close drawer first
+                  setIsMenuOpen(false);
 
                   setTimeout(() => {
                     navigate(to);
-                  }, 300); // delay to allow close animation
+                  }, 300);
                 }}
                 sx={{
                   textDecoration: "none",

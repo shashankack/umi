@@ -123,8 +123,8 @@ const TutorialSection = () => {
         <Typography
           variant="h4"
           whiteSpace="nowrap"
-          mx={5}
-          fontFamily={theme.fonts.text}
+          mx={2}
+          fontFamily={theme.fonts.heading}
           color={theme.colors.beige}
         >
           video tutorial
@@ -138,8 +138,8 @@ const TutorialSection = () => {
       </Box>
       <Box
         mb={10}
-        width={isMobile ? "97%" : "80vw"}
-        height={isMobile ? " 40vh" : "60vh"}
+        width={isMobile ? "90%" : "80vw"}
+        height={isMobile ? " 34vh" : "60vh"}
         display="flex"
         justifyContent="center"
         overflow="hidden"
@@ -150,7 +150,7 @@ const TutorialSection = () => {
           src="https://www.youtube-nocookie.com/embed/13uVij4DsZk?si=04sgpl12Syb3EGRR"
           title="YouTube video player"
           style={{
-            border: isMobile ? "none" : `4px solid ${theme.colors.beige}`,
+            border: `4px solid ${theme.colors.beige}`,
             borderRadius: 25,
           }}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -25,7 +25,7 @@ const Footer = () => {
     textDecoration: "none",
     color: theme.colors.pink,
     fontFamily: theme.fonts.text,
-    fontSize: isMobile ? "3vw" : "1.6vw",
+    fontSize: isMobile ? "2.4vw" : "1.6vw",
     transition: "all 0.3s ease",
 
     "&:hover": {
@@ -44,8 +44,8 @@ const Footer = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: isMobile ? "6vw" : "3vw",
-    height: isMobile ? "6vw" : "3vw",
+    width: isMobile ? "4.2vw" : "3vw",
+    height: isMobile ? "4.2vw" : "3vw",
     transition: "all 0.3s ease",
 
     "&:hover": {
@@ -69,27 +69,28 @@ const Footer = () => {
       { name: "FAQ", path: "/" },
     ],
     [
-      { name: "Instagram", path: "https://www.instagram.com" },
-      { name: "Pinterest", path: "https://www.pinterest.com" },
-      { name: "WhatsApp", path: "https://wa.me/1234567890" },
+      { name: "Instagram", path: "https://www.instagram.com/umimatchaclub" },
+      { name: "Pinterest", path: "https://pin.it/5YQInpBIg" },
+      { name: "WhatsApp", path: "https://wa.me/9568480048" },
     ],
   ];
 
   return (
     <Stack
-    zIndex={500}
+      zIndex={500}
       direction="row"
       bgcolor={theme.colors.beige}
       overflow="hidden"
       justifyContent="space-around"
       position="relative"
-      p={isMobile ? 2 : 6}
+      py={isMobile ? 3 : 6}
+      px={isMobile ? 0 : 6}
     >
       <Box
         position="absolute"
-        bottom={100}
+        bottom={isMobile ? 50 : 100}
         right={50}
-        height={isMobile ? "14vh" : "22vh"}
+        height={isMobile ? "8vh" : "22vh"}
       >
         <Box
           component="img"
@@ -101,8 +102,8 @@ const Footer = () => {
           }}
         />
       </Box>
-      <Stack direction="column" alignItems="center">
-        <Box width={isMobile ? "18vw" : "10vw"}>
+      <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>
+        <Box width={isMobile ? "15vw" : "10vw"}>
           <Box
             component="img"
             src={pinkMonogram}
@@ -113,7 +114,7 @@ const Footer = () => {
             }}
           />
         </Box>
-        <Box width={isMobile ? "18vw" : "10vw"}>
+        <Box width={isMobile ? "15vw" : "10vw"}>
           <Box
             component="img"
             src={bowl}
@@ -125,7 +126,8 @@ const Footer = () => {
           />
         </Box>
         <Typography
-          variant={isMobile ? "caption" : "h5"}
+          variant="h5"
+          fontSize={isMobile ? "2.3vw" : "1.6vw"}
           fontFamily={theme.fonts.text}
           fontWeight={500}
           color={theme.colors.pink}
@@ -152,13 +154,13 @@ const Footer = () => {
               target="_blank"
             >
               {linkGroup.name === "Instagram" && (
-                <FaInstagram size={isMobile ? 20 : 40} />
+                <FaInstagram size={isMobile ? 14 : "2.2vw"} />
               )}
               {linkGroup.name === "Pinterest" && (
-                <FaPinterestP size={isMobile ? 20 : 40} />
+                <FaPinterestP size={isMobile ? 14 : "2.2vw"} />
               )}
               {linkGroup.name === "WhatsApp" && (
-                <FaWhatsapp size={isMobile ? 20 : 40} />
+                <FaWhatsapp size={isMobile ? 14 : "2.2vw"} />
               )}
             </Link>
           ))}
@@ -176,7 +178,7 @@ const Footer = () => {
           sx={{
             color: theme.colors.pink,
             fontFamily: theme.fonts.text,
-            fontSize: isMobile ? "4vw" : "1.6vw",
+            fontSize: isMobile ? "2.2vw" : "1.6vw",
           }}
         >
           Copyright{" "}

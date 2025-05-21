@@ -197,7 +197,7 @@ const HeroSection = ({ theme }) => {
       { yPercent: 110, opacity: 0 },
       {
         yPercent: 0,
-        delay: 1,
+        delay: .6,
         opacity: 1,
         duration: 0.5,
         stagger: 0.3,

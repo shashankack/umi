@@ -34,8 +34,6 @@ const ProductsInternal = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
 
   const handleThumbnailClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -64,7 +62,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.7rem" : "1rem",
+          fontSize: isMobile ? "3.4vw" : "1.1vw",
           mb: 2,
         }}
       >
@@ -88,8 +86,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "0.7rem" : "1rem",
-          mt: 2,
+          fontSize: isMobile ? "3.4vw" : "1vw",
         }}
       >
         {li.textContent}
@@ -105,18 +102,18 @@ const ProductsInternal = () => {
     const attributes = doc.querySelectorAll("ul.highlighted-attributes li");
 
     return Array.from(attributes).map((li, i) => (
-      <Box key={i} mb={2} gap={2}>
+      <Box key={i}>
         <Typography
           sx={{
-            color: theme.colors.pink,
-            backgroundColor: theme.colors.beige,
-            fontSize: isMobile ? "0.7rem" : "1rem",
-            p: `10px 20px`,
-            borderRadius: 3,
-            boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-            fontFamily: theme.fonts.text,
+            p: "10px 20px",
             fontWeight: 200,
+            borderRadius: 3,
             textAlign: "justify",
+            color: theme.colors.pink,
+            fontFamily: theme.fonts.text,
+            backgroundColor: theme.colors.beige,
+            fontSize: isMobile ? "3.4vw" : "1vw",
+            boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
           }}
         >
           {li.textContent}
@@ -187,301 +184,277 @@ const ProductsInternal = () => {
   if (!product) return <Loading />;
 
   return (
-    <Box
-      sx={{
-        height: isMobile ? "100%" : "100%",
-        backgroundColor: theme.colors.beige,
-        fontFamily: theme.typography.fontFamily,
-        p: isMobile ? 1 : 10,
-      }}
+    <Stack
+      bgcolor={theme.colors.green}
+      width="100%"
+      height="100%"
+      pt={isMobile ? 4 : 16}
     >
-      <Box
-        sx={{
-          backgroundColor: theme.colors.green,
-          borderRadius: 6,
-          p: isMobile ? 1 : 4,
-          mt: isMobile ? 15 : 10,
-        }}
+      {/* Top */}
+      <Stack
+        width="100%"
+        height={isMobile ? "100%" : "60vh"}
+        direction="row"
+        bgcolor={theme.colors.green}
+        borderRadius={6}
+        flexDirection={isMobile ? "column" : "row"}
+        justifyContent={isMobile ? "center" : "space-between"}
+        alignItems="center"
+        mt={isMobile ? 8 : 0}
+        mb={
+          isMobile
+            ? parsedProductProfile.left.length > 0
+              ? 0
+              : 6
+            : parsedProductProfile.left.length > 0
+            ? 0
+            : 10
+        }
+        px={isMobile ? 4 : 10}
+        spacing={isMobile ? 0 : 4}
       >
-        <Grid container spacing={4}>
-          <Grid
-            size={{
-              xs: 12,
-              md: 6,
-              lg: 4,
-            }}
+        {/* Image Section */}
+        <Stack
+          width={isMobile ? "100%" : "30vw"}
+          height="100%"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box
+            p={2}
+            boxShadow={
+              isMobile ? "none" : `3px 3px 0px 0px ${theme.colors.pink}`
+            }
+            borderRadius={4}
+            bgcolor={theme.colors.beige}
             sx={{
+              width: "100%",
+              height: "100%",
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
+              flexDirection: "column",
             }}
           >
-            <Box
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              flexDirection={"column"}
-              sx={{
-                background: theme.colors.beige,
-                width: "100%",
-                p: 2,
-                borderRadius: 4,
-                boxShadow: `3px 3px 0px 0px ${theme.colors.pink};`,
-              }}
-            >
+            <Box height={"36vh"} mb={isMobile ? 2 : 0}>
               <Box
                 component="img"
                 src={selectedImage}
                 sx={{
                   height: "100%",
                   width: "100%",
-                  objectFit: "cover",
+                  objectFit: "contain",
                   borderRadius: 2,
                 }}
               />
-              <Swiper
-                spaceBetween={10}
-                slidesPerView="5"
-                direction="horizontal"
-                mousewheel={true}
-                scrollbar
-                modules={[Mousewheel, Scrollbar]}
-                loop={true}
-                style={{
-                  width: "100%",
-                  height: "100px",
-                  marginTop: "10px",
+            </Box>
+            <Swiper
+              slidesPerView="5"
+              direction="horizontal"
+              mousewheel={true}
+              scrollbar
+              modules={[Mousewheel, Scrollbar]}
+              style={{
+                width: "100%",
+              }}
+            >
+              {product.images.edges.map((image, i) => (
+                <SwiperSlide key={i} style={{ height: "100%", width: "100%" }}>
+                  <Box
+                    component="img"
+                    src={image.node.url}
+                    alt={`thumb-${i}`}
+                    onClick={() => handleThumbnailClick(image.node.url)}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      borderRadius: 1,
+                      cursor: "pointer",
+                      border:
+                        image.node.url === selectedImage
+                          ? `2px solid ${theme.colors.pink}`
+                          : "2px solid transparent",
+                    }}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
+        </Stack>
+
+        {/* Text Section */}
+        <Stack
+          width="100%"
+          height={"100%"}
+          color={theme.colors.beige}
+          alignItems="start"
+          justifyContent="space-between"
+        >
+          <Stack mt={isMobile ? 2 : 0}>
+            <Typography
+              fontSize={isMobile ? "9vw" : "3vw"}
+              fontFamily={theme.fonts.title}
+              fontWeight={500}
+              sx={{
+                textShadow: `1px 5px 0px ${theme.colors.pink}`,
+              }}
+            >
+              {product.title}
+            </Typography>
+            <Typography
+              mt={isMobile ? 1 : 0}
+              variant="h4"
+              fontWeight={800}
+              sx={{ fontSize: isMobile ? "6vw" : "2vw" }}
+            >
+              ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
+              /-
+            </Typography>
+
+            <Stack
+              mt={2}
+              mb={isMobile ? 2 : 0}
+              direction="row"
+              alignItems="center"
+              justifyContent="start"
+              gap={2}
+            >
+              <Select
+                value={quantity}
+                onChange={handleQuantityChange}
+                size="small"
+                sx={{
+                  fontSize: isMobile ? "0.7rem" : "1vw",
+                  backgroundColor: theme.colors.beige,
+                  color: theme.colors.pink,
+                  borderRadius: 2,
+                  boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                  "& .MuiSelect-icon": {
+                    color: theme.colors.pink,
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
                 }}
               >
-                {product.images.edges.map((image, i) => (
-                  <SwiperSlide
-                    key={i}
-                    style={{ height: "100%", width: "100%" }}
-                  >
-                    <Box
-                      component="img"
-                      src={image.node.url}
-                      alt={`thumb-${i}`}
-                      onClick={() => handleThumbnailClick(image.node.url)}
-                      sx={{
-                        width: "100%",
-                        objectFit: "contain",
-                        borderRadius: 1,
-                        cursor: "pointer",
-                        border:
-                          image.node.url === selectedImage
-                            ? `2px solid ${theme.colors.pink}`
-                            : "2px solid transparent",
-                      }}
-                    />
-                  </SwiperSlide>
+                {[...Array(10).keys()].map((i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </MenuItem>
                 ))}
-              </Swiper>
-            </Box>
-          </Grid>
+              </Select>
+              <Button
+                onClick={handleAddToCart}
+                variant="contained"
+                sx={{
+                  fontFamily: theme.fonts.text,
+                  fontWeight: 400,
+                  textAlign: "justify",
+                  fontSize: isMobile ? "0.7rem" : "1rem",
+                  backgroundColor: theme.colors.beige,
+                  color: theme.colors.pink,
+                  boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: theme.colors.pink,
+                    color: theme.colors.beige,
+                    boxShadow: `0px 4px 0px 0px ${theme.colors.beige}`,
+                  },
+                }}
+                endIcon={<FaShoppingCart />}
+              >
+                Add to Cart
+              </Button>
+            </Stack>
+          </Stack>
 
-          <Grid
-            size={{
-              xs: 12,
-              md: 6,
-              lg: 8,
-            }}
+          <Stack
+            fontFamily={theme.fonts.text}
+            fontWeight={200}
+            textAlign="justify"
           >
-            <Box
-              sx={{ color: theme.colors.beige }}
-              height={"100%"}
-              justifyContent={"start"}
-              gap={2}
-              alignItems={"start"}
-              display={"flex"}
-              flexDirection={"column"}
-              p={1}
-            >
-              <Box>
-                <Typography
-                  fontSize={isMobile ? "2rem" : "2.5rem"}
-                  sx={{
-                    fontFamily: "Genty",
-                    fontWeight: 200,
-                    textShadow: `1px 5px 0px ${theme.colors.pink}`,
-                  }}
-                >
-                  {product.title}
-                </Typography>
-                <Box
-                  sx={{
-                    fontFamily: theme.fonts.text,
-                    fontWeight: 200,
-                    textAlign: "justify",
-                  }}
-                >
-                  {parsedParagraphs}
-                </Box>
-              </Box>
+            {parsedParagraphs}
+            <Stack gap={1}>{parsedAttributes}</Stack>
+          </Stack>
 
-              <Stack mt={isMobile ? 0 : -5} mb={isMobile ? 1.5 : 5}>
-                {parsedAttributes}
-              </Stack>
+          <Stack mt={isMobile ? 2 : 0} direction="row" gap={1}>
+            {parsedHighlightedAttributes}
+            {product.variants.edges[0]?.node.weight !== 0 && (
+              <Typography
+                variant="h5"
+                sx={{
+                  fontSize: isMobile ? "3.4vw" : "1vw",
+                  backgroundColor: theme.colors.beige,
+                  color: theme.colors.pink,
+                  borderRadius: 2,
+                  boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                  p: "10px 20px",
+                  fontWeight: 200,
+                  fontFamily: theme.fonts.text,
+                }}
+              >
+                weight: {product.variants.edges[0]?.node.weight}
+                {product.variants.edges[0]?.node.weightUnit === "GRAMS"
+                  ? "g"
+                  : ""}
+              </Typography>
+            )}
+          </Stack>
+        </Stack>
+      </Stack>
 
-              <Box>
-                <Stack direction="row" gap={3}>
-                  {parsedHighlightedAttributes}
-                </Stack>
-
-                <Box
-                  mt={2}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="start"
-                  gap={5}
-                >
-                  {product.variants.edges[0]?.node.weight !== 0 && (
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        fontSize: isMobile ? "0.7rem" : "1.15rem",
-                        backgroundColor: theme.colors.beige,
-                        color: theme.colors.pink,
-                        borderRadius: 2,
-                        boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                        p: `10px 20px`,
-                        fontFamily: theme.fonts.text,
-                        fontWeight: 200,
-                      }}
-                    >
-                      weight: {product.variants.edges[0]?.node.weight}
-                      {product.variants.edges[0]?.node.weightUnit === "GRAMS"
-                        ? "g"
-                        : ""}
-                    </Typography>
-                  )}
-                  <Typography
-                    variant="h4"
-                    fontWeight={800}
-                    sx={{ fontSize: isMobile ? "1.6rem" : "2rem" }}
-                  >
-                    ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
-                    /-
-                  </Typography>
-                </Box>
-
-                <Box
-                  mt={4}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Select
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                    size="small"
-                    sx={{
-                      fontSize: isMobile ? "0.7rem" : "1rem",
-                      padding: "5px 20px",
-                      backgroundColor: theme.colors.beige,
-                      color: theme.colors.pink,
-                      borderRadius: 2,
-                      width: "100px",
-                      boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                      "& .MuiSelect-icon": {
-                        color: theme.colors.pink,
-                      },
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        border: "none",
-                      },
-                    }}
-                  >
-                    {[...Array(10).keys()].map((i) => (
-                      <MenuItem key={i + 1} value={i + 1}>
-                        {i + 1}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <Button
-                    onClick={handleAddToCart}
-                    variant="contained"
-                    sx={{
-                      padding: "10px 20px",
-                      ml: 2,
-                      fontFamily: theme.fonts.text,
-                      fontWeight: 400,
-                      textAlign: "justify",
-                      fontSize: isMobile ? "0.7rem" : "1rem",
-                      backgroundColor: theme.colors.beige,
-                      color: theme.colors.pink,
-                      boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        backgroundColor: theme.colors.pink,
-                        color: theme.colors.beige,
-                        boxShadow: `0px 4px 0px 0px ${theme.colors.beige}`,
-                      },
-                    }}
-                    endIcon={<FaShoppingCart />}
-                  >
-                    Add to Cart
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-
+      {/* Bottom */}
       {parsedProductProfile.left.length > 0 &&
         parsedTastingNotes.left.length > 0 && (
-          <Grid
-            container
-            display="flex"
+          <Stack
+            direction={isMobile ? "column" : "row"}
             justifyContent="space-between"
-            alignItems="start"
+            alignItems="center"
             mt={10}
-            height={"100%"}
-            overflow={"hidden"}
+            width="100%"
+            height="100%"
+            bgcolor={theme.colors.beige}
+            overflow="hidden"
+            px={isMobile ? 4 : 6}
+            py={isMobile ? 4 : 6}
+            gap={isMobile ? 4 : 0}
           >
             {/* Product Profile */}
-            <Grid
-              size={{
-                xs: 12,
-                md: 6,
-              }}
-              width={"100%"}
-              height="100%"
-              display={"flex"}
-              justifyContent="start"
-              alignItems={"center"}
-              flexDirection={"column"}
-            >
+            <Stack alignItems="center" justifyContent="center">
               <Typography
                 gutterBottom
                 color={theme.colors.pink}
                 variant="h4"
                 fontFamily="Gliker"
                 textTransform="capitalize"
+                fontSize={isMobile ? "5vw" : "2vw"}
               >
                 product profile
               </Typography>
 
               {/* Table Grid */}
-              <Grid
-                width={"100%"}
-                height={550}
+              <Box
+                width={isMobile ? "100%" : "50vw"}
+                height={isMobile ? "auto" : 550}
                 position="relative"
                 display={"flex"}
                 justifyContent="center"
-                alignItems={"center"}
+                alignItems="center"
                 border={`4px solid ${theme.colors.pink}`}
-                borderRadius={isMobile ? 4 : 8}
-                gap={2}
+                borderRadius={isMobile ? 2 : 8}
+                fontFamily={theme.fonts.text}
               >
-                <Box
-                  component="img"
-                  src={pageFold}
-                  position="absolute"
-                  width={isMobile ? "80px" : "100px"}
-                  top={isMobile ? "-24px" : "-30px"}
-                  right={isMobile ? "-19px" : "-24px"}
-                />
+                {!isMobile && (
+                  <Box
+                    component="img"
+                    src={pageFold}
+                    position="absolute"
+                    width={isMobile ? "80px" : "100px"}
+                    top={isMobile ? "-24px" : "-30px"}
+                    right={isMobile ? "-19px" : "-24px"}
+                  />
+                )}
 
                 {/* Table for Product Profile */}
                 <Box
@@ -489,12 +462,10 @@ const ProductsInternal = () => {
                     backgroundColor: theme.colors.beige,
                     overflow: "hidden",
                     borderRadius: isMobile
-                      ? "10px 0 0 10px"
+                      ? "4px 0 4px 4px"
                       : "28px 0 28px 28px",
                     width: "100%",
                     height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
                   }}
                 >
                   <table
@@ -522,7 +493,7 @@ const ProductsInternal = () => {
                           </td>
                           <td
                             style={{
-                              padding: "8px 60px 8px 10px",
+                              padding: "14px 10px",
                               backgroundColor: theme.colors.beige,
                               color: theme.colors.pink,
                               fontWeight: 300,
@@ -537,28 +508,18 @@ const ProductsInternal = () => {
                     </tbody>
                   </table>
                 </Box>
-              </Grid>
-            </Grid>
+              </Box>
+            </Stack>
 
             {/* Tasting Notes*/}
-            <Grid
-              size={{
-                xs: 12,
-                md: 5,
-              }}
-              display={"flex"}
-              justifyContent="start"
-              alignItems={"center"}
-              flexDirection={"column"}
-              height="100%"
-              mt={isMobile ? 4 : isTablet ? 4 : 0}
-            >
+            <Stack alignItems="center" justifyContent="center">
               <Typography
                 gutterBottom
                 color={theme.colors.pink}
                 variant="h4"
                 fontFamily="Gliker"
                 textTransform="capitalize"
+                fontSize={isMobile ? "5vw" : "2vw"}
               >
                 tasting notes
               </Typography>
@@ -568,22 +529,11 @@ const ProductsInternal = () => {
                 justifyContent="center"
                 alignItems={"center"}
                 flexDirection={"column"}
-                width="100%"
+                width={isMobile ? "82vw" : "40vw"}
                 height={550}
                 backgroundColor={theme.colors.green}
               >
-                <Box
-                  width="100%"
-                  sx={{
-                    scale: isMobile
-                      ? "0.8"
-                      : isTablet
-                      ? "0.8"
-                      : isSmallDesktop
-                      ? ".9"
-                      : "1",
-                  }}
-                >
+                <Box width="100%">
                   {parsedTastingNotes.left.map((label, index) => {
                     const value = parsedTastingNotes.right[index];
 
@@ -616,6 +566,7 @@ const ProductsInternal = () => {
                             borderRadius: 6,
 
                             "&.Mui-disabled": {
+                              height: isMobile ? "100%" : "auto",
                               color: theme.colors.pink,
                               backgroundColor: theme.colors.beige,
 
@@ -648,10 +599,10 @@ const ProductsInternal = () => {
                   })}
                 </Box>
               </Box>
-            </Grid>
-          </Grid>
+            </Stack>
+          </Stack>
         )}
-    </Box>
+    </Stack>
   );
 };
 
