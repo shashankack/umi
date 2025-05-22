@@ -4,21 +4,21 @@ import { searchProducts, fetchShopifyProducts } from "../../utils/shopify";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import {
+  Menu,
+  Grow,
+  MenuItem,
   AppBar,
   Box,
   Drawer,
   IconButton,
   List,
   ListItem,
-  ListItemText,
   Toolbar,
   Typography,
   useTheme,
   Input,
   Divider,
   useMediaQuery,
-  Menu,
-  MenuItem,
 } from "@mui/material";
 
 import { FaSearch, FaUser } from "react-icons/fa";
@@ -30,6 +30,7 @@ import CloseIcon from "../../assets/images/icons/close_icon.png";
 import neko from "../../assets/images/vectors/neko/neko.gif";
 import beigeLogo from "../../assets/images/icons/beige_logo.png";
 import pinkLogo from "../../assets/images/icons/pink_logo.png";
+import dropDown from "../../assets/images/vectors/dropdown_icon.png";
 
 const MobileNavbar = () => {
   const theme = useTheme();
@@ -37,15 +38,14 @@ const MobileNavbar = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [variantMenuOpen, setVariantMenuOpen] = useState(false);
-  const [variants, setVariants] = useState([]);
-
+  const [dropdownAnchor, setDropdownAnchor] = useState(null);
+  const isDropdownOpen = Boolean(dropdownAnchor);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categoriesMap, setCategoriesMap] = useState({});
 
   const lastScrollTopRef = useRef(0);
   const tickingRef = useRef(false);
@@ -55,21 +55,12 @@ const MobileNavbar = () => {
 
   const navLinks = [
     { label: "Home", to: "/" },
-    // { label: "Shop", to: "/shop" },
+    { label: "Shop", to: "/shop", hasDropdown: true },
     { label: "About", to: "/about" },
     { label: "Contact", to: "/contact" },
     { label: "Brewing", to: "/?scrollTo=brewing" },
     { label: "Our Matcha", to: "/?scrollTo=matcha" },
   ];
-
-  const handleVariantMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-    setVariantMenuOpen(true);
-  };
-  const handleVariantMenuClose = () => {
-    setAnchorEl(null);
-    setVariantMenuOpen(false);
-  };
 
   const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
 
@@ -98,14 +89,23 @@ const MobileNavbar = () => {
   useEffect(() => {
     const fetchVariants = async () => {
       const data = await fetchShopifyProducts();
-      const list = data.flatMap((product) =>
+
+      const categories = data.reduce((acc, product) => {
+        const { productType } = product;
+        if (!acc[productType]) acc[productType] = [];
+        acc[productType].push(product);
+        return acc;
+      }, {});
+      setCategoriesMap(categories);
+
+      const flatVariants = data.flatMap((product) =>
         product.variants.edges.map((v) => ({
           title: product.title,
           variantId: v.node.id,
-          productType: product.productType?.toLowerCase() || "matcha", // fallback
+          productType: product.productType || "matcha",
         }))
       );
-      setVariants(list);
+      setVariants(flatVariants);
     };
 
     const handleScroll = () => {
@@ -343,8 +343,8 @@ const MobileNavbar = () => {
         }}
       >
         <Box
+          borderColor={theme.colors.green}
           sx={{
-            width: isMobile ? "100vw" : "30vw",
             height: "100vh",
             display: "flex",
             flexDirection: "column",
@@ -355,6 +355,7 @@ const MobileNavbar = () => {
           }}
         >
           <Box
+            borderColor={theme.colors.green}
             display="flex"
             justifyContent="space-between"
             alignItems="center"
@@ -374,10 +375,11 @@ const MobileNavbar = () => {
               </IconButton>
             </Box>
             <Box
+            onClick={() => (window.location.href = "/")}
               component="img"
               src={beigeLogo}
               sx={{
-                height: 100,
+                height: isMobile ? 70 : 100,
               }}
             />
             <Box
@@ -399,37 +401,61 @@ const MobileNavbar = () => {
               justifyContent: "center",
             }}
           >
-            {navLinks.map(({ label, to }) => (
-              <ListItem
-                key={label}
-                disableGutters
-                onClick={() => {
-                  setIsMenuOpen(false);
+            {navLinks.map(({ label, to, hasDropdown }) => (
+              <Box key={label} width="100%">
+                <ListItem
+                  disableGutters
+                  sx={{
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  {/* SHOP TEXT navigates to /shop */}
+                  <Typography
+                    fontFamily={theme.fonts.heading}
+                    fontSize="1.8rem"
+                    fontWeight="bold"
+                    color={theme.colors.beige}
+                    onClick={() => {
+                      setIsMenuOpen(false);
 
-                  setTimeout(() => {
-                    navigate(to);
-                  }, 300);
-                }}
-                sx={{
-                  textDecoration: "none",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <ListItemText
-                  primary={
-                    <Typography
-                      fontFamily={theme.fonts.heading}
-                      fontSize="1.8rem"
-                      fontWeight="bold"
-                      color={theme.colors.beige}
-                    >
-                      {label}
-                    </Typography>
-                  }
-                  sx={{ textAlign: "center" }}
-                />
-              </ListItem>
+                      setTimeout(() => {
+                        if (label === "Home") {
+                          window.location.href = "/";
+                        } else {
+                          navigate(to);
+                        }
+                      }, 300);
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {label}
+                  </Typography>
+
+                  {/* DROPDOWN ICON toggles dropdown */}
+                  {hasDropdown && (
+                    <Box
+                      component="img"
+                      src={dropDown}
+                      alt="▼"
+                      sx={{
+                        mr: -3,
+                        width: 20,
+                        height: 20,
+                        cursor: "pointer",
+                        transform: isDropdownOpen
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                        transition: "transform 0.3s ease",
+                      }}
+                      onClick={(e) => setDropdownAnchor(e.currentTarget)}
+                    />
+                  )}
+                </ListItem>
+              </Box>
             ))}
           </List>
 
@@ -450,6 +476,52 @@ const MobileNavbar = () => {
           </Box>
         </Box>
       </Drawer>
+
+      <Menu
+        anchorEl={dropdownAnchor}
+        open={isDropdownOpen}
+        onClose={() => setDropdownAnchor(null)}
+        TransitionComponent={Grow}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        PaperProps={{
+          sx: {
+            backgroundColor: theme.colors.pink,
+            color: theme.colors.beige,
+            borderRadius: 2,
+            boxShadow: 3,
+          },
+        }}
+      >
+        {Object.keys(categoriesMap).map((cat) => (
+          <MenuItem
+            key={cat}
+            onClick={() => {
+              setDropdownAnchor(null);
+              setIsMenuOpen(false);
+              setTimeout(() => navigate(`/shop?scrollTo=${cat}`), 300);
+            }}
+            sx={{
+              textTransform: "capitalize",
+              fontFamily: theme.fonts.text,
+              fontSize: "1rem",
+              borderBottom: `2px solid ${theme.colors.beige}`,
+
+              "&:last-child": {
+                borderBottom: "none",
+              },
+            }}
+          >
+            {cat}
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 };

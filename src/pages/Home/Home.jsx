@@ -22,19 +22,18 @@ const Home = () => {
   const brewingRef = useRef(null);
 
   useEffect(() => {
+    const smoothScrollToRef = (ref) => {
+      if (!ref?.current) return;
+      requestAnimationFrame(() => {
+        ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+
     const params = new URLSearchParams(search);
     const target = params.get("scrollTo");
 
-    if (target === "matcha") {
-      setTimeout(() => {
-        ourMatchaRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 400);
-    }
-    if (target === "brewing") {
-      setTimeout(() => {
-        brewingRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 400);
-    }
+    if (target === "matcha") smoothScrollToRef(ourMatchaRef);
+    if (target === "brewing") smoothScrollToRef(brewingRef);
 
     const handleScroll = () => {
       const scrollMid = window.scrollY + window.innerHeight / 4.5;
@@ -60,7 +59,7 @@ const Home = () => {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [setNavbarTheme]);
+  }, [search, setNavbarTheme]);
 
   return (
     <>

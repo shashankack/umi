@@ -10,7 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-
+import { useLocation } from "react-router-dom";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
 import gsap from "gsap";
@@ -32,10 +32,11 @@ const Shop = () => {
   const theme = useTheme();
   const [products, setProducts] = useState([]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
   const { addItem, updateQuantity, lineItems, removeItem } = useCart();
 
+  const location = useLocation();
+
+  const categoryRefs = useRef({});
   const marqueeRef = useRef(null);
 
   const features = [feature1, feature2, feature3, feature4, feature5, feature6];
@@ -115,6 +116,20 @@ const Shop = () => {
 
     loadProducts();
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const scrollTo = params.get("scrollTo");
+
+    if (scrollTo && categoryRefs.current[scrollTo.toLowerCase()]) {
+      setTimeout(() => {
+        categoryRefs.current[scrollTo.toLowerCase()].scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 300);
+    }
+  }, [location.search, products]);
 
   const generateSquares = (
     width,
@@ -244,6 +259,8 @@ const Shop = () => {
       {categories["matcha"] && (
         <Stack spacing={10}>
           <Box
+            ref={(el) => (categoryRefs.current["matcha"] = el)}
+            id="matcha"
             mt={isMobile ? 0 : 10}
             display="flex"
             flexDirection="column"
@@ -419,6 +436,8 @@ const Shop = () => {
           categories[category] ? (
             <Box
               key={category}
+              ref={(el) => (categoryRefs.current[category] = el)}
+              id={category}
               mt={isMobile ? 0 : 10}
               display="flex"
               flexDirection="column"
