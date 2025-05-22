@@ -97,15 +97,6 @@ const MobileNavbar = () => {
         return acc;
       }, {});
       setCategoriesMap(categories);
-
-      const flatVariants = data.flatMap((product) =>
-        product.variants.edges.map((v) => ({
-          title: product.title,
-          variantId: v.node.id,
-          productType: product.productType || "matcha",
-        }))
-      );
-      setVariants(flatVariants);
     };
 
     const handleScroll = () => {
@@ -360,7 +351,7 @@ const MobileNavbar = () => {
             justifyContent="space-between"
             alignItems="center"
             width="100%"
-            mt={-2}
+            mt={-1}
             mb={2}
           >
             <Box
@@ -368,14 +359,13 @@ const MobileNavbar = () => {
               display="flex"
               justifyContent="start"
               alignItems="center"
-              ml={-2}
             >
               <IconButton onClick={handleMenuToggle} size="large">
                 <img src={CloseIcon} alt="Close" style={{ height: 35 }} />
               </IconButton>
             </Box>
             <Box
-            onClick={() => (window.location.href = "/")}
+              onClick={() => (window.location.href = "/")}
               component="img"
               src={beigeLogo}
               sx={{
@@ -505,7 +495,7 @@ const MobileNavbar = () => {
             onClick={() => {
               setDropdownAnchor(null);
               setIsMenuOpen(false);
-              setTimeout(() => navigate(`/shop?scrollTo=${cat}`), 300);
+              setTimeout(() => navigate(`/shop?scrollTo=${cat}`), 500);
             }}
             sx={{
               textTransform: "capitalize",

@@ -21,45 +21,58 @@ const Home = () => {
   const ourMatchaRef = useRef(null);
   const brewingRef = useRef(null);
 
-  useEffect(() => {
-    const smoothScrollToRef = (ref) => {
-      if (!ref?.current) return;
-      requestAnimationFrame(() => {
-        ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    };
+ useEffect(() => {
+  const params = new URLSearchParams(search);
+  const target = params.get("scrollTo");
 
-    const params = new URLSearchParams(search);
-    const target = params.get("scrollTo");
+  const scrollToRef = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+    return false;
+  };
 
-    if (target === "matcha") smoothScrollToRef(ourMatchaRef);
-    if (target === "brewing") smoothScrollToRef(brewingRef);
-
-    const handleScroll = () => {
-      const scrollMid = window.scrollY + window.innerHeight / 4.5;
-
-      if (brewingRef.current && scrollMid >= brewingRef.current.offsetTop) {
-        setNavbarTheme("beige");
-      } else if (
-        ourMatchaRef.current &&
-        scrollMid >= ourMatchaRef.current.offsetTop
-      ) {
-        setNavbarTheme("pink");
-      } else if (
-        productsRef.current &&
-        scrollMid >= productsRef.current.offsetTop
-      ) {
-        setNavbarTheme("pink");
-      } else if (heroRef.current && scrollMid >= heroRef.current.offsetTop) {
-        setNavbarTheme("beige");
+  const tryScroll = () => {
+    if (target === "matcha") {
+      if (!scrollToRef(ourMatchaRef)) {
+        setTimeout(tryScroll, 100);
       }
-    };
+    } else if (target === "brewing") {
+      if (!scrollToRef(brewingRef)) {
+        setTimeout(tryScroll, 100);
+      }
+    }
+  };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
+  tryScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [search, setNavbarTheme]);
+  const handleScroll = () => {
+    const scrollMid = window.scrollY + window.innerHeight / 4.5;
+
+    if (brewingRef.current && scrollMid >= brewingRef.current.offsetTop) {
+      setNavbarTheme("beige");
+    } else if (
+      ourMatchaRef.current &&
+      scrollMid >= ourMatchaRef.current.offsetTop
+    ) {
+      setNavbarTheme("pink");
+    } else if (
+      productsRef.current &&
+      scrollMid >= productsRef.current.offsetTop
+    ) {
+      setNavbarTheme("pink");
+    } else if (heroRef.current && scrollMid >= heroRef.current.offsetTop) {
+      setNavbarTheme("beige");
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [search, setNavbarTheme]);
+
 
   return (
     <>

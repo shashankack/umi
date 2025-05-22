@@ -1,3 +1,4 @@
+// Updated CartContext with productImages support
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   createCart,
@@ -5,6 +6,7 @@ import {
   removeFromCart,
   updateCartItemQuantity,
   getCart,
+  fetchShopifyProducts,
 } from "../utils/shopify";
 
 const CartContext = createContext();
@@ -16,6 +18,13 @@ export const CartProvider = ({ children }) => {
   const [checkoutUrl, setCheckoutUrl] = useState("#");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [productImages, setProductImages] = useState({});
+
+  const [cartSummary, setCartSummary] = useState({
+    totalQuantity: 0,
+    totalItems: 0,
+    subtotal: 0,
+  });
 
   useEffect(() => {
     const initCart = async () => {
@@ -29,7 +38,7 @@ export const CartProvider = ({ children }) => {
           setCartId(cart.id);
           setLineItems(cart.lines.edges.map((edge) => edge.node));
           setCheckoutUrl(cart.checkoutUrl);
-          // console.log("Loaded cart from sessionStorage", cart);
+          updateSummary(cart.lines.edges.map((edge) => edge.node));
         } else {
           const cart = await createCart();
           if (!cart || !cart.id) throw new Error("Cart creation failed");
@@ -38,7 +47,7 @@ export const CartProvider = ({ children }) => {
           setCartId(cart.id);
           setLineItems([]);
           setCheckoutUrl(cart.checkoutUrl);
-          console.log("Created new cart", cart);
+          updateSummary([]);
         }
       } catch (err) {
         console.error("Cart initialization failed:", err);
@@ -51,8 +60,40 @@ export const CartProvider = ({ children }) => {
     initCart();
   }, []);
 
+  useEffect(() => {
+    const loadProductImages = async () => {
+      try {
+        const products = await fetchShopifyProducts();
+        const imageMap = {};
+
+        products.forEach((product) => {
+          const imageUrl = product.images.edges[0]?.node.url || null;
+          product.variants.edges.forEach((variant) => {
+            imageMap[variant.node.id] = imageUrl;
+          });
+        });
+
+        setProductImages(imageMap);
+      } catch (err) {
+        console.error("Failed to load product images:", err);
+      }
+    };
+
+    loadProductImages();
+  }, []);
+
+  const updateSummary = (items) => {
+    const totalItems = items.length;
+    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = items.reduce(
+      (sum, item) =>
+        sum + parseFloat(item.cost?.subtotalAmount?.amount || 0),
+      0
+    );
+    setCartSummary({ totalQuantity, totalItems, subtotal });
+  };
+
   const addItem = async (variantId, quantity = 1) => {
-    // Optimistic update
     setLineItems((prev) => {
       const existingItem = prev.find(
         (item) => item.merchandise.id === variantId
@@ -67,7 +108,7 @@ export const CartProvider = ({ children }) => {
         return [
           ...prev,
           {
-            id: `temp-${variantId}`, // Temporary ID until API returns real one
+            id: `temp-${variantId}`,
             quantity,
             merchandise: { id: variantId },
           },
@@ -78,7 +119,9 @@ export const CartProvider = ({ children }) => {
     try {
       const cart = await addToCart(cartId, variantId, quantity);
       if (cart?.lines?.edges) {
-        setLineItems(cart.lines.edges.map((edge) => edge.node));
+        const updatedItems = cart.lines.edges.map((edge) => edge.node);
+        setLineItems(updatedItems);
+        updateSummary(updatedItems);
       }
     } catch (err) {
       console.error("Add to cart failed:", err);
@@ -87,13 +130,16 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeItem = async (lineItemId) => {
-    // Optimistic update
-    setLineItems((prev) => prev.filter((item) => item.id !== lineItemId));
+    const optimisticItems = lineItems.filter((item) => item.id !== lineItemId);
+    setLineItems(optimisticItems);
+    updateSummary(optimisticItems);
 
     try {
       const cart = await removeFromCart(cartId, lineItemId);
       if (cart?.lines?.edges) {
-        setLineItems(cart.lines.edges.map((edge) => edge.node));
+        const updatedItems = cart.lines.edges.map((edge) => edge.node);
+        setLineItems(updatedItems);
+        updateSummary(updatedItems);
       }
     } catch (err) {
       console.error("Remove from cart failed:", err);
@@ -102,17 +148,18 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = async (lineItemId, quantity) => {
-    // Optimistic update
-    setLineItems((prev) =>
-      prev.map((item) =>
-        item.id === lineItemId ? { ...item, quantity } : item
-      )
+    const optimisticItems = lineItems.map((item) =>
+      item.id === lineItemId ? { ...item, quantity } : item
     );
+    setLineItems(optimisticItems);
+    updateSummary(optimisticItems);
 
     try {
       const cart = await updateCartItemQuantity(cartId, lineItemId, quantity);
       if (cart?.lines?.edges) {
-        setLineItems(cart.lines.edges.map((edge) => edge.node));
+        const updatedItems = cart.lines.edges.map((edge) => edge.node);
+        setLineItems(updatedItems);
+        updateSummary(updatedItems);
       }
     } catch (err) {
       console.error("Update quantity failed:", err);
@@ -131,6 +178,8 @@ export const CartProvider = ({ children }) => {
         removeItem,
         updateQuantity,
         checkoutUrl,
+        productImages,
+        cartSummary,
       }}
     >
       {children}

@@ -134,12 +134,12 @@ const Contact = () => {
                 }}
                 onClick={() => {
                   window.open(
-                    "https://www.instagram.com/umimatcha.ig/",
+                    "https://www.instagram.com/umimatchaclub/",
                     "_blank"
                   );
                 }}
               >
-                @umimatcha.ig
+                @umimatchaclub
               </Button>
               <Button
                 sx={{
