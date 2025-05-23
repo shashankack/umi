@@ -495,7 +495,10 @@ const MobileNavbar = () => {
             onClick={() => {
               setDropdownAnchor(null);
               setIsMenuOpen(false);
-              setTimeout(() => navigate(`/shop?scrollTo=${cat}`), 500);
+              setTimeout(() => {
+                navigate(`/shop?scrollTo=${cat}`);
+                window.scrollTo(0, 0);
+              }, 500);
             }}
             sx={{
               textTransform: "capitalize",

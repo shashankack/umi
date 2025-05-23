@@ -31,10 +31,10 @@ const Contact = () => {
       <Typography
         color={theme.colors.beige}
         fontFamily={"Genty"}
-        fontSize={60}
+        fontSize={isMobile ? "12vw" : "4.6vw"}
         marginTop={10}
         fontWeight={400}
-        mt={isMobile ? 7 : 0}
+        mt={isMobile ? 4 : 6}
         sx={{
           textShadow: `4px 4px 0  ${theme.colors.pink}`,
         }}

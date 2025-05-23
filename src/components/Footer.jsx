@@ -86,22 +86,6 @@ const Footer = () => {
       py={isMobile ? 3 : 6}
       px={isMobile ? 0 : 6}
     >
-      <Box
-        position="absolute"
-        bottom={isMobile ? 50 : 100}
-        right={50}
-        height={isMobile ? "8vh" : "22vh"}
-      >
-        <Box
-          component="img"
-          src={whisk}
-          sx={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-          }}
-        />
-      </Box>
       <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>
         <Box width={isMobile ? "15vw" : "10vw"}>
           <Box
@@ -166,7 +150,7 @@ const Footer = () => {
           ))}
         </Stack>
       </Stack>
-      <Stack justifyContent="space-between">
+      <Stack justifyContent="space-between" alignItems="baseline">
         <Stack gap={isMobile ? 0.5 : 2}>
           {navLinks[1].map((linkGroup, index) => (
             <Link key={index} sx={navLinkStyles}>
@@ -174,6 +158,22 @@ const Footer = () => {
             </Link>
           ))}
         </Stack>
+        <Box
+          display="flex"
+          justifyContent="end"
+          alignItems="end"
+          width={isMobile ? "16vw" : "22vw"}
+        >
+          <Box
+            component="img"
+            src={whisk}
+            sx={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
+        </Box>
         <Typography
           sx={{
             color: theme.colors.pink,
