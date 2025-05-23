@@ -1,17 +1,25 @@
-import Navbar from "./components/Navbar/Navbar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import ProductsInternal from "./components/Products/ProductsInternal";
 import Contact from "./pages/Contact/Contact";
-import { createTheme, ThemeProvider } from "@mui/material";
 import Shop from "./pages/Shop/Shop";
-import { useState } from "react";
+
 import MobileNavbar from "./components/Navbar/MobileNavbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 import { CartProvider } from "./context/CartContext";
 import CartUI from "./components/CartUi";
 import Footer from "./components/Footer";
+import Loader from "./components/Loader.jsx";
+
+import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
   colors: {
@@ -20,7 +28,6 @@ const theme = createTheme({
     green: "#B5D782",
     white: "#FCF9E8",
   },
-
   fonts: {
     text: "Stolzl",
     heading: "Gliker",
@@ -28,27 +35,50 @@ const theme = createTheme({
   },
 });
 
-const App = () => {
-  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
+// This component handles showing the Loader on route change
+const LoadingHandler = ({ children }) => {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    // When location changes, show loading
+    setLoading(true);
+
+    // Hide loading after 300ms - adjust as needed
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [location]);
+
+  return (
+    <>
+      {loading && <Loader />}
+      {children}
+    </>
+  );
+};
+
+const App = () => {
   return (
     <NavbarThemeProvider>
       <ThemeProvider theme={theme}>
         <CartProvider>
           <Router basename="/" window={window}>
-            <MobileNavbar />
-            <CartUI />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route
-                path="/product/:productId"
-                element={<ProductsInternal />}
-              />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/shop" element={<Shop />} />
-            </Routes>
-            <Footer />
+            <LoadingHandler>
+              <MobileNavbar />
+              <CartUI />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/product/:productId" element={<ProductsInternal />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/load" element={<Loader />} />
+              </Routes>
+              <Footer />
+            </LoadingHandler>
           </Router>
         </CartProvider>
       </ThemeProvider>

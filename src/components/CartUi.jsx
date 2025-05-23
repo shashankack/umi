@@ -136,6 +136,7 @@ const CartUI = () => {
                     key={item.id}
                     direction="row"
                     justifyContent="space-between"
+                    alignItems="center"
                     mt={4}
                   >
                     <Box
@@ -160,12 +161,15 @@ const CartUI = () => {
                       />
                     </Box>
                     <Stack
+                      flex={1}
+                      ml={2}
+                      width="100%"
                       direction="column"
-                      justifyContent="space-between"
+                      justifyContent="space"
                       alignItems="start"
                     >
                       <Typography
-                        fontSize="1.1vw"
+                        fontSize="1vw"
                         fontFamily={theme.fonts.text}
                         color={theme.colors.green}
                       >
@@ -180,7 +184,7 @@ const CartUI = () => {
                       </Typography>
                     </Stack>
 
-                    <Stack direction="row" spacing={1} alignItems="end">
+                    <Stack direction="row" alignItems="center">
                       <IconButton
                         sx={{ color: theme.colors.green }}
                         onClick={() =>
@@ -195,7 +199,11 @@ const CartUI = () => {
                       </IconButton>
 
                       <Typography
-                        sx={{ color: theme.colors.green, fontSize: "1.4vw" }}
+                        sx={{
+                          fontFamily: theme.fonts.text,
+                          color: theme.colors.green,
+                          fontSize: "1.2vw",
+                        }}
                       >
                         {item.quantity}
                       </Typography>
@@ -240,16 +248,16 @@ const CartUI = () => {
             }}
           >
             <Stack direction="row" spacing={1} alignItems="center">
-              <Typography sx={summaryStylesLeft} width={200}>
+              {/* <Typography sx={summaryStylesLeft} width={200}>
                 Total Products:
               </Typography>{" "}
               <Typography sx={summaryStylesRight}>
                 {cartSummary.totalItems}
-              </Typography>
+              </Typography> */}
             </Stack>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography sx={summaryStylesLeft} width={200}>
-                Total Quantity:
+                Qty:
               </Typography>{" "}
               <Typography sx={summaryStylesRight}>
                 {cartSummary.totalQuantity}

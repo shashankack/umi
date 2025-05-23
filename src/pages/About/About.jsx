@@ -29,7 +29,7 @@ const About = () => {
       <Typography
         mt={isMobile ? 14 : 18}
         fontFamily={"Genty"}
-        fontSize={isMobile ? "12vw" : "2vw"}
+        fontSize={isMobile ? "12vw" : "4vw"}
         fontWeight={200}
         color={theme.colors.beige}
         sx={{

@@ -170,7 +170,10 @@ const MobileNavbar = () => {
                 transform: "scale(1.05)",
               },
             }}
-            onClick={() => (window.location.href = "/")}
+            onClick={() => {
+              setIsMenuOpen(false);
+              window.location.href = "/";
+            }}
           />
           <Box
             width="100%"
@@ -255,9 +258,8 @@ const MobileNavbar = () => {
             >
               {isSearchOpen &&
                 filteredProducts.map((product) => (
-                  <Box>
+                  <Box key={product.id}>
                     <Box
-                      key={product.id}
                       display="flex"
                       alignItems="center"
                       gap={1}
@@ -267,9 +269,13 @@ const MobileNavbar = () => {
                         cursor: "pointer",
                         transition: "all 0.3s ease",
                       }}
-                      onClick={() =>
-                        (window.location.href = `/product/${product.id}`)
-                      }
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setTimeout(
+                          () => navigate(`/product/${product.id}`),
+                          300
+                        );
+                      }}
                     >
                       {product.image && (
                         <Box bgcolor={theme.colors.beige} borderRadius={2}>
@@ -365,7 +371,10 @@ const MobileNavbar = () => {
               </IconButton>
             </Box>
             <Box
-              onClick={() => (window.location.href = "/")}
+              onClick={() => {
+                setIsMenuOpen(false);
+                setTimeout(() => navigate("/"), 300);
+              }}
               component="img"
               src={beigeLogo}
               sx={{
@@ -411,12 +420,15 @@ const MobileNavbar = () => {
                     color={theme.colors.beige}
                     onClick={() => {
                       setIsMenuOpen(false);
-
                       setTimeout(() => {
-                        if (label === "Home") {
-                          window.location.href = "/";
+                        if (label === "Brewing" || label === "Our Matcha") {
+                          navigate(
+                            `/?scrollTo=${label
+                              .toLowerCase()
+                              .replace(/\s/g, "")}`
+                          );
                         } else {
-                          navigate(to);
+                          window.location.href = to;
                         }
                       }, 300);
                     }}
@@ -497,7 +509,6 @@ const MobileNavbar = () => {
               setIsMenuOpen(false);
               setTimeout(() => {
                 navigate(`/shop?scrollTo=${cat}`);
-                window.scrollTo(0, 0);
               }, 500);
             }}
             sx={{
@@ -505,7 +516,6 @@ const MobileNavbar = () => {
               fontFamily: theme.fonts.text,
               fontSize: "1rem",
               borderBottom: `2px solid ${theme.colors.beige}`,
-
               "&:last-child": {
                 borderBottom: "none",
               },

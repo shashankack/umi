@@ -162,7 +162,7 @@ const Footer = () => {
           display="flex"
           justifyContent="end"
           alignItems="end"
-          width={isMobile ? "16vw" : "22vw"}
+          width={isMobile ? "16vw" : "10vw"}
         >
           <Box
             component="img"

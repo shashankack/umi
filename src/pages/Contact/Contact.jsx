@@ -161,7 +161,7 @@ const Contact = () => {
                   },
                 }}
                 onClick={() => {
-                  window.location.href = "mailto:umimatchashop.com";
+                  window.location.href = "mailto:hello@umimatchashop.com";
                 }}
               >
                 hello@umimatchashop.com

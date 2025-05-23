@@ -6,7 +6,6 @@ import sliderThumb from "../../assets/images/vectors/neko/slider_thumb.png";
 
 import {
   Box,
-  Grid,
   Typography,
   Button,
   Select,
