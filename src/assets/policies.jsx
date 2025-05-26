@@ -155,7 +155,7 @@ export const privacyPolicy = {
       content: `
         This Privacy Policy describes how Umi Matcha - M/s Mirai Enterprises (the "Site", "we", "us", or "our")
         collects, uses, and discloses your personal information when you visit, use our services, or make a
-        purchase from umimatchashop.com (the "Site") or otherwise communicate with us regarding the Site
+        purchase from https://www.umimatchashop.com (the "Site") or otherwise communicate with us regarding the Site
         (collectively, the "Services").
         <br/><br/>
         For purposes of this Privacy Policy, "you" and "your" means you as the user of the Services, whether you are
