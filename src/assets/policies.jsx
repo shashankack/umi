@@ -155,7 +155,7 @@ export const privacyPolicy = {
       content: `
         This Privacy Policy describes how Umi Matcha - M/s Mirai Enterprises (the "Site", "we", "us", or "our")
         collects, uses, and discloses your personal information when you visit, use our services, or make a
-        purchase from 6ix8jh-qp.myshopify.com (the "Site") or otherwise communicate with us regarding the Site
+        purchase from umimatchashop.com (the "Site") or otherwise communicate with us regarding the Site
         (collectively, the "Services").
         <br/><br/>
         For purposes of this Privacy Policy, "you" and "your" means you as the user of the Services, whether you are
@@ -337,6 +337,126 @@ export const privacyPolicy = {
         <br/>
         <strong>Email:</strong> <a href="mailto:adviti@umimatchashop.com">adviti@umimatchashop.com</a><br/>
         <strong>Address:</strong> 17th Cross, 10th Main, Malleshwaram, No. 50, Bengaluru, KA 560055, India
+      `,
+    },
+  ],
+};
+
+export const refundPolicy = {
+  title: "Return & Refund Policy",
+  lastUpdated: "May 2025", // Optional – can be made dynamic
+  sections: [
+    {
+      heading: "Introduction",
+      content: `
+        At Umi (Mirai Enterprises), we strive to ensure that every order reaches you in perfect condition.
+        Please read our return and refund policy carefully before making a purchase.
+      `,
+    },
+    {
+      heading: "Matcha Products",
+      content: `
+        Due to the nature of our matcha products and for safety and hygiene reasons,
+        we do not accept any returns or offer refunds on our matcha range under any circumstances.
+        All matcha purchases are final.
+      `,
+    },
+    {
+      heading: "Matchaware (Matcha Accessories)",
+      content: `
+        We only accept returns for matchaware items (e.g., chawans, whisks, scoops) if the product
+        arrives in a damaged or defective condition.
+        <br/><br/>
+        If your matchaware item is damaged or defective upon delivery, please follow these steps:
+        <ol>
+          <li>Contact us at <a href="mailto:hello@umimatchashop.com">hello@umimatchashop.com</a> within 24 hours of receiving the product.</li>
+          <li>Provide your order number, a brief description of the issue, and clear photos of the damaged or defective item.</li>
+          <li>Upon verification, we will arrange for a replacement or issue a refund, as appropriate.</li>
+        </ol>
+      `,
+    },
+    {
+      heading: "Important Notes",
+      content: `
+        <ul>
+          <li>Returns are only accepted for matchaware products that are unused and in their original packaging.</li>
+          <li>We reserve the right to reject any return request that does not meet the above criteria.</li>
+          <li>Refunds, if approved, will be processed to the original method of payment within 7–10 business days.</li>
+        </ul>
+        <br/>
+        We appreciate your understanding and support. If you have any questions, please contact us at
+        <a href="mailto:hello@umimatchashop.com">hello@umimatchashop.com</a>.
+      `,
+    },
+    {
+      heading: "Changes to This Policy",
+      content: `
+        We may update this Policy from time to time, including to reflect changes to our practices or
+        for other operational, legal, or regulatory reasons. We will post the revised Policy on the Site,
+        update the "Last updated" date and take any other steps required by applicable law.
+      `,
+    },
+  ],
+};
+
+export const shippingPolicy = {
+  title: "Shipping & Delivery Policy",
+  lastUpdated: "May 2025", // Optional field
+  sections: [
+    {
+      heading: "Introduction",
+      content: `
+        At Umi (Mirai Enterprises), we are committed to delivering your order swiftly and securely.
+        Please take a moment to review our shipping and delivery policy.
+      `,
+    },
+    {
+      heading: "Order Processing & Shipping",
+      content: `
+        <ul>
+          <li>All orders are processed and shipped within 3 business days from the date of purchase.</li>
+          <li>Delays may occur due to unforeseen circumstances beyond Umi's control (e.g., weather, courier delays, operational issues).</li>
+          <li>Orders are shipped via air shipping for fast and reliable delivery.</li>
+          <li>Once your order is picked up, tracking information and delivery updates will be provided by the shipping partner.</li>
+        </ul>
+      `,
+    },
+    {
+      heading: "Delivery Duration & Timing",
+      content: `
+        <ul>
+          <li>Estimated delivery times vary based on your location and courier logistics.</li>
+          <li>Delivery dates and time slots are managed solely by the shipping provider; Umi cannot control exact timings.</li>
+          <li>Track your order using the link shared by the shipping partner for real-time updates.</li>
+        </ul>
+      `,
+    },
+    {
+      heading: "Shipping Insurance & Damages",
+      content: `
+        <ul>
+          <li>Every order is shipped with comprehensive transit insurance.</li>
+          <li>If your order is damaged during transit, notify us within 24 hours at <a href="mailto:hello@umimatchashop.com">hello@umimatchashop.com</a>.</li>
+          <li>To claim a refund or replacement, include clear photos of the damaged item(s) and packaging in your email.</li>
+        </ul>
+      `,
+    },
+    {
+      heading: "Additional Notes",
+      content: `
+        <ul>
+          <li>Shipping times may slightly vary based on location and unforeseen delays.</li>
+          <li>We currently ship only within India.</li>
+        </ul>
+        <br/>
+        Thank you for choosing Umi. We appreciate your support and are happy to help with any shipping-related questions.
+      `,
+    },
+    {
+      heading: "Changes to This Policy",
+      content: `
+        We may update this Policy from time to time, including to reflect changes to our practices or for other operational, legal, or regulatory reasons.
+        We will post the revised Policy on the Site, update the "Last updated" date and take any other steps required by applicable law.
       `,
     },
   ],

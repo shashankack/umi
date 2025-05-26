@@ -82,6 +82,8 @@ const App = () => {
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/terms-of-service" element={<Policies />} />
                 <Route path="/privacy-policy" element={<Policies />} />
+                <Route path="/refund-policy" element={<Policies />} />
+                <Route path="/shipping-policy" element={<Policies />} />
                 <Route path="/load" element={<Test />} />
               </Routes>
               <Footer />

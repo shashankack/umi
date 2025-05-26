@@ -1,12 +1,18 @@
 import { Stack, useTheme, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { privacyPolicy, termsOfService } from "../assets/policies";
+import {
+  privacyPolicy,
+  termsOfService,
+  refundPolicy,
+  shippingPolicy,
+} from "../assets/policies";
 
 // Centralized policy map – scalable and clean
 const policyMap = {
   "privacy-policy": privacyPolicy,
   "terms-of-service": termsOfService,
-  // "refund-policy": refundPolicy
+  "refund-policy": refundPolicy,
+  "shipping-policy": shippingPolicy,
 };
 
 const LegalPolicy = () => {
