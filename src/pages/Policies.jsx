@@ -1,13 +1,20 @@
 import { Stack, useTheme, Typography } from "@mui/material";
-import { privacyPolicy } from "../../assets/policies/privacyPolicy";
-import { termsOfService } from "../assets/policies/termsOfService";
 import { useLocation } from "react-router-dom";
+import { privacyPolicy, termsOfService } from "../assets/policies";
 
-const PrivacyPolicy = () => {
+// Centralized policy map – scalable and clean
+const policyMap = {
+  "privacy-policy": privacyPolicy,
+  "terms-of-service": termsOfService,
+  // "refund-policy": refundPolicy
+};
+
+const LegalPolicy = () => {
   const theme = useTheme();
   const location = useLocation();
-  const isTermsOfService = location.pathname.includes("terms-of-service");
-  
+
+  const path = location.pathname.split("/").pop();
+  const policyData = policyMap[path] || privacyPolicy;
 
   return (
     <Stack
@@ -27,11 +34,11 @@ const PrivacyPolicy = () => {
           fontSize: "3vw",
         }}
       >
-        {privacyPolicy.title}
+        {policyData.title}
       </Typography>
 
       <Stack>
-        {privacyPolicy.sections.map((section, index) => (
+        {policyData.sections.map((section, index) => (
           <Stack key={index} mb={4} maxWidth="1600px" px={2}>
             <Typography
               sx={{
@@ -58,21 +65,17 @@ const PrivacyPolicy = () => {
                   borderRadius: "8px",
                   borderCollapse: "collapse",
                   tableLayout: "fixed",
+
                   "& th, & td": {
                     width: "50%",
+                    border: `1px solid ${theme.colors.pink}`,
+                    padding: "0.5rem",
                   },
 
                   "& th": {
                     color: theme.colors.beige,
-                    bgcolor: theme.colors.green,
-                    padding: "0.5rem",
-                    border: `4px solid ${theme.colors.pink}`,
+                    backgroundColor: theme.colors.green,
                     textAlign: "center",
-                  },
-                  "& td": {
-                    border: `4px solid ${theme.colors.pink}`,
-                    padding: "0.5rem",
-                    borderBottom: `1px solid ${theme.colors.pink}`,
                   },
                 },
 
@@ -106,4 +109,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default LegalPolicy;

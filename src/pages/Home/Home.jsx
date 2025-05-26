@@ -88,21 +88,21 @@ const Home = () => {
 
   return (
     <>
-      <div ref={heroRef}>
-        <HeroSection theme={theme} />
-      </div>
       <Box
         height="100vh"
-        bgcolor={theme.colors.pink}
+        bgcolor={theme.colors.beige}
         display="flex"
         justifyContent="center"
         alignItems="center"
         fontFamily={theme.fonts.text}
-        color={theme.colors.beige}
+        color={theme.colors.pink}
         fontSize={30}
       >
         video section
       </Box>
+      <div ref={heroRef}>
+        <HeroSection theme={theme} />
+      </div>
       <div
         ref={productsRef}
         className="products-sec"
@@ -137,6 +137,19 @@ const Home = () => {
       <div className="about-sec" ref={ourMatchaRef}>
         <AboutSection />
       </div>
+      <Box
+        height="100vh"
+        bgcolor={theme.colors.pink}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        fontFamily={theme.fonts.text}
+        color={theme.colors.beige}
+        fontSize={30}
+      >
+        <Box height={600} width={400} bgcolor={theme.colors.beige}></Box>
+        video section
+      </Box>
       <div ref={brewingRef}>
         <TutorialSection />
       </div>

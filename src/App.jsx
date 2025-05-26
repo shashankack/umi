@@ -23,6 +23,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import PrivacyPolicy from "./pages/Policies/privacyPolicy.jsx";
 import Test from "./components/Test.jsx";
 import TermsOfService from "./pages/Policies/TermsOfService.jsx";
+import Policies from "./pages/Policies";
 
 const theme = createTheme({
   colors: {
@@ -81,8 +82,8 @@ const App = () => {
                 />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/shop" element={<Shop />} />
-                <Route path="/terms-of-service" element={<TermsOfService />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<Policies />} />
+                <Route path="/privacy-policy" element={<Policies />} />
                 <Route path="/load" element={<Test />} />
               </Routes>
               <Footer />
