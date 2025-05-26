@@ -31,6 +31,7 @@ export async function fetchShopifyProducts(limit = 20) {
             id
             title
             productType
+            tags
             descriptionHtml
             images(first:10) {
               edges {

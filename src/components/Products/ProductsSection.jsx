@@ -67,12 +67,12 @@ const ProductsSection = () => {
           { height: "70%" },
           {
             height: isMobile ? "145%" : "150%",
-            ease: "none",
+            duration: 1.4,
+            ease: "back.out(1.4)",
             scrollTrigger: {
               trigger: svgRef.current,
-              start: "top bottom",
-              end: "top 80% ",
-              scrub: 4,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
             },
           }
         );

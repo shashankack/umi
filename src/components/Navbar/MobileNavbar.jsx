@@ -59,7 +59,7 @@ const MobileNavbar = () => {
     { label: "About", to: "/about" },
     { label: "Contact", to: "/contact" },
     { label: "Brewing", to: "/?scrollTo=brewing" },
-    { label: "Our Matcha", to: "/?scrollTo=matcha" },
+    { label: "Our Matcha", to: "/?scrollTo=ourmatcha" },
   ];
 
   const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);

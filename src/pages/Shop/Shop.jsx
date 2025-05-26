@@ -28,6 +28,10 @@ import { useCart } from "../../context/CartContext";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
+import limitedTag from "../../assets/images/vectors/tags/limited.png";
+import bestSellerTag from "../../assets/images/vectors/tags/best_seller.png";
+import mostLovedTag from "../../assets/images/vectors/tags/most_loved.png";
+
 const Shop = () => {
   const theme = useTheme();
   const [products, setProducts] = useState([]);
@@ -40,6 +44,29 @@ const Shop = () => {
   const marqueeRef = useRef(null);
 
   const features = [feature1, feature2, feature3, feature4, feature5, feature6];
+
+  const setTags = (tags = []) => {
+    const normalized = tags.map((tag) => tag.toLowerCase());
+
+    if (
+      normalized.includes("limited") ||
+      normalized.includes("limited edition")
+    ) {
+      return limitedTag;
+    }
+
+    if (
+      normalized.includes("bestseller") ||
+      normalized.includes("best seller")
+    ) {
+      return bestSellerTag;
+    }
+
+    if (normalized.includes("mostloved") || normalized.includes("most-loved")) {
+      return mostLovedTag;
+    }
+    return null;
+  };
 
   const leftButtonStyles = {
     backgroundColor: theme.colors.pink,
@@ -292,7 +319,24 @@ const Shop = () => {
                     justifyContent="center"
                     flexDirection="column"
                     alignItems="center"
+                    position="relative"
                   >
+                    {setTags(product.tags) && (
+                      <Box
+                        component="img"
+                        src={setTags(product.tags)}
+                        alt="Product Tag"
+                        sx={{
+                          position: "absolute",
+                          transform: "rotate(20deg)",
+                          top: isMobile ? 20 : 0,
+                          right: isMobile ? -20 : 20,
+                          zIndex: 1,
+                          width: isMobile ? "16vw" : "10vw",
+                          objectFit: "contain",
+                        }}
+                      />
+                    )}
                     <Box
                       component="h2"
                       sx={{
@@ -465,10 +509,28 @@ const Shop = () => {
                       size={isMobile ? 5 : 4}
                       key={product.id}
                       display="flex"
-                      justifyContent="center"
+                      justifyContent="space-between"
                       flexDirection="column"
                       alignItems="center"
+                      position="relative"
+                      height={isMobile ? "auto" : "40vh"}
                     >
+                      {setTags(product.tags) && (
+                        <Box
+                          component="img"
+                          src={setTags(product.tags)}
+                          alt="Product Tag"
+                          sx={{
+                            transform: "rotate(20deg)",
+                            position: "absolute",
+                            top: isMobile ? 20 : 0,
+                            right: isMobile ? -20 : 20,
+                            zIndex: 1,
+                            width: isMobile ? "16vw" : "10vw",
+                            objectFit: "contain",
+                          }}
+                        />
+                      )}
                       <Box
                         component="h2"
                         sx={{
@@ -481,7 +543,10 @@ const Shop = () => {
                       >
                         {product.title}
                       </Box>
-                      <Box width={isMobile ? "40vw" : "60%"}>
+                      <Box
+                        width={isMobile ? "40vw" : "100%"}
+                        height={isMobile ? "auto" : "100%"}
+                      >
                         <Box
                           component="img"
                           src={product.images.edges[0]?.node.url}

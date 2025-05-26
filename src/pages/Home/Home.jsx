@@ -1,4 +1,4 @@
-import { useTheme } from "@mui/material/styles";
+import { useTheme, Box } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -9,7 +9,7 @@ import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
 
-import "./Home.scss";
+// import "./Home.scss";
 
 const Home = () => {
   const theme = useTheme();
@@ -91,6 +91,18 @@ const Home = () => {
       <div ref={heroRef}>
         <HeroSection theme={theme} />
       </div>
+      <Box
+        height="100vh"
+        bgcolor={theme.colors.pink}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        fontFamily={theme.fonts.text}
+        color={theme.colors.beige}
+        fontSize={30}
+      >
+        video section
+      </Box>
       <div
         ref={productsRef}
         className="products-sec"
@@ -105,10 +117,14 @@ const Home = () => {
             bottom:
               window.innerWidth <= 400
                 ? "-9%"
+                : window.innerWidth <= 430
+                ? "-8.8%"
                 : window.innerWidth <= 500
-                ? "-8.5%"
+                ? "-8.2%"
                 : window.innerWidth <= 1440
                 ? "-11%"
+                : window.innerWidth <= 1500
+                ? "-10%"
                 : "-9%",
             left: "0",
             width: "100%",

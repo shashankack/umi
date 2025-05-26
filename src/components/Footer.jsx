@@ -60,13 +60,13 @@ const Footer = () => {
       { name: "Shop", path: "/shop" },
       { name: "Story", path: "/about" },
       { name: "Contact", path: "/contact" },
-      { name: "Our matcha", path: "/" },
+      { name: "Our matcha", path: "/?scrollTo=ourmatcha" },
     ],
     [
-      { name: "Terms of service", path: "/" },
-      { name: "Refund policy", path: "/" },
-      { name: "Privacy policy", path: "/" },
-      { name: "FAQ", path: "/" },
+      { name: "Terms of service", path: "/terms-of-service" },
+      { name: "Refund policy", path: "/refund-policy" },
+      { name: "Privacy policy", path: "/privacy-policy" },
+      { name: "FAQ", path: "/faq" },
     ],
     [
       { name: "Instagram", path: "https://www.instagram.com/umimatchaclub" },
@@ -124,7 +124,19 @@ const Footer = () => {
       <Stack justifyContent="space-between">
         <Stack gap={isMobile ? 0.5 : 2}>
           {navLinks[0].map((linkGroup, index) => (
-            <Link key={index} sx={navLinkStyles}>
+            <Link
+              key={index}
+              sx={navLinkStyles}
+              onClick={() => {
+                setTimeout(() => {
+                  if (linkGroup.name === "Our Matcha") {
+                    navigate("/?scrollTo=ourmatcha");
+                  } else {
+                    window.location.href = linkGroup.path;
+                  }
+                }, 300);
+              }}
+            >
               {linkGroup.name}
             </Link>
           ))}
@@ -153,7 +165,7 @@ const Footer = () => {
       <Stack justifyContent="space-between" alignItems="baseline">
         <Stack gap={isMobile ? 0.5 : 2}>
           {navLinks[1].map((linkGroup, index) => (
-            <Link key={index} sx={navLinkStyles}>
+            <Link key={index} sx={navLinkStyles} href={linkGroup.path}>
               {linkGroup.name}
             </Link>
           ))}
