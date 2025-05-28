@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import Hero from "./components/HeroSection.jsx";
+
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import ProductsInternal from "./components/Products/ProductsInternal";
@@ -84,7 +86,7 @@ const App = () => {
                 <Route path="/privacy-policy" element={<Policies />} />
                 <Route path="/refund-policy" element={<Policies />} />
                 <Route path="/shipping-policy" element={<Policies />} />
-                <Route path="/load" element={<Test />} />
+                <Route path="/load" element={<Hero />} />
               </Routes>
               <Footer />
             </LoadingHandler>

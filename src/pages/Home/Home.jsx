@@ -2,20 +2,26 @@ import { useTheme, Box } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
+// import HeroSection from "../../components/HeroSection/HeroSection";
 import HeroSection from "../../components/HeroSection/HeroSection";
 import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
 
-// import "./Home.scss";
+import introVideo from "../../assets/videos/intro.mp4";
 
 const Home = () => {
   const theme = useTheme();
   const { setNavbarTheme } = useNavbarTheme();
   const location = useLocation();
 
+  const videoContainerRef = useRef(null);
+  const introVideoRef = useRef(null);
   const heroRef = useRef(null);
   const productsRef = useRef(null);
   const ourMatchaRef = useRef(null);
@@ -86,19 +92,41 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [setNavbarTheme]);
 
+  useEffect(() => {
+    gsap.fromTo(
+      introVideoRef.current,
+      { filter: "blur(0px) brightness(1)", scale: 1 },
+      {
+        filter: "blur(5px) brightness(0.8)",
+        ease: "back.out",
+        scrollTrigger: {
+          trigger: videoContainerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
+  }, []);
+
   return (
     <>
-      <Box
-        height="100vh"
-        bgcolor={theme.colors.beige}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        fontFamily={theme.fonts.text}
-        color={theme.colors.pink}
-        fontSize={30}
-      >
-        video section
+      <Box bgcolor={theme.colors.pink} height="100vh" ref={videoContainerRef}>
+        <Box
+          ref={introVideoRef}
+          component="video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          src={introVideo}
+          sx={{
+            height: "100%",
+            width: "100%",
+            objectFit: "cover",
+          }}
+        />
       </Box>
       <div ref={heroRef}>
         <HeroSection theme={theme} />

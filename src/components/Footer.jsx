@@ -25,7 +25,7 @@ const Footer = () => {
     textDecoration: "none",
     color: theme.colors.pink,
     fontFamily: theme.fonts.text,
-    fontSize: isMobile ? "2.4vw" : "1.6vw",
+    fontSize: isMobile ? "2.4vw" : "1.2vw",
     transition: "all 0.3s ease",
 
     "&:hover": {
@@ -37,6 +37,10 @@ const Footer = () => {
 
   const iconStyles = {
     textDecoration: "none",
+    mr: "1vw",
+    "&:last-child": {
+      mr: 0,
+    },
     color: theme.colors.beige,
     bgcolor: theme.colors.green,
     fontFamily: theme.fonts.text,
@@ -44,8 +48,8 @@ const Footer = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: isMobile ? "4.2vw" : "3vw",
-    height: isMobile ? "4.2vw" : "3vw",
+    width: isMobile ? "4.2vw" :  "2.6vw",
+    height: isMobile ? "4.2vw" : "2.6vw",
     transition: "all 0.3s ease",
 
     "&:hover": {
@@ -84,7 +88,7 @@ const Footer = () => {
       overflow="hidden"
       justifyContent="space-around"
       position="relative"
-      py={isMobile ? 3 : 6}
+      py={isMobile ? 3 : 4}
       px={isMobile ? 0 : 6}
     >
       <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>
@@ -112,7 +116,7 @@ const Footer = () => {
         </Box>
         <Typography
           variant="h5"
-          fontSize={isMobile ? "2.3vw" : "1.6vw"}
+          fontSize={isMobile ? "2.3vw" : "1.4vw"}
           fontFamily={theme.fonts.text}
           fontWeight={500}
           color={theme.colors.pink}
@@ -151,13 +155,13 @@ const Footer = () => {
               target="_blank"
             >
               {linkGroup.name === "Instagram" && (
-                <FaInstagram size={isMobile ? 14 : "2.2vw"} />
+                <FaInstagram size={isMobile ? 14 : "1.7vw"} />
               )}
               {linkGroup.name === "Pinterest" && (
-                <FaPinterestP size={isMobile ? 14 : "2.2vw"} />
+                <FaPinterestP size={isMobile ? 14 : "1.7vw"} />
               )}
               {linkGroup.name === "WhatsApp" && (
-                <FaWhatsapp size={isMobile ? 14 : "2.2vw"} />
+                <FaWhatsapp size={isMobile ? 14 : "1.7vw"} />
               )}
             </Link>
           ))}
@@ -175,7 +179,7 @@ const Footer = () => {
           display="flex"
           justifyContent="end"
           alignItems="end"
-          width={isMobile ? "16vw" : "10vw"}
+          width={isMobile ? "16vw" : "6vw"}
         >
           <Box
             component="img"
@@ -191,7 +195,7 @@ const Footer = () => {
           sx={{
             color: theme.colors.pink,
             fontFamily: theme.fonts.text,
-            fontSize: isMobile ? "2.2vw" : "1.6vw",
+            fontSize: isMobile ? "2.2vw" : "1.4vw",
           }}
         >
           Copyright{" "}

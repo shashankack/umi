@@ -1,12 +1,10 @@
 import gsap from "gsap";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 import { searchProducts, fetchShopifyProducts } from "../../utils/shopify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import {
-  Menu,
-  Grow,
-  MenuItem,
+  Collapse,
   AppBar,
   Box,
   Drawer,
@@ -36,10 +34,11 @@ const MobileNavbar = () => {
   const theme = useTheme();
   const { navbarTheme } = useNavbarTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [dropdownAnchor, setDropdownAnchor] = useState(null);
-  const isDropdownOpen = Boolean(dropdownAnchor);
+  const [showShopSubmenu, setShowShopSubmenu] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -101,12 +100,13 @@ const MobileNavbar = () => {
 
     const handleScroll = () => {
       const currentScroll = window.scrollY;
+      const threshold = pathname === "/" ? 1000 : 100;
 
       if (!tickingRef.current) {
         window.requestAnimationFrame(() => {
           const lastScrollTop = lastScrollTopRef.current;
 
-          if (currentScroll > lastScrollTop && currentScroll > 150) {
+          if (currentScroll > lastScrollTop && currentScroll > threshold) {
             setIsNavbarVisible(false);
           } else {
             setIsNavbarVisible(true);
@@ -406,55 +406,105 @@ const MobileNavbar = () => {
                   disableGutters
                   sx={{
                     justifyContent: "center",
-                    cursor: "pointer",
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    gap: 1,
+                    px: 0,
+                    py: 1,
                   }}
                 >
-                  {/* SHOP TEXT navigates to /shop */}
-                  <Typography
-                    fontFamily={theme.fonts.heading}
-                    fontSize="1.8rem"
-                    fontWeight="bold"
-                    color={theme.colors.beige}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setTimeout(() => {
-                        if (label === "Brewing" || label === "Our Matcha") {
-                          navigate(
-                            `/?scrollTo=${label
-                              .toLowerCase()
-                              .replace(/\s/g, "")}`
-                          );
-                        } else {
-                          window.location.href = to;
-                        }
-                      }, 300);
-                    }}
-                    sx={{ cursor: "pointer" }}
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    gap={1}
+                    width="100%"
                   >
-                    {label}
-                  </Typography>
-
-                  {/* DROPDOWN ICON toggles dropdown */}
-                  {hasDropdown && (
-                    <Box
-                      component="img"
-                      src={dropDown}
-                      alt="▼"
-                      sx={{
-                        mr: -3,
-                        width: 20,
-                        height: 20,
-                        cursor: "pointer",
-                        transform: isDropdownOpen
-                          ? "rotate(180deg)"
-                          : "rotate(0deg)",
-                        transition: "transform 0.3s ease",
+                    <Typography
+                      fontFamily={theme.fonts.heading}
+                      fontSize="1.8rem"
+                      fontWeight="bold"
+                      color={theme.colors.beige}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setTimeout(() => {
+                          if (label === "Brewing" || label === "Our Matcha") {
+                            navigate(
+                              `/?scrollTo=${label
+                                .toLowerCase()
+                                .replace(/\s/g, "")}`
+                            );
+                          } else {
+                            navigate(to);
+                          }
+                        }, 300);
                       }}
-                      onClick={(e) => setDropdownAnchor(e.currentTarget)}
-                    />
+                      sx={{ cursor: "pointer" }}
+                    >
+                      {label}
+                    </Typography>
+
+                    {hasDropdown && (
+                      <Box
+                        component="img"
+                        src={dropDown}
+                        alt="▼"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent triggering nav
+                          setShowShopSubmenu((prev) => !prev);
+                        }}
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          transformOrigin: "center",
+                          mr: -4,
+                          transform: showShopSubmenu
+                            ? "rotate(180deg)"
+                            : "rotate(0deg)",
+                          transition: "transform 0.3s ease",
+                          cursor: "pointer",
+                        }}
+                      />
+                    )}
+                  </Box>
+
+                  {/* Collapsible Shop submenu */}
+                  {label === "Shop" && (
+                    <Collapse in={showShopSubmenu} timeout="auto" unmountOnExit>
+                      <Box mt={1} width="100%" textAlign="center">
+                        {Object.keys(categoriesMap).map((cat) => (
+                          <Typography
+                            key={cat}
+                            onClick={() => {
+                              setShowShopSubmenu(false);
+                              setIsMenuOpen(false);
+                              setTimeout(() => {
+                                navigate(`/shop?scrollTo=${cat}`);
+                              }, 300);
+                            }}
+                            fontFamily={theme.fonts.heading}
+                            fontSize="1.4rem"
+                            textTransform={"capitalize"}
+                            fontWeight="bold"
+                            color={theme.colors.beige}
+                            sx={{
+                              py: 0.5,
+                              cursor: "pointer",
+                              // borderTop: `1px solid ${theme.colors.green}`,
+                              borderBottom: `1px solid ${theme.colors.green}`,
+                              "&:first-child": {
+                                borderTop: `1px solid ${theme.colors.green}`,
+                              },
+                              "&:last-child": {
+                                borderBottom: `1px solid ${theme.colors.green}`,
+                              },
+                            }}
+                          >
+                            {cat}
+                          </Typography>
+                        ))}
+                      </Box>
+                    </Collapse>
                   )}
                 </ListItem>
               </Box>
@@ -478,53 +528,6 @@ const MobileNavbar = () => {
           </Box>
         </Box>
       </Drawer>
-
-      <Menu
-        anchorEl={dropdownAnchor}
-        open={isDropdownOpen}
-        onClose={() => setDropdownAnchor(null)}
-        TransitionComponent={Grow}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        PaperProps={{
-          sx: {
-            backgroundColor: theme.colors.pink,
-            color: theme.colors.beige,
-            borderRadius: 2,
-            boxShadow: 3,
-          },
-        }}
-      >
-        {Object.keys(categoriesMap).map((cat) => (
-          <MenuItem
-            key={cat}
-            onClick={() => {
-              setDropdownAnchor(null);
-              setIsMenuOpen(false);
-              setTimeout(() => {
-                navigate(`/shop?scrollTo=${cat}`);
-              }, 500);
-            }}
-            sx={{
-              textTransform: "capitalize",
-              fontFamily: theme.fonts.text,
-              fontSize: "1rem",
-              borderBottom: `2px solid ${theme.colors.beige}`,
-              "&:last-child": {
-                borderBottom: "none",
-              },
-            }}
-          >
-            {cat}
-          </MenuItem>
-        ))}
-      </Menu>
     </>
   );
 };

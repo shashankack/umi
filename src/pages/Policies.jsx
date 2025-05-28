@@ -1,4 +1,4 @@
-import { Stack, useTheme, Typography } from "@mui/material";
+import { Stack, useTheme, Typography, useMediaQuery } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import {
   privacyPolicy,
@@ -17,6 +17,7 @@ const policyMap = {
 
 const LegalPolicy = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
 
   const path = location.pathname.split("/").pop();
@@ -25,7 +26,8 @@ const LegalPolicy = () => {
   return (
     <Stack
       bgcolor={theme.colors.beige}
-      py={20}
+      pt={isMobile ? 14 : 20}
+      pb={isMobile ? 0 : 4}
       spacing={2}
       justifyContent="center"
       alignItems="center"
@@ -37,7 +39,7 @@ const LegalPolicy = () => {
           fontWeight: 700,
           marginBottom: "1rem",
           textAlign: "center",
-          fontSize: "3vw",
+          fontSize: isMobile ? "6vw" : "3vw",
         }}
       >
         {policyData.title}
@@ -50,7 +52,7 @@ const LegalPolicy = () => {
               sx={{
                 fontFamily: theme.fonts.text,
                 fontWeight: 700,
-                fontSize: "1.4vw",
+                fontSize: isMobile ? "4vw" : "1.4vw",
                 color: theme.colors.pink,
                 marginBottom: "0.5rem",
               }}
@@ -62,7 +64,7 @@ const LegalPolicy = () => {
                 textAlign: "justify",
                 lineHeight: "1.3",
                 fontFamily: theme.fonts.text,
-                fontSize: "1vw",
+                fontSize: isMobile ? "3vw" : "1vw",
                 color: theme.colors.green,
 
                 "& table": {

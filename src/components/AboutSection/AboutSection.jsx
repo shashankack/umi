@@ -154,7 +154,7 @@ const AboutSection = () => {
         <Box
           width={isMobile ? "100%" : "50vw"}
           height={isMobile ? "auto" : "100vh"}
-          bgcolor={theme.colors.beige}
+          bgcolor={theme.colors.pink}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -163,7 +163,7 @@ const AboutSection = () => {
           <Typography
             fontFamily={theme.fonts.text}
             fontSize={isMobile ? "2.8vw" : "1.2vw"}
-            color={theme.colors.pink}
+            color={theme.colors.beige}
             textAlign="justify"
           >
             In the quiet hills of Wazuka, Japan where morning mists cling gently

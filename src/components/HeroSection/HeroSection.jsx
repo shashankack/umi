@@ -2,6 +2,8 @@ import "./HeroSection.scss";
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
@@ -23,6 +25,7 @@ import bowl from "../../assets/images/products/bowl.png";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
 const HeroSection = ({ theme }) => {
+  const containerRef = useRef(null);
   const imageRef = useRef(null);
   const nameRef = useRef(null);
   const descRef = useRef(null);
@@ -112,114 +115,168 @@ const HeroSection = ({ theme }) => {
     if (!products.length) return;
 
     const positions = getAnimationPositions();
-    const randomFloat = (min, max) => Math.random() * (max - min) + min;
 
-    // Initial entrance animations
-    gsap.fromTo(leaf1Ref.current, positions.leaf1.from, {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current, // ⬅️ Add this reference to your top-level section
+        start: "top 80%", // ⬅️ Adjust as needed
+        toggleActions: "play none none none",
+      },
+    });
+
+    tl.fromTo(leaf1Ref.current, positions.leaf1.from, {
       ...positions.leaf1.to,
       duration: 1,
       ease: "power3.out",
-    });
-    gsap.fromTo(leaf2Ref.current, positions.leaf2.from, {
-      ...positions.leaf2.to,
-      duration: 1,
-      ease: "power3.out",
-    });
-    gsap.fromTo(leaf3Ref.current, positions.leaf3.from, {
-      ...positions.leaf3.to,
-      duration: 1,
-      ease: "power3.out",
-    });
-    gsap.fromTo(leaf4Ref.current, positions.leaf4.from, {
-      ...positions.leaf4.to,
-      duration: 1,
-      ease: "power3.out",
-    });
-    gsap.fromTo(soupBowlRef.current, positions.soupBowl.from, {
-      ...positions.soupBowl.to,
-      duration: 1,
-      ease: "power3.out",
-    });
-    gsap.fromTo(whiskRef.current, positions.whisk.from, {
-      ...positions.whisk.to,
-      duration: 1,
-      ease: "power3.out",
+    })
+      .fromTo(
+        leaf2Ref.current,
+        positions.leaf2.from,
+        {
+          ...positions.leaf2.to,
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.9"
+      )
+      .fromTo(
+        leaf3Ref.current,
+        positions.leaf3.from,
+        {
+          ...positions.leaf3.to,
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.9"
+      )
+      .fromTo(
+        leaf4Ref.current,
+        positions.leaf4.from,
+        {
+          ...positions.leaf4.to,
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.9"
+      )
+      .fromTo(
+        soupBowlRef.current,
+        positions.soupBowl.from,
+        {
+          ...positions.soupBowl.to,
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.9"
+      )
+      .fromTo(
+        whiskRef.current,
+        positions.whisk.from,
+        {
+          ...positions.whisk.to,
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.9"
+      )
+      .fromTo(
+        homeTextRefs.current,
+        { yPercent: 110, opacity: 0 },
+        {
+          yPercent: 0,
+          delay: 0.6,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.3,
+          ease: "power2.out",
+        },
+        "-=0.8"
+      );
+
+    // Optional scroll-triggered float animation
+    ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top 80%",
+      onEnter: () => {
+        gsap.to(
+          [
+            leaf1Ref.current,
+            leaf2Ref.current,
+            leaf3Ref.current,
+            leaf4Ref.current,
+          ],
+          {
+            y: "+=10",
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          }
+        );
+
+        gsap.to(whiskRef.current, {
+          y: "-=6",
+          duration: 1.5,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+        gsap.to(soupBowlRef.current, {
+          rotate: -360,
+          duration: 30,
+          repeat: -1,
+          ease: "none",
+        });
+
+        if (imageRef.current) {
+          gsap.to(imageRef.current, {
+            y: -10,
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut",
+          });
+        }
+
+        intervalRef.current = setInterval(() => {
+          handleSlide(1);
+        }, 5000);
+      },
+      onLeaveBack: () => {
+        clearInterval(intervalRef.current);
+      },
     });
 
-    // Float animations (infinite yoyo effect)
-    gsap.to(leaf1Ref.current, {
-      y: "-=10",
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-    gsap.to(leaf2Ref.current, {
-      y: "+=10",
-      duration: 2.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-    gsap.to(leaf3Ref.current, {
-      y: "-=8",
-      duration: 2.8,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-    gsap.to(leaf4Ref.current, {
-      y: "+=10",
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
+    homeTextRefs.current.forEach((el, i) => {
+      gsap.fromTo(
+        el,
+        {
+          y: 50 * (i + 1),
+          opacity: 0,
+          rotateX: 90,
+          transformOrigin: "center top",
+        },
+        {
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            end: "bottom top",
+            scrub: true,
+          },
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          duration: 1.2,
+          ease: "power3.out",
+        }
+      );
     });
 
-    gsap.to(whiskRef.current, {
-      y: "-=6",
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-
-    // Continuous rotation for soup bowl
-    gsap.to(soupBowlRef.current, {
-      rotate: -360,
-      duration: 30,
-      repeat: -1,
-      ease: "none",
-    });
-
-    gsap.fromTo(
-      homeTextRefs.current,
-      { yPercent: 110, opacity: 0 },
-      {
-        yPercent: 0,
-        delay: .6,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.3,
-        ease: "power2.out",
-      }
-    );
-
-    if (imageRef.current) {
-      gsap.to(imageRef.current, {
-        y: -10,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut",
-      });
-    }
-
-    intervalRef.current = setInterval(() => {
-      handleSlide(1);
-    }, 5000);
-
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+      clearInterval(intervalRef.current);
+    };
   }, [products]);
 
   useEffect(() => {
@@ -316,11 +373,12 @@ const HeroSection = ({ theme }) => {
 
   return (
     <section
+      ref={containerRef}
       className="hero-section"
-      style={{ backgroundColor: theme.colors.pink }}
+      sx={{ backgroundColor: theme.colors.pink }}
     >
       <div className="hero-content">
-        <div className="home-text" style={{ color: theme.colors.beige }}>
+        <div className="home-text" sx={{ color: theme.colors.beige }}>
           <div className="title-wrapper">
             <h2 ref={(el) => (homeTextRefs.current[0] = el)}>UMI IS</h2>
           </div>
@@ -334,7 +392,7 @@ const HeroSection = ({ theme }) => {
 
         <div
           className="product-window"
-          style={{ fontFamily: theme.fonts.text }}
+          sx={{ fontFamily: theme.fonts.text }}
         >
           <div className="product-frame">
             <div className="slider">
@@ -364,7 +422,7 @@ const HeroSection = ({ theme }) => {
                   </p>
                 </div>
 
-                <div className="grid-item flower" style={{ cursor: "pointer" }}>
+                <div className="grid-item flower" sx={{ cursor: "pointer" }}>
                   <img src={sakura} alt="flower" ref={sakuraRef} />
                 </div>
               </div>
@@ -386,7 +444,7 @@ const HeroSection = ({ theme }) => {
               <div
                 key={colIdx}
                 className="square"
-                style={{
+                sx={{
                   backgroundColor:
                     (rowIdx + colIdx) % 2 === 0
                       ? theme.colors.green
