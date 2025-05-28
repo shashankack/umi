@@ -23,8 +23,9 @@ import scoop from "../../assets/images/products/scoop.png";
 import bowl from "../../assets/images/products/bowl.png";
 
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
+import { useTheme } from "@mui/material";
 
-const HeroSection = ({ theme }) => {
+const HeroSection = () => {
   const containerRef = useRef(null);
   const imageRef = useRef(null);
   const nameRef = useRef(null);
@@ -32,6 +33,8 @@ const HeroSection = ({ theme }) => {
   const originRef = useRef(null);
   const sakuraRef = useRef(null);
   const homeTextRefs = useRef([]);
+
+  const theme = useTheme();
 
   const leaf1Ref = useRef(null);
   const leaf2Ref = useRef(null);
@@ -375,10 +378,10 @@ const HeroSection = ({ theme }) => {
     <section
       ref={containerRef}
       className="hero-section"
-      sx={{ backgroundColor: theme.colors.pink }}
+      style={{ backgroundColor: theme.colors.pink }}
     >
       <div className="hero-content">
-        <div className="home-text" sx={{ color: theme.colors.beige }}>
+        <div className="home-text" style={{ color: theme.colors.beige }}>
           <div className="title-wrapper">
             <h2 ref={(el) => (homeTextRefs.current[0] = el)}>UMI IS</h2>
           </div>
@@ -392,7 +395,7 @@ const HeroSection = ({ theme }) => {
 
         <div
           className="product-window"
-          sx={{ fontFamily: theme.fonts.text }}
+          style={{ fontFamily: theme.fonts.text }}
         >
           <div className="product-frame">
             <div className="slider">
@@ -422,7 +425,7 @@ const HeroSection = ({ theme }) => {
                   </p>
                 </div>
 
-                <div className="grid-item flower" sx={{ cursor: "pointer" }}>
+                <div className="grid-item flower" style={{ cursor: "pointer" }}>
                   <img src={sakura} alt="flower" ref={sakuraRef} />
                 </div>
               </div>
@@ -444,7 +447,7 @@ const HeroSection = ({ theme }) => {
               <div
                 key={colIdx}
                 className="square"
-                sx={{
+                style={{
                   backgroundColor:
                     (rowIdx + colIdx) % 2 === 0
                       ? theme.colors.green
