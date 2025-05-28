@@ -7,7 +7,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 // import HeroSection from "../../components/HeroSection/HeroSection";
-import HeroSection from "../../components/HeroSection/HeroSection";
+import HeroSection from "../../components/HeroSection";
 import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
