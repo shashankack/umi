@@ -121,52 +121,93 @@ const HeroSection = () => {
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: containerRef.current, // ⬅️ Add this reference to your top-level section
-        start: "top 80%", // ⬅️ Adjust as needed
+        trigger: containerRef.current,
+        start: "top 80%",
         toggleActions: "play none none none",
+        onEnter: () => {
+          // Floating animations
+          gsap.to(
+            [
+              leaf1Ref.current,
+              leaf2Ref.current,
+              leaf3Ref.current,
+              leaf4Ref.current,
+            ],
+            {
+              y: "+=10",
+              duration: 2,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut",
+            }
+          );
+
+          gsap.to(whiskRef.current, {
+            y: "-=6",
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+
+          gsap.to(soupBowlRef.current, {
+            rotate: -360,
+            duration: 30,
+            repeat: -1,
+            ease: "none",
+          });
+
+          if (imageRef.current) {
+            gsap.to(imageRef.current, {
+              y: -10,
+              duration: 2,
+              repeat: -1,
+              yoyo: true,
+              ease: "power1.inOut",
+            });
+          }
+
+          // Auto slide
+          intervalRef.current = setInterval(() => {
+            handleSlide(1);
+          }, 5000);
+        },
+        onLeaveBack: () => {
+          clearInterval(intervalRef.current);
+        },
       },
     });
 
-    tl.fromTo(leaf1Ref.current, positions.leaf1.from, {
-      ...positions.leaf1.to,
-      duration: 1,
-      ease: "power3.out",
-    })
+    // Main entrance animations with opacity
+    tl.fromTo(
+      leaf1Ref.current,
+      { ...positions.leaf1.from, opacity: 0 },
+      { ...positions.leaf1.to, opacity: 1, duration: 1, ease: "power3.out" }
+    )
       .fromTo(
         leaf2Ref.current,
-        positions.leaf2.from,
-        {
-          ...positions.leaf2.to,
-          duration: 1,
-          ease: "power3.out",
-        },
+        { ...positions.leaf2.from, opacity: 0 },
+        { ...positions.leaf2.to, opacity: 1, duration: 1, ease: "power3.out" },
         "-=0.9"
       )
       .fromTo(
         leaf3Ref.current,
-        positions.leaf3.from,
-        {
-          ...positions.leaf3.to,
-          duration: 1,
-          ease: "power3.out",
-        },
+        { ...positions.leaf3.from, opacity: 0 },
+        { ...positions.leaf3.to, opacity: 1, duration: 1, ease: "power3.out" },
         "-=0.9"
       )
       .fromTo(
         leaf4Ref.current,
-        positions.leaf4.from,
-        {
-          ...positions.leaf4.to,
-          duration: 1,
-          ease: "power3.out",
-        },
+        { ...positions.leaf4.from, opacity: 0 },
+        { ...positions.leaf4.to, opacity: 1, duration: 1, ease: "power3.out" },
         "-=0.9"
       )
       .fromTo(
         soupBowlRef.current,
-        positions.soupBowl.from,
+        { ...positions.soupBowl.from, opacity: 0 },
         {
           ...positions.soupBowl.to,
+          opacity: 1,
           duration: 1,
           ease: "power3.out",
         },
@@ -174,20 +215,16 @@ const HeroSection = () => {
       )
       .fromTo(
         whiskRef.current,
-        positions.whisk.from,
-        {
-          ...positions.whisk.to,
-          duration: 1,
-          ease: "power3.out",
-        },
+        { ...positions.whisk.from, opacity: 0 },
+        { ...positions.whisk.to, opacity: 1, duration: 1, ease: "power3.out" },
         "-=0.9"
       )
       .fromTo(
         homeTextRefs.current,
-        { yPercent: 110, opacity: 0 },
+        { yPercent: -110, opacity: 0 },
         {
           yPercent: 0,
-          delay: 0.6,
+          delay: 0.3,
           opacity: 1,
           duration: 0.5,
           stagger: 0.3,
@@ -195,86 +232,6 @@ const HeroSection = () => {
         },
         "-=0.8"
       );
-
-    // Optional scroll-triggered float animation
-    ScrollTrigger.create({
-      trigger: containerRef.current,
-      start: "top 80%",
-      onEnter: () => {
-        gsap.to(
-          [
-            leaf1Ref.current,
-            leaf2Ref.current,
-            leaf3Ref.current,
-            leaf4Ref.current,
-          ],
-          {
-            y: "+=10",
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          }
-        );
-
-        gsap.to(whiskRef.current, {
-          y: "-=6",
-          duration: 1.5,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-
-        gsap.to(soupBowlRef.current, {
-          rotate: -360,
-          duration: 30,
-          repeat: -1,
-          ease: "none",
-        });
-
-        if (imageRef.current) {
-          gsap.to(imageRef.current, {
-            y: -10,
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            ease: "power1.inOut",
-          });
-        }
-
-        intervalRef.current = setInterval(() => {
-          handleSlide(1);
-        }, 5000);
-      },
-      onLeaveBack: () => {
-        clearInterval(intervalRef.current);
-      },
-    });
-
-    homeTextRefs.current.forEach((el, i) => {
-      gsap.fromTo(
-        el,
-        {
-          y: 50 * (i + 1),
-          opacity: 0,
-          rotateX: 90,
-          transformOrigin: "center top",
-        },
-        {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 80%",
-            end: "bottom top",
-            scrub: true,
-          },
-          y: 0,
-          opacity: 1,
-          rotateX: 0,
-          duration: 1.2,
-          ease: "power3.out",
-        }
-      );
-    });
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());

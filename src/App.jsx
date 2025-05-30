@@ -20,6 +20,7 @@ import { CartProvider } from "./context/CartContext";
 import CartUI from "./components/CartUi";
 import Footer from "./components/Footer";
 import Loader from "./components/Loader.jsx";
+import FAQ from "./pages/FAQ.jsx";
 
 import { createTheme, ThemeProvider } from "@mui/material";
 import Test from "./components/Test.jsx";
@@ -39,16 +40,13 @@ const theme = createTheme({
   },
 });
 
-// This component handles showing the Loader on route change
 const LoadingHandler = ({ children }) => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // When location changes, show loading
     setLoading(true);
 
-    // Hide loading after 300ms - adjust as needed
     const timer = setTimeout(() => {
       setLoading(false);
     }, 300);
@@ -86,6 +84,7 @@ const App = () => {
                 <Route path="/privacy-policy" element={<Policies />} />
                 <Route path="/refund-policy" element={<Policies />} />
                 <Route path="/shipping-policy" element={<Policies />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="/load" element={<Hero />} />
               </Routes>
               <Footer />

@@ -1,4 +1,4 @@
-import { useTheme, Box } from "@mui/material";
+import { useTheme, Box, useMediaQuery } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -7,25 +7,28 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 // import HeroSection from "../../components/HeroSection/HeroSection";
-import HeroSection from "../../components/HeroSection";
+import HeroSection from "../../components/HeroSection/HeroSection";
 import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
 
 import introVideo from "../../assets/videos/intro.mp4";
+import VideoSection from "../../components/VideoSection";
 
 const Home = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const { setNavbarTheme } = useNavbarTheme();
   const location = useLocation();
-
   const videoContainerRef = useRef(null);
   const introVideoRef = useRef(null);
   const heroRef = useRef(null);
   const productsRef = useRef(null);
   const ourMatchaRef = useRef(null);
   const brewingRef = useRef(null);
+  const videosRef = useRef(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -112,22 +115,24 @@ const Home = () => {
 
   return (
     <>
-      <Box bgcolor={theme.colors.pink} height="100vh" ref={videoContainerRef}>
-        <Box
-          ref={introVideoRef}
-          component="video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          src={introVideo}
-          sx={{
-            height: "100%",
-            width: "100%",
-            objectFit: "cover",
-          }}
-        />
-      </Box>
+      {!isMobile && (
+        <Box bgcolor={theme.colors.pink} height="100vh" ref={videoContainerRef}>
+          <Box
+            ref={introVideoRef}
+            component="video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            src={introVideo}
+            sx={{
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
+      )}
       <div ref={heroRef}>
         <HeroSection theme={theme} />
       </div>
@@ -165,19 +170,9 @@ const Home = () => {
       <div className="about-sec" ref={ourMatchaRef}>
         <AboutSection />
       </div>
-      <Box
-        height="100vh"
-        bgcolor={theme.colors.pink}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        fontFamily={theme.fonts.text}
-        color={theme.colors.beige}
-        fontSize={30}
-      >
-        <Box height={600} width={400} bgcolor={theme.colors.beige}></Box>
-        video section
-      </Box>
+      <div ref={videosRef}>
+        <VideoSection />
+      </div>
       <div ref={brewingRef}>
         <TutorialSection />
       </div>

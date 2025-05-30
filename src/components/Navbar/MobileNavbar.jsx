@@ -435,7 +435,7 @@ const MobileNavbar = () => {
                                 .replace(/\s/g, "")}`
                             );
                           } else {
-                            navigate(to);
+                            window.location.href = to;
                           }
                         }, 300);
                       }}

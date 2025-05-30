@@ -48,7 +48,7 @@ const Footer = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: isMobile ? "4.2vw" :  "2.6vw",
+    width: isMobile ? "4.2vw" : "2.6vw",
     height: isMobile ? "4.2vw" : "2.6vw",
     transition: "all 0.3s ease",
 
@@ -61,6 +61,7 @@ const Footer = () => {
 
   const navLinks = [
     [
+      { name: "FAQ", path: "/faq" },
       { name: "Shop", path: "/shop" },
       { name: "Story", path: "/about" },
       { name: "Contact", path: "/contact" },
@@ -71,7 +72,6 @@ const Footer = () => {
       { name: "Refund policy", path: "/refund-policy" },
       { name: "Privacy policy", path: "/privacy-policy" },
       { name: "Shipping policy", path: "/shipping-policy" },
-      { name: "FAQ", path: "/faq" },
     ],
     [
       { name: "Instagram", path: "https://www.instagram.com/umimatchaclub" },
@@ -88,11 +88,11 @@ const Footer = () => {
       overflow="hidden"
       justifyContent="space-around"
       position="relative"
-      py={isMobile ? 3 : 4}
+      py={isMobile ? 3 : 2}
       px={isMobile ? 0 : 6}
     >
       <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>
-        <Box width={isMobile ? "15vw" : "10vw"}>
+        <Box width={isMobile ? "15vw" : "8vw"}>
           <Box
             component="img"
             src={pinkMonogram}
@@ -103,7 +103,7 @@ const Footer = () => {
             }}
           />
         </Box>
-        <Box width={isMobile ? "15vw" : "10vw"}>
+        <Box width={isMobile ? "15vw" : "8vw"}>
           <Box
             component="img"
             src={bowl}
@@ -116,7 +116,7 @@ const Footer = () => {
         </Box>
         <Typography
           variant="h5"
-          fontSize={isMobile ? "2.3vw" : "1.4vw"}
+          fontSize={isMobile ? "2.3vw" : "1.2vw"}
           fontFamily={theme.fonts.text}
           fontWeight={500}
           color={theme.colors.pink}

@@ -100,25 +100,25 @@ const Hero = () => {
   const vectorsPositions = [
     {
       img: leaf1,
-      top: 10,
+      top: isMobile ? 110 : 10,
       left: 0,
-      width: "10vw",
+      width: isMobile ? "24vw" : "10vw",
       ref: leaf1Ref,
       animations: { from: 20, to: 0 },
     },
     {
       img: leaf2,
-      bottom: 0,
+      bottom: isMobile ? -480 : 0,
       left: 0,
-      width: "12vw",
+      width: isMobile ? "26vw" : "12vw",
       ref: leaf2Ref,
       animations: { from: 20, to: 0 },
     },
     {
       img: leaf3,
-      top: 10,
-      left: 50,
-      width: "17vw",
+      top: isMobile ? 140 : 10,
+      left: isMobile ? 65 : 50,
+      width: isMobile ? "34vw" : "17vw",
       rotate: 0,
       ref: leaf3Ref,
       animations: { from: 20, to: 0 },
@@ -156,8 +156,8 @@ const Hero = () => {
 
   const textStyle = {
     fontFamily: theme.fonts.heading,
-    textAlign: "start",
-    fontSize: isMobile ? "6vw" : "6.4vw",
+    textAlign: isMobile ? "center" : "start",
+    fontSize: isMobile ? "10vw" : "6.4vw",
     fontWeight: 800,
     lineHeight: 1,
     textTransform: "uppercase",
@@ -175,10 +175,10 @@ const Hero = () => {
 
     const dirMultiplier = direction === "next" ? 1 : -1;
 
-    // Outro animation timeline
     const outroTl = gsap.timeline({
       onComplete: () => {
         setCurrentProductIndex(newIndex);
+
         if (productTitleRef.current)
           productTitleRef.current.textContent = products[newIndex].title;
         if (productDescriptionRef.current)
@@ -204,7 +204,6 @@ const Hero = () => {
           }
         );
 
-        // Intro animation timeline
         const introTl = gsap.timeline();
 
         introTl.to(productImageRef.current, {
@@ -234,13 +233,13 @@ const Hero = () => {
             opacity: 1,
             duration: 0.4,
             ease: "power2.out",
-            stagger: 0.1,
           },
           "<"
         );
       },
     });
 
+    // Outro animations
     outroTl.to(
       [
         productTitleRef.current,
@@ -249,12 +248,10 @@ const Hero = () => {
       ],
       {
         opacity: 0,
-        y: 10,
+        y: -10,
         duration: 0.4,
         ease: "power2.out",
-        stagger: 0.1,
-      },
-      "-=0.2"
+      }
     );
 
     outroTl.to(
@@ -464,7 +461,7 @@ const Hero = () => {
 
   return (
     <Box
-      height="100vh"
+      height={isMobile ? "100%" : "100vh"}
       bgcolor={theme.colors.pink}
       display="flex"
       alignItems="center"
@@ -472,6 +469,8 @@ const Hero = () => {
       flexDirection={isMobile ? "column" : "row"}
       position="relative"
       overflow="hidden"
+      py={isMobile ? 8 : 0}
+      gap={isMobile ? 6 : 0}
     >
       {/* Checkered Background */}
       <Box
@@ -503,14 +502,14 @@ const Hero = () => {
 
       {/* Left */}
       <Box
-        width="60%"
+        width={isMobile ? "100%" : "60%"}
         height="100%"
         display="flex"
         justifyContent="center"
         flexDirection="column"
-        alignItems="center"
-        position={"relative"}
-        pl="8vw"
+        alignItems={isMobile ? "center" : "flex-start"}
+        position="relative"
+        pl={isMobile ? 0 : 14}
       >
         {/* Vectors */}
         {vectorsPositions.map((vector, index) => (
@@ -553,17 +552,19 @@ const Hero = () => {
       {/* Right */}
       <Box
         ref={rightSectionRef}
-        width="40%"
+        width={isMobile ? "100%" : "40%"}
         height="100%"
         display="flex"
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        py={"6vh"}
+        // py={"6vh"}
+        border={1}
       >
         <Box
-          height="70vh"
-          maxWidth={420}
+          height={isMobile ? "60vh" : "70vh"}
+          maxWidth={isMobile ? 310 : 420}
+          mb={isMobile ? 10 : 0}
           width="100%"
           bgcolor={theme.colors.beige}
           sx={{
@@ -608,11 +609,11 @@ const Hero = () => {
               </IconButton>
             </Box>
 
-            <Box mt={4} width="60%" overflow="hidden">
+            <Box mt={6} width="60%" overflow="hidden">
               <Typography
                 ref={productTitleRef}
                 fontFamily={theme.fonts.text}
-                fontSize="1.2vw"
+                fontSize={isMobile ? "4vw" : "1.2vw"}
                 fontWeight={700}
                 color={theme.colors.green}
                 textAlign="center"
@@ -647,7 +648,7 @@ const Hero = () => {
                   ref={productDescriptionRef}
                   fontFamily={theme.fonts.text}
                   color={theme.colors.green}
-                  fontSize=".8vw"
+                  fontSize={isMobile ? "2.4vw" : ".8vw"}
                   fontWeight={500}
                 >
                   {products[currentProductIndex].description}
@@ -658,7 +659,7 @@ const Hero = () => {
                   ref={productPriceRef}
                   fontFamily={theme.fonts.text}
                   color={theme.colors.green}
-                  fontSize=".8vw"
+                  fontSize={isMobile ? "2.4vw" : ".8vw"}
                   fontWeight={500}
                 >
                   Price: {products[currentProductIndex].price}
@@ -670,8 +671,8 @@ const Hero = () => {
                   component="img"
                   src={sakura}
                   sx={{
-                    width: "60%",
-                    height: "60%",
+                    width: "70%",
+                    height: "70%",
                     objectFit: "contain",
                   }}
                 />

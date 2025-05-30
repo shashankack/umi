@@ -103,7 +103,7 @@ const AboutSection = () => {
           >
             <Typography
               fontSize={isMobile ? "10vw" : "4.4vw"}
-              color="white"
+              color={theme.colors.white}
               textAlign="center"
               textTransform="uppercase"
               fontFamily={theme.fonts.text}
@@ -120,7 +120,7 @@ const AboutSection = () => {
             style={{ height: "100%" }}
             loop
             autoplay={{
-              delay: 3000,
+              delay: 1000,
             }}
             grabCursor={true}
             effect={"creative"}

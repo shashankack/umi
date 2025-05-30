@@ -41,7 +41,7 @@ const About = () => {
         About us
       </Typography>
       <Stack
-        gap={isMobile ? 5 : 0}
+        gap={0}
         display="flex"
         alignItems="center"
         justifyContent="space-evenly"

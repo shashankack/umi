@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Drawer,
@@ -11,6 +11,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
+import confetti from "canvas-confetti";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,12 +20,14 @@ import RemoveIcon from "@mui/icons-material/Remove";
 
 import { useCart } from "../context/CartContext";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
+import gsap from "gsap";
 
 const CartUI = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { navbarTheme } = useNavbarTheme();
   const [open, setOpen] = useState(false);
+
   const {
     lineItems,
     removeItem,
@@ -35,7 +38,51 @@ const CartUI = () => {
     cartSummary,
   } = useCart();
 
+  const cartIconRef = useRef(null);
+  const prevLineItemCountRef = useRef(
+    lineItems.reduce((sum, item) => sum + item.quantity, 0)
+  );
+
   const toggleDrawer = () => setOpen(!open);
+
+  useEffect(() => {
+  const prevCount = prevLineItemCountRef.current;
+  const currentCount = lineItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (currentCount > prevCount) {
+    // Confetti from actual cart icon position
+    const rect = cartIconRef.current.getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+    confetti({
+      particleCount: 60,
+      spread: 80,
+      startVelocity: 35,
+      origin: { x, y },
+      colors: ['#ff69b4', '#98fb98', '#fcd34d', '#f472b6'],
+    });
+
+    // Bounce + Pulse effect on cart icon
+    const tl = gsap.timeline();
+
+    tl.to(cartIconRef.current, {
+      y: -10,
+      scale: 1.2,
+      duration: 0.2,
+      ease: "power2.out",
+    })
+      .to(cartIconRef.current, {
+        y: 0,
+        scale: 1,
+        duration: 0.3,
+        ease: "bounce.out",
+      });
+  }
+
+  prevLineItemCountRef.current = currentCount;
+}, [lineItems]);
+
 
   if (loading || lineItems.length === 0) return null;
 
@@ -60,6 +107,7 @@ const CartUI = () => {
   return (
     <>
       <Box
+        ref={cartIconRef}
         sx={{
           position: "fixed",
           bottom: 24,
@@ -131,9 +179,8 @@ const CartUI = () => {
               const productThumbnail = productImages[variant?.id];
 
               return (
-                <>
+                <div key={item.id}>
                   <Stack
-                    key={item.id}
                     direction="row"
                     justifyContent="space-between"
                     alignItems="center"
@@ -143,10 +190,7 @@ const CartUI = () => {
                       display="flex"
                       justifyContent="center"
                       alignItems="center"
-                      sx={{
-                        width: 70,
-                        height: 70,
-                      }}
+                      sx={{ width: 70, height: 70 }}
                     >
                       <Box
                         component="img"
@@ -159,6 +203,7 @@ const CartUI = () => {
                         }}
                       />
                     </Box>
+
                     <Stack
                       flex={1}
                       ml={2}
@@ -229,7 +274,7 @@ const CartUI = () => {
                   <Divider
                     sx={{ mt: 1, border: `1px solid ${theme.colors.pink}` }}
                   />
-                </>
+                </div>
               );
             })}
           </Box>
@@ -247,17 +292,9 @@ const CartUI = () => {
             }}
           >
             <Stack direction="row" spacing={1} alignItems="center">
-              {/* <Typography sx={summaryStylesLeft} width={200}>
-                Total Products:
-              </Typography>{" "}
-              <Typography sx={summaryStylesRight}>
-                {cartSummary.totalItems}
-              </Typography> */}
-            </Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
               <Typography sx={summaryStylesLeft} width={200}>
                 Qty:
-              </Typography>{" "}
+              </Typography>
               <Typography sx={summaryStylesRight}>
                 {cartSummary.totalQuantity}
               </Typography>
@@ -265,9 +302,9 @@ const CartUI = () => {
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography sx={summaryStylesLeft} width={200}>
                 Subtotal:
-              </Typography>{" "}
+              </Typography>
               <Typography sx={summaryStylesRight}>
-                ₹{cartSummary.subtotal.toFixed(0) + `/-`}
+                ₹{cartSummary.subtotal.toFixed(0)}/-
               </Typography>
             </Stack>
           </Stack>
@@ -298,6 +335,3 @@ const CartUI = () => {
 };
 
 export default CartUI;
-
-/*
- */

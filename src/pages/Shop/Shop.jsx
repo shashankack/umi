@@ -15,6 +15,8 @@ import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
 import gsap from "gsap";
 
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
+
 import helloNeko from "../../assets/images/vectors/neko/hello.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
@@ -34,6 +36,7 @@ import mostLovedTag from "../../assets/images/vectors/tags/most_loved.png";
 
 const Shop = () => {
   const theme = useTheme();
+  const { setNavbarTheme } = useNavbarTheme();
   const [products, setProducts] = useState([]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { addItem, updateQuantity, lineItems, removeItem } = useCart();
@@ -108,6 +111,7 @@ const Shop = () => {
   };
 
   useEffect(() => {
+    setNavbarTheme("beige");
     const marquee = marqueeRef.current;
 
     if (!marquee) return;
