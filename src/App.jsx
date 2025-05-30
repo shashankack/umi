@@ -23,7 +23,7 @@ import Loader from "./components/Loader.jsx";
 import FAQ from "./pages/FAQ.jsx";
 
 import { createTheme, ThemeProvider } from "@mui/material";
-import Test from "./components/Test.jsx";
+import { faqData } from "./assets/faqData.jsx";
 import Policies from "./pages/Policies";
 
 const theme = createTheme({
@@ -84,7 +84,7 @@ const App = () => {
                 <Route path="/privacy-policy" element={<Policies />} />
                 <Route path="/refund-policy" element={<Policies />} />
                 <Route path="/shipping-policy" element={<Policies />} />
-                <Route path="/faq" element={<FAQ />} />
+                <Route path="/faq" element={<FAQ data={faqData} />} />
                 <Route path="/load" element={<Hero />} />
               </Routes>
               <Footer />
