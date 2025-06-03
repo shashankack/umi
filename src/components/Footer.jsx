@@ -88,7 +88,7 @@ const Footer = () => {
       overflow="hidden"
       justifyContent="space-around"
       position="relative"
-      py={isMobile ? 3 : 2}
+      py={isMobile ? 3 : 6}
       px={isMobile ? 0 : 6}
     >
       <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>

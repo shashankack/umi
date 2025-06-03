@@ -24,8 +24,6 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import Loading from "../Loading/Loading";
 
-import pageFold from "../../assets/images/vectors/paper_fold.png";
-
 const ProductsInternal = () => {
   const theme = useTheme();
   const { productId } = useParams();
@@ -46,6 +44,68 @@ const ProductsInternal = () => {
     console.log(`Added ${quantity} of ${product.title} to the cart.`);
   };
 
+  const parsedTagline = useMemo(() => {
+    if (!product?.descriptionHtml) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(product.descriptionHtml, "text/html");
+    const taglineElement = doc.querySelector("p.tagline");
+
+    return taglineElement ? (
+      <Typography
+        variant="h5"
+        sx={{
+          fontFamily: theme.fonts.text,
+          fontWeight: 700,
+          textAlign: "justify",
+          fontSize: isMobile ? "3vw" : "1.2vw",
+        }}
+        dangerouslySetInnerHTML={{ __html: taglineElement.innerHTML }}
+      />
+    ) : null;
+  }, [product?.descriptionHtml, theme.fonts.text]);
+
+  const parsedSummary = useMemo(() => {
+    if (!product?.descriptionHtml) return null;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(product.descriptionHtml, "text/html");
+    const summaryElement = doc.querySelector("p.summary");
+    return summaryElement ? (
+      <Typography
+        variant="h5"
+        sx={{
+          fontFamily: theme.fonts.text,
+          fontWeight: 200,
+          textAlign: "justify",
+          fontSize: isMobile ? "3.4vw" : "1.1vw",
+          mb: 2,
+        }}
+        dangerouslySetInnerHTML={{ __html: summaryElement.innerHTML }}
+      />
+    ) : null;
+  }, [product?.descriptionHtml, theme.fonts.text]);
+
+  const parsedFullDescription = useMemo(() => {
+    if (!product?.descriptionHtml) return null;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(product.descriptionHtml, "text/html");
+    const fullDescriptionElement = doc.querySelector("p.full-description");
+    return fullDescriptionElement ? (
+      <Typography
+        variant="body1"
+        sx={{
+          fontFamily: theme.fonts.text,
+          fontWeight: 200,
+          textAlign: "justify",
+          fontSize: isMobile ? "3.4vw" : "1vw",
+          color: theme.colors.beige,
+        }}
+      >
+        {fullDescriptionElement.textContent}
+      </Typography>
+    ) : null;
+  }, [product?.descriptionHtml, theme.fonts.text]);
+
   const parsedParagraphs = useMemo(() => {
     if (!product?.descriptionHtml) return null;
 
@@ -61,14 +121,17 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "3.4vw" : "1.1vw",
+          fontSize: isMobile ? "3vw" : "1vw",
           mb: 2,
+          "& strong": {
+            fontWeight: 500,
+            fontSize: 30,
+          },
         }}
-      >
-        {p.textContent}
-      </Typography>
+        dangerouslySetInnerHTML={{ __html: p.innerHTML }}
+      />
     ));
-  }, [product?.descriptionHtml, theme.fonts.text]);
+  }, [product?.descriptionHtml, theme.fonts.text, isMobile]);
 
   const parsedAttributes = useMemo(() => {
     if (!product?.descriptionHtml) return null;
@@ -104,14 +167,14 @@ const ProductsInternal = () => {
       <Box key={i}>
         <Typography
           sx={{
-            p: "10px 20px",
+            p: isMobile ? "6px 10px" : "10px 30px",
             fontWeight: 200,
-            borderRadius: 3,
+            borderRadius: isMobile ? 1 : 3,
             textAlign: "justify",
             color: theme.colors.pink,
             fontFamily: theme.fonts.text,
             backgroundColor: theme.colors.beige,
-            fontSize: isMobile ? "3.4vw" : "1vw",
+            fontSize: isMobile ? "2vw" : ".6vw",
             boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
           }}
         >
@@ -196,9 +259,9 @@ const ProductsInternal = () => {
         direction="row"
         bgcolor={theme.colors.green}
         borderRadius={6}
-        flexDirection={isMobile ? "column" : "row"}
-        justifyContent={isMobile ? "center" : "space-between"}
-        alignItems="center"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="start"
         mt={isMobile ? 8 : 0}
         mb={
           isMobile
@@ -210,195 +273,268 @@ const ProductsInternal = () => {
             : 10
         }
         px={isMobile ? 4 : 10}
-        spacing={isMobile ? 0 : 4}
       >
-        {/* Image Section */}
-        <Stack
-          width={isMobile ? "100%" : "30vw"}
-          height="100%"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box
-            p={2}
-            boxShadow={
-              isMobile ? "none" : `3px 3px 0px 0px ${theme.colors.pink}`
-            }
-            borderRadius={4}
-            bgcolor={theme.colors.beige}
+        {!isMobile && (
+          <Typography
+            mt={isMobile ? 2 : 0}
+            fontSize={isMobile ? "7vw" : "2.6vw"}
+            fontFamily={theme.fonts.title}
+            fontWeight={500}
+            textAlign="center"
+            width={isMobile ? "100%" : "30vw"}
+            color={theme.colors.beige}
             sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexDirection: "column",
+              textShadow: `1px 5px 0px ${theme.colors.pink}`,
             }}
           >
-            <Box height={"36vh"} mb={isMobile ? 2 : 0}>
-              <Box
-                component="img"
-                src={selectedImage}
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  objectFit: "contain",
-                  borderRadius: 2,
-                }}
-              />
-            </Box>
-            <Swiper
-              slidesPerView="5"
-              direction="horizontal"
-              mousewheel={true}
-              scrollbar
-              modules={[Mousewheel, Scrollbar]}
-              style={{
-                width: "100%",
-              }}
-            >
-              {product.images.edges.map((image, i) => (
-                <SwiperSlide key={i} style={{ height: "100%", width: "100%" }}>
-                  <Box
-                    component="img"
-                    src={image.node.url}
-                    alt={`thumb-${i}`}
-                    onClick={() => handleThumbnailClick(image.node.url)}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      borderRadius: 1,
-                      cursor: "pointer",
-                      border:
-                        image.node.url === selectedImage
-                          ? `2px solid ${theme.colors.pink}`
-                          : "2px solid transparent",
-                    }}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Box>
-        </Stack>
+            {product.title}
+          </Typography>
+        )}
 
-        {/* Text Section */}
-        <Stack
-          width="100%"
-          height={"100%"}
-          color={theme.colors.beige}
-          alignItems="start"
-          justifyContent="space-between"
-        >
-          <Stack mt={isMobile ? 2 : 0}>
-            <Typography
-              fontSize={isMobile ? "9vw" : "3vw"}
-              fontFamily={theme.fonts.title}
-              fontWeight={500}
-              sx={{
-                textShadow: `1px 5px 0px ${theme.colors.pink}`,
-              }}
-            >
-              {product.title}
-            </Typography>
-            <Typography
-              mt={isMobile ? 1 : 0}
-              variant="h4"
-              fontWeight={800}
-              sx={{ fontSize: isMobile ? "6vw" : "2vw" }}
-            >
-              ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
-              /-
-            </Typography>
-
-            <Stack
-              mt={2}
-              mb={isMobile ? 2 : 0}
-              direction="row"
-              alignItems="center"
-              justifyContent="start"
-              gap={2}
-            >
-              <Select
-                value={quantity}
-                onChange={handleQuantityChange}
-                size="small"
-                sx={{
-                  fontSize: isMobile ? "0.7rem" : "1vw",
-                  backgroundColor: theme.colors.beige,
-                  color: theme.colors.pink,
-                  borderRadius: 2,
-                  boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                  "& .MuiSelect-icon": {
-                    color: theme.colors.pink,
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    border: "none",
-                  },
-                }}
-              >
-                {[...Array(10).keys()].map((i) => (
-                  <MenuItem key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Button
-                onClick={handleAddToCart}
-                variant="contained"
-                sx={{
-                  fontFamily: theme.fonts.text,
-                  fontWeight: 400,
-                  textAlign: "justify",
-                  fontSize: isMobile ? "0.7rem" : "1rem",
-                  backgroundColor: theme.colors.beige,
-                  color: theme.colors.pink,
-                  boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: theme.colors.pink,
-                    color: theme.colors.beige,
-                    boxShadow: `0px 4px 0px 0px ${theme.colors.beige}`,
-                  },
-                }}
-                endIcon={<FaShoppingCart />}
-              >
-                Add to Cart
-              </Button>
-            </Stack>
-          </Stack>
-
+        {/* Image Section */}
+        <Stack direction={isMobile ? "column" : "row"} width="100%" gap={2}>
           <Stack
-            fontFamily={theme.fonts.text}
-            fontWeight={200}
-            textAlign="justify"
+            width={isMobile ? "100%" : "30vw"}
+            height="100%"
+            justifyContent="center"
+            alignItems="center"
           >
-            {parsedParagraphs}
-            <Stack gap={1}>{parsedAttributes}</Stack>
-          </Stack>
-
-          <Stack mt={isMobile ? 2 : 0} direction="row" gap={1}>
-            {parsedHighlightedAttributes}
-            {product.variants.edges[0]?.node.weight !== 0 && (
-              <Typography
-                variant="h5"
-                sx={{
-                  fontSize: isMobile ? "3.4vw" : "1vw",
-                  backgroundColor: theme.colors.beige,
-                  color: theme.colors.pink,
-                  borderRadius: 2,
-                  boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                  p: "10px 20px",
-                  fontWeight: 200,
-                  fontFamily: theme.fonts.text,
+            <Box
+              p={2}
+              boxShadow={
+                isMobile ? "none" : `3px 3px 0px 0px ${theme.colors.pink}`
+              }
+              borderRadius={4}
+              bgcolor={theme.colors.beige}
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Box height={"36vh"} mb={isMobile ? 2 : 0}>
+                <Box
+                  component="img"
+                  src={selectedImage}
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    objectFit: "contain",
+                    borderRadius: 2,
+                  }}
+                />
+              </Box>
+              <Swiper
+                slidesPerView="5"
+                direction="horizontal"
+                mousewheel={true}
+                scrollbar
+                modules={[Mousewheel, Scrollbar]}
+                style={{
+                  width: "100%",
                 }}
               >
-                weight: {product.variants.edges[0]?.node.weight}
-                {product.variants.edges[0]?.node.weightUnit === "GRAMS"
-                  ? "g"
-                  : ""}
+                {product.images.edges.map((image, i) => (
+                  <SwiperSlide
+                    key={i}
+                    style={{ height: "100%", width: "100%" }}
+                  >
+                    <Box
+                      component="img"
+                      src={image.node.url}
+                      alt={`thumb-${i}`}
+                      onClick={() => handleThumbnailClick(image.node.url)}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        borderRadius: 1,
+                        cursor: "pointer",
+                        border:
+                          image.node.url === selectedImage
+                            ? `2px solid ${theme.colors.pink}`
+                            : "2px solid transparent",
+                      }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
+          </Stack>
+
+          {/* Text Section */}
+          <Stack
+            width="100%"
+            height="100%"
+            color={theme.colors.beige}
+            alignItems="start"
+            justifyContent={!parsedTagline ? "start" : "space-between"}
+            gap={2}
+          >
+            {isMobile && (
+              <Typography
+                mt={isMobile ? 2 : 0}
+                fontSize={isMobile ? "7vw" : "2.6vw"}
+                fontFamily={theme.fonts.title}
+                fontWeight={500}
+                textAlign="start"
+                width="100%"
+                color={theme.colors.beige}
+                sx={{
+                  textShadow: `1px 5px 0px ${theme.colors.pink}`,
+                }}
+              >
+                {product.title}
               </Typography>
             )}
+            {parsedTagline && <Box>{parsedTagline}</Box>}
+
+            <Stack
+              mt={isMobile ? 2 : 0}
+              gap={isMobile ? 0 : 2}
+              mb={isMobile ? 2 : 0}
+              width="100%"
+            >
+              <Stack direction="row" gap={1}>
+                <Typography
+                  variant="h1"
+                  fontWeight={800}
+                  sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
+                >
+                  ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
+                  /-
+                </Typography>
+
+                {isMobile && (
+                  <Stack direction="row" gap={2} mb={2}>
+                    {parsedHighlightedAttributes}
+                    {product.variants.edges[0]?.node.weight !== 0 && (
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          p: isMobile ? "6px 10px" : "10px 30px",
+                          fontWeight: 200,
+                          borderRadius: isMobile ? 1 : 3,
+                          textAlign: "justify",
+                          color: theme.colors.pink,
+                          fontFamily: theme.fonts.text,
+                          backgroundColor: theme.colors.beige,
+                          fontSize: isMobile ? "2vw" : ".6vw",
+                          boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                        }}
+                      >
+                        weight: {product.variants.edges[0]?.node.weight}
+                        {product.variants.edges[0]?.node.weightUnit === "GRAMS"
+                          ? "g"
+                          : ""}
+                      </Typography>
+                    )}
+                  </Stack>
+                )}
+              </Stack>
+
+              <Stack
+                width="100%"
+                mt={1}
+                direction="row"
+                alignItems="center"
+                justifyContent="start"
+                gap={2}
+              >
+                <Select
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  size="small"
+                  sx={{
+                    fontSize: isMobile ? "0.7rem" : ".8vw",
+                    backgroundColor: theme.colors.beige,
+                    color: theme.colors.pink,
+                    borderRadius: 2,
+                    boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                    "& .MuiSelect-icon": {
+                      color: theme.colors.pink,
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                  }}
+                >
+                  {[...Array(10).keys()].map((i) => (
+                    <MenuItem key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Button
+                  onClick={handleAddToCart}
+                  variant="contained"
+                  fullWidth={isMobile}
+                  sx={{
+                    fontFamily: theme.fonts.text,
+                    fontWeight: 400,
+                    textAlign: "justify",
+                    fontSize: isMobile ? "0.7rem" : "1rem",
+                    backgroundColor: theme.colors.beige,
+                    color: theme.colors.pink,
+                    boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: theme.colors.pink,
+                      color: theme.colors.beige,
+                      boxShadow: `0px 4px 0px 0px ${theme.colors.beige}`,
+                    },
+                  }}
+                  endIcon={<FaShoppingCart />}
+                >
+                  Add to Cart
+                </Button>
+              </Stack>
+
+              {!isMobile && (
+                <Stack
+                  mt={isMobile ? 2 : 0}
+                  direction="row"
+                  gap={2}
+                  width="100%"
+                >
+                  {parsedHighlightedAttributes}
+                  {product.variants.edges[0]?.node.weight !== 0 && (
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        p: isMobile ? "6px 10px" : "10px 30px",
+                        fontWeight: 200,
+                        borderRadius: isMobile ? 1 : 3,
+                        textAlign: "justify",
+                        color: theme.colors.pink,
+                        fontFamily: theme.fonts.text,
+                        backgroundColor: theme.colors.beige,
+                        fontSize: isMobile ? "2vw" : ".6vw",
+                        boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                      }}
+                    >
+                      weight: {product.variants.edges[0]?.node.weight}
+                      {product.variants.edges[0]?.node.weightUnit === "GRAMS"
+                        ? "g"
+                        : ""}
+                    </Typography>
+                  )}
+                </Stack>
+              )}
+            </Stack>
+
+            <Stack
+              fontFamily={theme.fonts.text}
+              fontWeight={200}
+              textAlign="justify"
+            >
+              {parsedParagraphs}
+              <Stack gap={1}>{parsedAttributes}</Stack>
+              <Box>{parsedSummary}</Box>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>
@@ -443,18 +579,8 @@ const ProductsInternal = () => {
                 border={`4px solid ${theme.colors.pink}`}
                 borderRadius={isMobile ? 2 : 8}
                 fontFamily={theme.fonts.text}
+                overflow="hidden"
               >
-                {!isMobile && (
-                  <Box
-                    component="img"
-                    src={pageFold}
-                    position="absolute"
-                    width={isMobile ? "80px" : "100px"}
-                    top={isMobile ? "-24px" : "-30px"}
-                    right={isMobile ? "-19px" : "-24px"}
-                  />
-                )}
-
                 {/* Table for Product Profile */}
                 <Box
                   sx={{
@@ -601,6 +727,20 @@ const ProductsInternal = () => {
             </Stack>
           </Stack>
         )}
+
+      {parsedFullDescription && (
+        <Box width="100%" bgcolor={theme.colors.green} px={8} py={4} mb={4}>
+          <Typography
+            color={theme.colors.beige}
+            fontSize={20}
+            fontFamily={theme.fonts.text}
+            fontWeight={700}
+          >
+            Full description:
+          </Typography>
+          {parsedFullDescription}
+        </Box>
+      )}
     </Stack>
   );
 };

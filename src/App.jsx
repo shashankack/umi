@@ -25,6 +25,7 @@ import FAQ from "./pages/FAQ.jsx";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { faqData } from "./assets/faqData.jsx";
 import Policies from "./pages/Policies";
+import Test from "./components/Test.jsx";
 
 const theme = createTheme({
   colors: {
@@ -86,6 +87,8 @@ const App = () => {
                 <Route path="/shipping-policy" element={<Policies />} />
                 <Route path="/faq" element={<FAQ data={faqData} />} />
                 <Route path="/load" element={<Hero />} />
+                <Route path="/test" element={<Test />} />
+                <Route path="*" element={<Home />} />
               </Routes>
               <Footer />
             </LoadingHandler>
