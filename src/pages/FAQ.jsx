@@ -108,6 +108,9 @@ const FAQRenderer = ({ data }) => {
                           mt: -2,
                           listStyleType: "disc",
                         },
+                        "& .pinky": {
+                          color: theme.colors.pink,
+                        },
                       }}
                     >
                       {item.answer}
@@ -121,6 +124,9 @@ const FAQRenderer = ({ data }) => {
                 sx={{
                   color: theme.colors.green,
                   fontSize: isMobile ? "3vw" : "1.2vw",
+                  "& .pinky": {
+                    color: theme.colors.pink,
+                  },
                   "& ul": {
                     paddingLeft: isMobile ? "5vw" : "2vw",
                     mt: -2,

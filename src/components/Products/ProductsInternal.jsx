@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchShopifyProducts } from "../../utils/shopify";
 
+import { useCart } from "../../context/CartContext";
+
 import sliderThumb from "../../assets/images/vectors/neko/slider_thumb.png";
 
 import {
@@ -31,17 +33,21 @@ const ProductsInternal = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { addItem } = useCart();
 
   const handleThumbnailClick = (imageUrl) => {
     setSelectedImage(imageUrl);
   };
 
   const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
+    setQuantity(parseInt(e.target.value));
   };
 
   const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${product.title} to the cart.`);
+    const variantId = product.variants.edges[0]?.node.id;
+    if (variantId) {
+      addItem(variantId, quantity);
+    }
   };
 
   const parsedTagline = useMemo(() => {
@@ -77,7 +83,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 800,
           textAlign: isMobile ? "justify" : "start",
-          fontSize: isMobile ? "3.2vw" : "1.1vw",
+          fontSize: isMobile ? "3vw" : "1.2vw",
           mb: 2,
         }}
         dangerouslySetInnerHTML={{ __html: summaryElement.innerHTML }}
@@ -124,6 +130,7 @@ const ProductsInternal = () => {
           fontSize: isMobile ? "2.8vw" : "1vw",
           "& strong": {
             fontWeight: 900,
+            fontSize: isMobile ? "3vw" : "1.2vw",
           },
           mb: 2,
         }}

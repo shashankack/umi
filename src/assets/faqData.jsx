@@ -13,24 +13,28 @@ export const faqData = [
         answer: (
           <ul>
             <li>
-              <strong>Shade grown leaves:</strong> About 3-4 weeks before
-              harvest, the tea plants are covered to block direct sunlight. This
-              process boosts chlorophyll levels, giving the leaves a vibrant
-              green colour and a naturally sweeter, umami-rich flavour.
+              <strong className="pinky">Shade grown leaves:</strong> About 3-4
+              weeks before harvest, the tea plants are covered to block direct
+              sunlight. This process boosts chlorophyll levels, giving the
+              leaves a vibrant green colour and a naturally sweeter, umami-rich
+              flavour.
             </li>
             <li>
-              <strong>Handpicked during Harvest Seasons:</strong> Only the
-              youngest, most tender leaves from the top of the tea plant are
-              carefully handpicked during the harvest season. Each seasonal
-              harvest brings subtle differences in flavour, aroma and colour,
-              contributing to the unique character of every batch of matcha.
+              <strong className="pinky">
+                Handpicked during Harvest Seasons:
+              </strong>{" "}
+              Only the youngest, most tender leaves from the top of the tea
+              plant are carefully handpicked during the harvest season. Each
+              seasonal harvest brings subtle differences in flavour, aroma and
+              colour, contributing to the unique character of every batch of
+              matcha.
             </li>
             <li>
-              <strong>Stone-Ground into fine powder:</strong> After steaming and
-              drying the leaves (called tencha) are slowly ground using
-              traditional granite stone mills. This method preserves the
-              delicate flavour, aroma and nutrients resulting in a silky,
-              vibrant green powder which is matcha.
+              <strong className="pinky">Stone-Ground into fine powder:</strong>{" "}
+              After steaming and drying the leaves (called tencha) are slowly
+              ground using traditional granite stone mills. This method
+              preserves the delicate flavour, aroma and nutrients resulting in a
+              silky, vibrant green powder which is matcha.
             </li>
           </ul>
         ),
@@ -59,7 +63,7 @@ export const faqData = [
       {
         question: "Astringency",
         answer:
-          ": A dry, puckering sensation on the tongue. Astringency is a texture or sensation in the mouth rather than a specific taste or smell. It is a key characteristic of matcha and can be a desirable flavour component. It adds complexity to the matcha flavour when well-balanced but excessive astringency can be unpleasant.",
+          "A dry, puckering sensation on the tongue. Astringency is a texture or sensation in the mouth rather than a specific taste or smell. It is a key characteristic of matcha and can be a desirable flavour component. It adds complexity to the matcha flavour when well-balanced but excessive astringency can be unpleasant.",
       },
       {
         question: "Vegetal",
@@ -360,37 +364,44 @@ export const faqData = [
         This shortage is impacting various sectors, from tea shops and cafes to
         beverage makers. <br />
         <br />
-        <strong>Factors Contributing to the Shortage:</strong><br /><br />
+        <strong className="pinky">Factors Contributing to the Shortage:</strong>
+        <br />
+        <br />
         <ul>
           <li>
-            <strong>Increased Global Demand:</strong> Matcha has gained immense
-            popularity worldwide, especially after viral social media content
-            and the tourism boom in Japan.
+            <strong className="pinky">Increased Global Demand:</strong> Matcha
+            has gained immense popularity worldwide, especially after viral
+            social media content and the tourism boom in Japan.
           </li>
           <li>
-            <strong>Limited Supply:</strong> Matcha is made from a specific type
-            of tea leaf (tencha) harvested during a limited season, and only a
-            small portion of Japan's total tea production becomes matcha.
+            <strong className="pinky">Limited Supply:</strong> Matcha is made
+            from a specific type of tea leaf (tencha) harvested during a limited
+            season, and only a small portion of Japan's total tea production
+            becomes matcha.
           </li>
           <li>
-            <strong>Traditional Farming Practices:</strong> High-quality matcha
-            requires meticulous care and traditional farming techniques, making
-            it challenging to scale up production quickly.
+            <strong className="pinky">Traditional Farming Practices:</strong>{" "}
+            High-quality matcha requires meticulous care and traditional farming
+            techniques, making it challenging to scale up production quickly.
           </li>
           <li>
-            <strong>Climate Change:</strong> Unpredictable weather patterns and
-            rising temperatures have affected tea harvests in key regions.
+            <strong className="pinky">Climate Change:</strong> Unpredictable
+            weather patterns and rising temperatures have affected tea harvests
+            in key regions.
           </li>
           <li>
-            <strong>Aging Population and Labour Shortages:</strong> Japan faces
-            an aging population and a shortage of younger workers willing to
-            take on traditional agricultural roles, further limiting production.
+            <strong className="pinky">
+              Aging Population and Labour Shortages:
+            </strong>{" "}
+            Japan faces an aging population and a shortage of younger workers
+            willing to take on traditional agricultural roles, further limiting
+            production.
           </li>
           <li>
-            <strong>Production Bottlenecks:</strong> Many matcha farms are
-            small, family-run businesses, which can struggle to adapt to the
-            rapid increase in demand and face challenges in transitioning to new
-            technologies or farming techniques.
+            <strong className="pinky">Production Bottlenecks:</strong> Many
+            matcha farms are small, family-run businesses, which can struggle to
+            adapt to the rapid increase in demand and face challenges in
+            transitioning to new technologies or farming techniques.
           </li>
         </ul>
       </>

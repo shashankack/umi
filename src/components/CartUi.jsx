@@ -11,7 +11,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-import confetti from "canvas-confetti";
+// import confetti from "canvas-confetti";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -45,44 +45,105 @@ const CartUI = () => {
 
   const toggleDrawer = () => setOpen(!open);
 
-  useEffect(() => {
-  const prevCount = prevLineItemCountRef.current;
-  const currentCount = lineItems.reduce((sum, item) => sum + item.quantity, 0);
+  //   useEffect(() => {
+  //   const prevCount = prevLineItemCountRef.current;
+  //   const currentCount = lineItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  if (currentCount > prevCount) {
-    // Confetti from actual cart icon position
-    const rect = cartIconRef.current.getBoundingClientRect();
-    const x = (rect.left + rect.width / 2) / window.innerWidth;
-    const y = (rect.top + rect.height / 2) / window.innerHeight;
+  //   if (currentCount > prevCount) {
+  //     // Confetti from actual cart icon position
+  //     const rect = cartIconRef.current.getBoundingClientRect();
+  //     const x = (rect.left + rect.width / 2) / window.innerWidth;
+  //     const y = (rect.top + rect.height / 2) / window.innerHeight;
 
-    confetti({
-      particleCount: 60,
-      spread: 80,
-      startVelocity: 35,
-      origin: { x, y },
-      colors: ['#ff69b4', '#98fb98', '#fcd34d', '#f472b6'],
+  //     confetti({
+  //       particleCount: 60,
+  //       spread: 80,
+  //       startVelocity: 35,
+  //       origin: { x, y },
+  //       colors: ['#ff69b4', '#98fb98', '#fcd34d', '#f472b6'],
+  //     });
+
+  //     // Bounce + Pulse effect on cart icon
+  //     const tl = gsap.timeline();
+
+  //     tl.to(cartIconRef.current, {
+  //       y: -10,
+  //       scale: 1.2,
+  //       duration: 0.2,
+  //       ease: "power2.out",
+  //     })
+  //       .to(cartIconRef.current, {
+  //         y: 0,
+  //         scale: 1,
+  //         duration: 0.3,
+  //         ease: "bounce.out",
+  //       });
+  //   }
+
+  //   prevLineItemCountRef.current = currentCount;
+  // }, [lineItems]);
+
+  const tl = gsap.timeline();
+
+  tl.to(cartIconRef.current, {
+    scale: 1.2,
+    rotation: 15,
+    x: 8,
+    backgroundColor:
+      navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
+    duration: 0.1,
+  })
+    .to(cartIconRef.current, {
+      rotation: -15,
+      x: -8,
+      backgroundColor:
+        navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
+      duration: 0.1,
+      repeat: 3,
+      yoyo: true,
+      ease: "power2.inOut",
+    })
+    .to(cartIconRef.current, {
+      rotation: 0,
+      x: 0,
+      scale: 1,
+      backgroundColor:
+        navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
+      duration: 0.3,
+      ease: "elastic.out(1, 0.3)",
     });
 
-    // Bounce + Pulse effect on cart icon
-    const tl = gsap.timeline();
+  useEffect(() => {
+    const prevCount = prevLineItemCountRef.current;
+    const currentCount = lineItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
 
-    tl.to(cartIconRef.current, {
-      y: -10,
-      scale: 1.2,
-      duration: 0.2,
-      ease: "power2.out",
-    })
-      .to(cartIconRef.current, {
-        y: 0,
-        scale: 1,
-        duration: 0.3,
-        ease: "bounce.out",
-      });
-  }
+    if (currentCount > prevCount && cartIconRef.current) {
+      const tl = gsap.timeline();
 
-  prevLineItemCountRef.current = currentCount;
-}, [lineItems]);
+      tl.to(cartIconRef.current, {
+        rotation: 15,
+        x: 3,
+        duration: 0.1,
+      })
+        .to(cartIconRef.current, {
+          rotation: -15,
+          x: -3,
+          duration: 0.1,
+          repeat: 2,
+          yoyo: true,
+        })
+        .to(cartIconRef.current, {
+          rotation: 0,
+          x: 0,
+          duration: 0.2,
+        });
+    }
 
+    prevLineItemCountRef.current = currentCount;
+  }, [lineItems]);
 
   if (loading || lineItems.length === 0) return null;
 
