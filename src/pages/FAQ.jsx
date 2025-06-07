@@ -97,11 +97,18 @@ const FAQRenderer = ({ data }) => {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    {/* Ensure the answer is rendered as a block element */}
                     <Typography
-                      component="div" // Avoid wrapping in <p> tag to prevent hydration error
+                      component="div"
                       fontSize={isMobile ? "3vw" : "1.2vw"}
-                      sx={{ color: theme.colors.green }}
+                      sx={{
+                        color: theme.colors.green,
+                        mt: -2,
+                        "& ul": {
+                          paddingLeft: isMobile ? "5vw" : "2vw",
+                          mt: -2,
+                          listStyleType: "disc",
+                        },
+                      }}
                     >
                       {item.answer}
                     </Typography>
@@ -109,7 +116,18 @@ const FAQRenderer = ({ data }) => {
                 </Accordion>
               ))
             ) : (
-              <Typography component="div" sx={{ color: theme.colors.green }}>
+              <Typography
+                component="div"
+                sx={{
+                  color: theme.colors.green,
+                  fontSize: isMobile ? "3vw" : "1.2vw",
+                  "& ul": {
+                    paddingLeft: isMobile ? "5vw" : "2vw",
+                    mt: -2,
+                    listStyleType: "disc",
+                  },
+                }}
+              >
                 {topic.answer}
               </Typography>
             )}

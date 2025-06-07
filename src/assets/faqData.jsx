@@ -41,18 +41,18 @@ export const faqData = [
           "Matcha is loved not just for its flavour, but also for its powerful health benefits. It can help boost metabolism, enhance focus and energy, and is packed with antioxidants – especially catechins like EGCG, which support overall wellbeing. Unlike coffee, matcha provides a calmer, more sustained energy boost thanks to the combination of caffeine and L-theanine.",
       },
       {
-        question: "Important things to consider when buying Matcha:",
+        question: "Important things to consider when buying Matcha",
         answer:
           " It should be made in Japan. It should be a bright green colour (a dull, swampy green is a definite no). The only ingredient should be matcha, which means no sugar, no flavourings, and no milk powder, etc., unless you are buying instant matcha premixes.",
       },
     ],
   },
   {
-    topic: "Matcha Terms you need to know:",
+    topic: "Matcha Terms you need to know",
     type: "faq",
     content: [
       {
-        question: "Umami: Known as the “Fifth Taste” – Savoury and Rich:",
+        question: "Umami: Known as the “Fifth Taste” – Savoury and Rich",
         answer:
           "Umami comes from Ltheanine and amino acids, creating a smooth, brothy richness – like the savoury depth found in mushrooms or seaweed. Umami is often spotted in high-quality matcha as it adds depth and complexity, making the flavour more layered and balanced.",
       },
@@ -109,17 +109,17 @@ export const faqData = [
     type: "faq",
     content: [
       {
-        question: "Culinary Grade:",
+        question: "Culinary Grade",
         answer:
           "More robust and slightly bitter, ideal for baking and cooking, where its flavour can stand out even when mixed with other ingredients.",
       },
       {
-        question: "Cafe/ Latte Grade:",
+        question: "Cafe/ Latte Grade",
         answer:
           "A balanced blend with a slightly bolder flavour, designed to pair well with milk while still retaining a smooth and creamy texture.",
       },
       {
-        question: "Ceremonial Grade:",
+        question: "Ceremonial Grade",
         answer:
           "Made from the youngest, first-harvest leaves and stone-milled for a naturally smooth, umami-rich taste, perfect for drinking straight or in latte form.",
       },
@@ -146,22 +146,22 @@ export const faqData = [
         ),
       },
       {
-        question: "First Harvest:",
+        question: "First Harvest",
         answer:
           "First harvest or first flush matcha refers to the tea leaves harvested in early spring, typically in late April to mid-May in Japan. These leaves are considered the highest quality and most tender due to their freshness and the time spent under shade, which enhances flavour and nutrients. This first harvest is often used to make high-grade ceremonial matcha. First harvest leaves are packed with nutrients and chlorophyll due to being shaded for a period before harvest. First harvest matcha contains more L-theanine, an amino acid responsible for the umami flavour.",
       },
       {
-        question: "Single Origin:",
+        question: "Single Origin",
         answer:
           "Single origin matcha means the matcha is produced from leaves grown in a single location, which could be a region, a prefecture, or even a single farm. This contrasts with blended matcha, which is a mixture of matcha from various origins. The single origin designation highlights the unique characteristics of that specific terroir, including soil, climate, and farming practices. Single-origin matcha offers a taste profile reflecting the specific terroir, unlike blended matcha, which often aims for a balanced and consistent flavour.",
       },
       {
-        question: "Single Cultivar:",
+        question: "Single Cultivar",
         answer:
           "Single cultivar matcha means the tea is made from the leaves of only one specific cultivar of the tea plant. Cultivars are bred or cultivated varieties, meaning they are selected and grown for specific flavours or characteristics, as opposed to wild or seed-grown plants. When matcha is labelled as 'single cultivar,' it means that the matcha powder is made exclusively from the leaves of one specific tea plant cultivar. This allows the unique characteristics of that cultivar to shine through in the flavour profile.",
       },
       {
-        question: "Single Origin vs Single Cultivar:",
+        question: "Single Origin vs Single Cultivar",
         answer:
           "While often used interchangeably, 'single origin' refers to the geographic location where the tea leaves are grown, while 'single cultivar' refers to the specific variety of tea plant used.",
       },
@@ -172,17 +172,17 @@ export const faqData = [
     type: "faq",
     content: [
       {
-        question: "First Harvest:",
+        question: "First Harvest",
         answer:
           "Harvested in early spring (April-May). Leaf quality consists of the youngest, most tender leaves are used. Flavour profile consists of smooth, sweet and umami-rich. Best used for Ceremonial-grade, premium lattes and usucha.",
       },
       {
-        question: "Second Harvest:",
+        question: "Second Harvest",
         answer:
           "Harvested in early summer (June-July). Leaf quality consists of slightly mature leaves whose flavour profile is slightly bitter and grassy. Best used for daily drinking and smoothies.",
       },
       {
-        question: "Third Harvest:",
+        question: "Third Harvest",
         answer:
           "Harvested in late summer (August-September). Leaf quality consists of more mature and tougher leaves whose flavour profile is sharp, earthy and has strong bitterness with less complexity. Best used for culinary purposes and flavoured drinks.",
       },
@@ -224,7 +224,7 @@ export const faqData = [
     type: "faq",
     content: [
       {
-        question: "Labour-Intensive Cultivation:",
+        question: "Labour-Intensive Cultivation",
         answer: (
           <>
             Matcha is made from <strong>shade-grown tea leaves</strong>,
@@ -235,7 +235,7 @@ export const faqData = [
         ),
       },
       {
-        question: "Hand-Picked, Young Leaves Only:",
+        question: "Hand-Picked, Young Leaves Only",
         answer: (
           <>
             Only the <strong>top, youngest leaves</strong> from the first
@@ -246,7 +246,7 @@ export const faqData = [
         ),
       },
       {
-        question: "Complex Processing:",
+        question: "Complex Processing",
         answer: (
           <ul>
             <li>Steaming (to stop oxidation)</li>
@@ -257,7 +257,7 @@ export const faqData = [
         ),
       },
       {
-        question: "Strict Quality Control & Origin:",
+        question: "Strict Quality Control & Origin",
         answer: (
           <ul>
             <li>Have centuries-old cultivation traditions</li>
@@ -270,7 +270,7 @@ export const faqData = [
         ),
       },
       {
-        question: "Ceremonial vs Culinary Grades:",
+        question: "Ceremonial vs Culinary Grades",
         answer:
           "Ceremonial grade matcha (used for drinking) requires even more selectivity, finesse, and skill. These grades are often reserved for direct consumption, not blended or cooked, which commands a higher price.",
       },
@@ -305,7 +305,7 @@ export const faqData = [
       "Matcha offers a more sustained energy boost due to its L-theanine content, which helps balance caffeine's effects, leading to less jitteriness and a more calm focus. Coffee, on the other hand, provides a quicker, more intense energy boost but can also lead to jitters and a crash for some. Matcha offers a smoother, more sustained energy lift than coffee, thanks to its L-theanine content, which counteracts the jitters often associated with caffeine. A typical cup of matcha contains about 70 mg of caffeine. Coffee provides a quick and intense energy boost, but it can also cause jitters, anxiety, and a crash for some individuals but this isn’t the case in matcha as it offers a slow more sustained release in energy that keeps you active and balanced throughout the day.",
   },
   {
-    topic: "Matcha Myth’s Busted:",
+    topic: "Matcha Myth’s Busted",
     type: "faq",
     content: [
       {
@@ -344,7 +344,7 @@ export const faqData = [
     ),
   },
   {
-    topic: "How to store your Matcha properly:",
+    topic: "How to store your Matcha properly",
     type: "section",
     answer:
       "To store matcha powder properly, use an airtight, opaque container that blocks light and keep it in a cool, dark place, like a pantry or cupboard. If you live in a warm climate, consider storing it in the refrigerator. Exposure to light, air, and moisture can degrade the colour, flavour, and nutritional benefits of matcha. Tip: When taking out the matcha tin from the refrigerator, let your matcha tin acclimatise to room temperature before opening the lid as the warm moisture gets attracted to the cold contents of the tin.",
@@ -360,7 +360,7 @@ export const faqData = [
         This shortage is impacting various sectors, from tea shops and cafes to
         beverage makers. <br />
         <br />
-        <strong>Factors Contributing to the Shortage:</strong>
+        <strong>Factors Contributing to the Shortage:</strong><br /><br />
         <ul>
           <li>
             <strong>Increased Global Demand:</strong> Matcha has gained immense

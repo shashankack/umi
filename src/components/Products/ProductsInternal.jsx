@@ -75,9 +75,9 @@ const ProductsInternal = () => {
         variant="h5"
         sx={{
           fontFamily: theme.fonts.text,
-          fontWeight: 200,
-          textAlign: "justify",
-          fontSize: isMobile ? "3.4vw" : "1.1vw",
+          fontWeight: 800,
+          textAlign: isMobile ? "justify" : "start",
+          fontSize: isMobile ? "3.2vw" : "1.1vw",
           mb: 2,
         }}
         dangerouslySetInnerHTML={{ __html: summaryElement.innerHTML }}

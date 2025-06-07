@@ -27,6 +27,8 @@ import { faqData } from "./assets/faqData.jsx";
 import Policies from "./pages/Policies";
 import Test from "./components/Test.jsx";
 
+import navbarBg from "./assets/images/navbar_bg.png";
+
 const theme = createTheme({
   colors: {
     pink: "#F6A09E",
@@ -66,6 +68,12 @@ const LoadingHandler = ({ children }) => {
 const App = () => {
   return (
     <NavbarThemeProvider>
+      <img
+        src={navbarBg}
+        style={{
+          display: "none",
+        }}
+      />
       <ThemeProvider theme={theme}>
         <CartProvider>
           <Router basename="/" window={window}>
