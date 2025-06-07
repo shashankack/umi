@@ -100,7 +100,13 @@ const Footer = () => {
               width: "100%",
               height: "100%",
               objectFit: "contain",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                cursor: "pointer",
+                transform: "scale(1.05)",
+              },
             }}
+            onClick={() => (window.location.href = "/")}
           />
         </Box>
         <Box width={isMobile ? "15vw" : "8vw"}>
