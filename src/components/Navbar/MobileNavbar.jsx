@@ -410,7 +410,7 @@ const MobileNavbar = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     px: 0,
-                    py: 1,
+                    py: 0.2,
                   }}
                 >
                   <Box
@@ -517,7 +517,8 @@ const MobileNavbar = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              width: 140,
+              width: 150,
+              mb: 10,
             }}
           >
             <img

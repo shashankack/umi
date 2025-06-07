@@ -3,7 +3,15 @@ import badge from "../../assets/images/vectors/about/badge.png";
 
 import { useTheme } from "@mui/material/styles";
 
-import { Box, Stack, Typography, Button, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  useMediaQuery,
+} from "@mui/material";
 
 import { useRef, useEffect, useState } from "react";
 
@@ -48,9 +56,8 @@ const About = () => {
         flexDirection={isMobile ? "column-reverse" : "row"}
       >
         <Box
-          width={isMobile ? "90vw" : "50vw"}
+          width={isMobile ? "100vw" : "50vw"}
           backgroundColor={theme.colors.green}
-          py={isMobile ? 5 : 2}
           px={isMobile ? 3 : 5}
           borderRadius={5}
           boxShadow={`4px 4px 0 ${theme.colors.green}`}
@@ -90,27 +97,58 @@ const About = () => {
             with other vicious waves, other bigger problems & difficulties.
           </Typography>
 
-          {isMobile && !showMore && (
-            <Button
-              variant="text"
+          {isMobile ? (
+            <Accordion
+              elevation={0}
+              disableGutters
               sx={{
-                transition: "all .3s ease",
+                mt: -4,
+                backgroundColor: "transparent",
                 color: theme.colors.pink,
                 fontFamily: theme.fonts.text,
-                fontSize: isMobile ? "3vw" : "1vw",
-                textTransform: "none",
+                "&::before": { display: "none" },
               }}
-              onClick={() => setShowMore(true)}
             >
-              Read more...
-            </Button>
-          )}
-
-          {(!isMobile || showMore) && (
+              <AccordionSummary
+                expandIcon={null}
+                sx={{
+                  p: 0,
+                  fontSize: "3vw",
+                  color: theme.colors.pink,
+                  fontFamily: theme.fonts.text,
+                  textTransform: "none",
+                }}
+              >
+                Read more...
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: 0 }}>
+                <Typography
+                  fontFamily={theme.fonts.text}
+                  color={theme.colors.beige}
+                  fontSize="3vw"
+                  fontWeight={200}
+                  textAlign="justify"
+                  mb={3}
+                >
+                  However, our tiredness towards the journey will also have its
+                  sweetness when we reach a calm sea, where its wave is gentle,
+                  and we can feel the summer breeze warm our mind, body, and
+                  soul. But, with the knowledge that another wave is waiting to
+                  be conquered. Umi Matcha represents a symbolic shift within
+                  the matcha community.
+                  <br />
+                  <br />
+                  Life is always better with a matcha in hand. I'm thrilled to
+                  have Umi become a part of your daily routine because it's
+                  truly the most magical part of mine.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          ) : (
             <Typography
               fontFamily={theme.fonts.text}
               color={theme.colors.beige}
-              fontSize={isMobile ? "3vw" : "1vw"}
+              fontSize="1vw"
               fontWeight={200}
               textAlign="justify"
               mb={3}
@@ -121,27 +159,12 @@ const About = () => {
               with the knowledge that another wave is waiting to be conquered.
               Umi Matcha represents a symbolic shift within the matcha
               community.
-              <br /> <br />
+              <br />
+              <br />
               Life is always better with a matcha in hand. I'm thrilled to have
               Umi become a part of your daily routine because it's truly the
               most magical part of mine.
             </Typography>
-          )}
-
-          {isMobile && showMore && (
-            <Button
-              variant="text"
-              sx={{
-                transition: "all .3s ease",
-                color: theme.colors.pink,
-                fontFamily: theme.fonts.text,
-                fontSize: isMobile ? "3vw" : "1vw",
-                textTransform: "none",
-              }}
-              onClick={() => setShowMore(false)}
-            >
-              Read less...
-            </Button>
           )}
 
           <Typography

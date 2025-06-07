@@ -111,7 +111,7 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    setNavbarTheme("beige");
+    setNavbarTheme("pink");
     const marquee = marqueeRef.current;
 
     if (!marquee) return;
@@ -128,7 +128,7 @@ const Shop = () => {
       ease: "linear",
       repeat: -1,
       modifiers: {
-        x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth), // seamless loop
+        x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth),
       },
     });
 

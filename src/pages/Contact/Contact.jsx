@@ -108,7 +108,7 @@ const Contact = () => {
                   },
                 }}
                 onClick={() => {
-                  window.location.href = "tel:+919568480048";
+                  window.location.href = "https://wa.me/9568480048";
                 }}
               >
                 +91 9568480048

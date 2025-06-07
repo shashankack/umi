@@ -58,7 +58,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 700,
           textAlign: "justify",
-          fontSize: isMobile ? "3vw" : "1.2vw",
+          fontSize: isMobile ? "3.4vw" : "1.2vw",
         }}
         dangerouslySetInnerHTML={{ __html: taglineElement.innerHTML }}
       />
@@ -121,12 +121,11 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "3vw" : "1vw",
-          mb: 2,
+          fontSize: isMobile ? "2.8vw" : "1vw",
           "& strong": {
-            fontWeight: 500,
-            fontSize: 30,
+            fontWeight: 900,
           },
+          mb: 2,
         }}
         dangerouslySetInnerHTML={{ __html: p.innerHTML }}
       />
@@ -174,7 +173,7 @@ const ProductsInternal = () => {
             color: theme.colors.pink,
             fontFamily: theme.fonts.text,
             backgroundColor: theme.colors.beige,
-            fontSize: isMobile ? "2vw" : ".6vw",
+            fontSize: isMobile ? "3vw" : ".6vw",
             boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
           }}
         >
@@ -233,7 +232,7 @@ const ProductsInternal = () => {
         const fullProductId = `gid://shopify/Product/${productId}`;
         const foundProduct = data.find((p) => p.id === fullProductId);
         setProduct(foundProduct);
-        console.log("Incoming product data:", foundProduct); // Log the incoming data
+        console.log("Incoming product data:", foundProduct);
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
       } catch (error) {
         console.error("Failed to fetch product", error);
@@ -407,33 +406,6 @@ const ProductsInternal = () => {
                   ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
                   /-
                 </Typography>
-
-                {isMobile && (
-                  <Stack direction="row" gap={2} mb={2}>
-                    {parsedHighlightedAttributes}
-                    {product.variants.edges[0]?.node.weight !== 0 && (
-                      <Typography
-                        variant="h5"
-                        sx={{
-                          p: isMobile ? "6px 10px" : "10px 30px",
-                          fontWeight: 200,
-                          borderRadius: isMobile ? 1 : 3,
-                          textAlign: "justify",
-                          color: theme.colors.pink,
-                          fontFamily: theme.fonts.text,
-                          backgroundColor: theme.colors.beige,
-                          fontSize: isMobile ? "2vw" : ".6vw",
-                          boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                        }}
-                      >
-                        weight: {product.variants.edges[0]?.node.weight}
-                        {product.variants.edges[0]?.node.weightUnit === "GRAMS"
-                          ? "g"
-                          : ""}
-                      </Typography>
-                    )}
-                  </Stack>
-                )}
               </Stack>
 
               <Stack
@@ -493,37 +465,30 @@ const ProductsInternal = () => {
                 </Button>
               </Stack>
 
-              {!isMobile && (
-                <Stack
-                  mt={isMobile ? 2 : 0}
-                  direction="row"
-                  gap={2}
-                  width="100%"
-                >
-                  {parsedHighlightedAttributes}
-                  {product.variants.edges[0]?.node.weight !== 0 && (
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        p: isMobile ? "6px 10px" : "10px 30px",
-                        fontWeight: 200,
-                        borderRadius: isMobile ? 1 : 3,
-                        textAlign: "justify",
-                        color: theme.colors.pink,
-                        fontFamily: theme.fonts.text,
-                        backgroundColor: theme.colors.beige,
-                        fontSize: isMobile ? "2vw" : ".6vw",
-                        boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
-                      }}
-                    >
-                      weight: {product.variants.edges[0]?.node.weight}
-                      {product.variants.edges[0]?.node.weightUnit === "GRAMS"
-                        ? "g"
-                        : ""}
-                    </Typography>
-                  )}
-                </Stack>
-              )}
+              <Stack mt={isMobile ? 2 : 0} direction="row" gap={2} width="100%">
+                {parsedHighlightedAttributes}
+                {product.variants.edges[0]?.node.weight !== 0 && (
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      p: isMobile ? "6px 10px" : "10px 30px",
+                      fontWeight: 200,
+                      borderRadius: isMobile ? 1 : 3,
+                      textAlign: "justify",
+                      color: theme.colors.pink,
+                      fontFamily: theme.fonts.text,
+                      backgroundColor: theme.colors.beige,
+                      fontSize: isMobile ? "3vw" : ".6vw",
+                      boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                    }}
+                  >
+                    weight: {product.variants.edges[0]?.node.weight}
+                    {product.variants.edges[0]?.node.weightUnit === "GRAMS"
+                      ? "g"
+                      : ""}
+                  </Typography>
+                )}
+              </Stack>
             </Stack>
 
             <Stack
@@ -551,7 +516,7 @@ const ProductsInternal = () => {
             height="100%"
             bgcolor={theme.colors.beige}
             overflow="hidden"
-            px={isMobile ? 4 : 6}
+            px={isMobile ? 2 : 6}
             py={isMobile ? 4 : 6}
             gap={isMobile ? 4 : 0}
           >
@@ -637,7 +602,7 @@ const ProductsInternal = () => {
             </Stack>
 
             {/* Tasting Notes*/}
-            <Stack alignItems="center" justifyContent="center">
+            <Stack alignItems="center" justifyContent="center" width="100%">
               <Typography
                 gutterBottom
                 color={theme.colors.pink}
@@ -654,7 +619,7 @@ const ProductsInternal = () => {
                 justifyContent="center"
                 alignItems={"center"}
                 flexDirection={"column"}
-                width={isMobile ? "82vw" : "40vw"}
+                width={isMobile ? "100%" : "40vw"}
                 height={550}
                 backgroundColor={theme.colors.green}
               >
@@ -728,8 +693,15 @@ const ProductsInternal = () => {
           </Stack>
         )}
 
+      {/* Full Description  */}
       {parsedFullDescription && (
-        <Box width="100%" bgcolor={theme.colors.green} px={8} py={4} mb={4}>
+        <Box
+          width="100%"
+          bgcolor={theme.colors.green}
+          px={isMobile ? 3 : 8}
+          py={4}
+          mb={4}
+        >
           <Typography
             color={theme.colors.beige}
             fontSize={20}
