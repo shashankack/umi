@@ -201,7 +201,7 @@
 
     .product-actions {
       position: absolute;
-      z-index: 20;
+      z-index: 1000;
       left: 0;
       bottom: 3%;
       width: 100%;
@@ -234,6 +234,7 @@
     .cart-icon {
       cursor: pointer;
       transition: all 0.3s ease;
+      z-index: 40;
 
       &:hover {
         scale: 1.2;

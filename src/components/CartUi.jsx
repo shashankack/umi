@@ -211,8 +211,12 @@ const CartUI = () => {
         }}
       >
         <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
           sx={{
-            width: isMobile ? 350 : 500,
+            width: isMobile ? "100%" : 500,
             p: 2,
             bgcolor: theme.colors.beige,
           }}
@@ -223,6 +227,8 @@ const CartUI = () => {
             display="flex"
             alignItems="center"
             justifyContent="start"
+            textAlign="left"
+            width="100%"
             gap={2}
             fontFamily={theme.fonts.heading}
             fontWeight={600}
@@ -274,14 +280,14 @@ const CartUI = () => {
                       alignItems="start"
                     >
                       <Typography
-                        fontSize="1vw"
+                        fontSize={isMobile ? "4vw" : "1vw"}
                         fontFamily={theme.fonts.text}
                         color={theme.colors.green}
                       >
                         {productTitle}
                       </Typography>
                       <Typography
-                        fontSize="1.1vw"
+                        fontSize={isMobile ? "3.5vw" : "0.9vw"}
                         fontFamily={theme.fonts.text}
                         color={theme.colors.pink}
                       >
@@ -307,7 +313,7 @@ const CartUI = () => {
                         sx={{
                           fontFamily: theme.fonts.text,
                           color: theme.colors.green,
-                          fontSize: "1.2vw",
+                          fontSize: isMobile ? "4vw" : "1vw",
                         }}
                       >
                         {item.quantity}
@@ -348,7 +354,6 @@ const CartUI = () => {
               mt: 4,
               textAlign: "left",
               fontFamily: theme.fonts.text,
-              fontSize: isMobile ? "3.5vw" : "1vw",
               color: theme.colors.green,
             }}
           >
@@ -371,7 +376,7 @@ const CartUI = () => {
           </Stack>
 
           <Button
-            fullWidth
+            fullWidth={!isMobile}
             variant="contained"
             href={checkoutUrl}
             target="_blank"
@@ -380,7 +385,7 @@ const CartUI = () => {
               bgcolor: theme.colors.pink,
               color: theme.colors.beige,
               fontFamily: theme.fonts.text,
-              fontSize: "1.2vw",
+              fontSize: isMobile ? "4vw" : "1.2vw",
               "&:hover": {
                 bgcolor: theme.colors.green,
                 color: theme.colors.beige,
