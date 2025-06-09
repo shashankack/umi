@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import {
   Box,
   Drawer,
@@ -9,9 +9,10 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  GlobalStyles,
+  Alert as MuiAlert,
 } from "@mui/material";
 
-// import confetti from "canvas-confetti";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,13 +21,13 @@ import RemoveIcon from "@mui/icons-material/Remove";
 
 import { useCart } from "../context/CartContext";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
-import gsap from "gsap";
 
 const CartUI = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { navbarTheme } = useNavbarTheme();
   const [open, setOpen] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(false);
 
   const {
     lineItems,
@@ -39,167 +40,110 @@ const CartUI = () => {
   } = useCart();
 
   const cartIconRef = useRef(null);
-  const prevLineItemCountRef = useRef(
-    lineItems.reduce((sum, item) => sum + item.quantity, 0)
-  );
+  const hasHydrated = useRef(false);
+  const prevQuantityRef = useRef(cartSummary.totalQuantity ?? 0);
 
   const toggleDrawer = () => setOpen(!open);
 
-  //   useEffect(() => {
-  //   const prevCount = prevLineItemCountRef.current;
-  //   const currentCount = lineItems.reduce((sum, item) => sum + item.quantity, 0);
-
-  //   if (currentCount > prevCount) {
-  //     // Confetti from actual cart icon position
-  //     const rect = cartIconRef.current.getBoundingClientRect();
-  //     const x = (rect.left + rect.width / 2) / window.innerWidth;
-  //     const y = (rect.top + rect.height / 2) / window.innerHeight;
-
-  //     confetti({
-  //       particleCount: 60,
-  //       spread: 80,
-  //       startVelocity: 35,
-  //       origin: { x, y },
-  //       colors: ['#ff69b4', '#98fb98', '#fcd34d', '#f472b6'],
-  //     });
-
-  //     // Bounce + Pulse effect on cart icon
-  //     const tl = gsap.timeline();
-
-  //     tl.to(cartIconRef.current, {
-  //       y: -10,
-  //       scale: 1.2,
-  //       duration: 0.2,
-  //       ease: "power2.out",
-  //     })
-  //       .to(cartIconRef.current, {
-  //         y: 0,
-  //         scale: 1,
-  //         duration: 0.3,
-  //         ease: "bounce.out",
-  //       });
-  //   }
-
-  //   prevLineItemCountRef.current = currentCount;
-  // }, [lineItems]);
-
-  const tl = gsap.timeline();
-
-  tl.to(cartIconRef.current, {
-    scale: 1.2,
-    rotation: 15,
-    x: 8,
-    backgroundColor:
-      navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
-    duration: 0.1,
-  })
-    .to(cartIconRef.current, {
-      rotation: -15,
-      x: -8,
-      backgroundColor:
-        navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
-      duration: 0.1,
-      repeat: 3,
-      yoyo: true,
-      ease: "power2.inOut",
-    })
-    .to(cartIconRef.current, {
-      rotation: 0,
-      x: 0,
-      scale: 1,
-      backgroundColor:
-        navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
-      duration: 0.3,
-      ease: "elastic.out(1, 0.3)",
-    });
+  useEffect(() => {
+    if (snackOpen) {
+      const timeout = setTimeout(() => setSnackOpen(false), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [snackOpen]);
 
   useEffect(() => {
-    const prevCount = prevLineItemCountRef.current;
-    const currentCount = lineItems.reduce(
-      (sum, item) => sum + item.quantity,
-      0
-    );
+    const currentQty = cartSummary.totalQuantity ?? 0;
 
-    if (currentCount > prevCount && cartIconRef.current) {
-      const tl = gsap.timeline();
-
-      tl.to(cartIconRef.current, {
-        rotation: 15,
-        x: 3,
-        duration: 0.1,
-      })
-        .to(cartIconRef.current, {
-          rotation: -15,
-          x: -3,
-          duration: 0.1,
-          repeat: 2,
-          yoyo: true,
-        })
-        .to(cartIconRef.current, {
-          rotation: 0,
-          x: 0,
-          duration: 0.2,
-        });
+    if (!hasHydrated.current) {
+      prevQuantityRef.current = currentQty;
+      hasHydrated.current = true;
+      return;
     }
 
-    prevLineItemCountRef.current = currentCount;
-  }, [lineItems]);
+    if (currentQty > prevQuantityRef.current) {
+      setSnackOpen(true);
+    }
+
+    prevQuantityRef.current = currentQty;
+  }, [cartSummary.totalQuantity]);
 
   if (loading || lineItems.length === 0) return null;
 
-  const summaryStylesLeft = {
+  const textStyle = {
     fontFamily: theme.fonts.text,
-    fontSize: isMobile ? "3.5vw" : "1vw",
-    color: theme.colors.green,
-  };
-
-  const summaryStylesRight = {
-    fontFamily: theme.fonts.text,
-    fontSize: isMobile ? "3.5vw" : "1vw",
-    color: theme.colors.pink,
-  };
-
-  const iconStyles = {
-    fontSize: isMobile ? "4vw" : "2vw",
-    color: navbarTheme === "pink" ? theme.colors.beige : theme.colors.pink,
-    transition: "all 0.3s ease",
+    fontSize: isMobile ? "4.4vw" : "1.05vw",
+    fontWeight: 500,
   };
 
   return (
     <>
+      <GlobalStyles
+        styles={{
+          "@keyframes thoughtBubbleGrow": {
+            "0%": {
+              opacity: 0,
+              transform: "scaleX(0)",
+            },
+            "10%": {
+              opacity: 1,
+              transform: "scaleX(1)",
+            },
+            "85%": {
+              opacity: 1,
+              transform: "scaleX(1)",
+            },
+            "100%": {
+              opacity: 0,
+              transform: "scaleX(0)",
+            },
+          },
+        }}
+      />
+
       <Box
         ref={cartIconRef}
         sx={{
           position: "fixed",
           bottom: 24,
           right: 24,
-          zIndex: 2000,
+          zIndex: 4000,
           bgcolor:
             navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
           borderRadius: "50%",
-          boxShadow: `4px 4px 0px 0px ${theme.colors.green}`,
-          padding: 1,
-          transition: "all 0.3s ease",
-
+          boxShadow: `2px 2px 0 ${theme.colors.green}`,
+          cursor: "pointer",
           "&:hover": {
-            transform: "scale(1.05)",
-            boxShadow:
-              navbarTheme === "pink"
-                ? `4px 4px 0px 0px ${theme.colors.beige}`
-                : `4px 4px 0px 0px ${theme.colors.pink}`,
+            transform: "scale(1.1)",
+            transition: "transform 0.3s",
           },
         }}
       >
         <IconButton onClick={toggleDrawer} size="large" disableRipple>
           {open ? (
-            <CloseIcon sx={iconStyles} />
+            <CloseIcon
+              sx={{
+                color:
+                  navbarTheme === "pink"
+                    ? theme.colors.beige
+                    : theme.colors.pink,
+                fontSize: isMobile ? "6vw" : "2vw",
+              }}
+            />
           ) : (
-            <ShoppingCartIcon sx={iconStyles} />
+            <ShoppingCartIcon
+              sx={{
+                color:
+                  navbarTheme === "pink"
+                    ? theme.colors.beige
+                    : theme.colors.pink,
+                fontSize: isMobile ? "6vw" : "2vw",
+              }}
+            />
           )}
         </IconButton>
       </Box>
 
-      {/* Cart Drawer */}
       <Drawer
         anchor="right"
         open={open}
@@ -207,195 +151,204 @@ const CartUI = () => {
         sx={{
           "& .MuiDrawer-paper": {
             backgroundColor: theme.colors.beige,
+            width: isMobile ? "100%" : 460,
+            px: 3,
+            py: 4,
+            boxShadow: `-8px 0 18px rgba(0, 0, 0, 0.1)`,
           },
         }}
       >
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
+        <Typography
+          variant="h4"
+          fontFamily={theme.fonts.heading}
+          fontWeight={700}
+          color={theme.colors.pink}
+          sx={{ mb: 3 }}
+        >
+          Your Cart
+        </Typography>
+
+        <Divider
           sx={{
-            width: isMobile ? "100%" : 500,
-            p: 2,
-            bgcolor: theme.colors.beige,
+            border: 1,
+            borderRadius: 2,
+            borderColor: theme.colors.green,
+            mb: 3,
+          }}
+        />
+
+        <Box sx={{ maxHeight: 380, overflowY: "auto" }}>
+          {lineItems.map((item) => {
+            const variant = item.merchandise;
+            const title = variant?.product?.title || "Item";
+            const image = productImages[variant?.id];
+
+            return (
+              <Stack key={item.id} direction="row" spacing={2} mb={3}>
+                <Box
+                  component="img"
+                  src={image}
+                  alt={title}
+                  sx={{
+                    width: 72,
+                    height: 72,
+                    borderRadius: 2,
+                    objectFit: "cover",
+                  }}
+                />
+                <Box flex={1}>
+                  <Typography sx={{ ...textStyle, color: theme.colors.green }}>
+                    {title}
+                  </Typography>
+                  <Typography
+                    sx={{ ...textStyle, color: theme.colors.pink, mt: 0.5 }}
+                  >
+                    ₹{item.cost?.subtotalAmount?.amount || "N/A"}/-
+                  </Typography>
+                  <Stack direction="row" alignItems="center" spacing={1} mt={1}>
+                    <IconButton
+                      size="small"
+                      onClick={() =>
+                        updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                      }
+                      sx={{ color: theme.colors.green }}
+                    >
+                      <RemoveIcon fontSize="small" />
+                    </IconButton>
+                    <Typography
+                      fontFamily={theme.fonts.text}
+                      color={theme.colors.green}
+                      fontWeight={600}
+                    >
+                      {item.quantity}
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      sx={{ color: theme.colors.green }}
+                    >
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      aria-label="Remove item"
+                      onClick={() => removeItem(item.id)}
+                      sx={{ color: theme.colors.pink }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Stack>
+                </Box>
+              </Stack>
+            );
+          })}
+        </Box>
+
+        <Divider
+          sx={{
+            border: 1,
+            borderRadius: 2,
+            borderColor: theme.colors.pink,
+            mb: 1,
+          }}
+        />
+
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography sx={textStyle} color={theme.colors.green}>
+              Qty
+            </Typography>
+            <Typography sx={textStyle} color={theme.colors.pink}>
+              {cartSummary.totalQuantity}
+            </Typography>
+          </Stack>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography sx={textStyle} color={theme.colors.green}>
+              Subtotal
+            </Typography>
+            <Typography sx={textStyle} color={theme.colors.pink}>
+              ₹{cartSummary.subtotal.toFixed(0)}/-
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <Button
+          variant="contained"
+          href={checkoutUrl}
+          target="_blank"
+          fullWidth
+          sx={{
+            mt: 4,
+            py: 1,
+            borderRadius: 2,
+            bgcolor: theme.colors.pink,
+            color: theme.colors.beige,
+            fontFamily: theme.fonts.text,
+            fontWeight: 600,
+            fontSize: isMobile ? "4vw" : "1rem",
+            "&:hover": {
+              bgcolor: theme.colors.green,
+              color: theme.colors.beige,
+            },
           }}
         >
-          <Typography
-            gutterBottom
-            fontSize={30}
-            display="flex"
-            alignItems="center"
-            justifyContent="start"
-            textAlign="left"
-            width="100%"
-            gap={2}
-            fontFamily={theme.fonts.heading}
-            fontWeight={600}
-            color={theme.colors.pink}
-          >
-            Your Cart <ShoppingCartIcon />
-          </Typography>
-          <Divider sx={{ mb: 4, border: `1px solid ${theme.colors.green}` }} />
-
-          <Box maxHeight={500} overflow="auto">
-            {lineItems.map((item) => {
-              const variant = item.merchandise;
-              const productTitle =
-                variant?.product?.title || variant?.title || "N/A";
-              const productThumbnail = productImages[variant?.id];
-
-              return (
-                <div key={item.id}>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mt={4}
-                  >
-                    <Box
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      sx={{ width: 70, height: 70 }}
-                    >
-                      <Box
-                        component="img"
-                        src={productThumbnail}
-                        alt={productTitle}
-                        sx={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </Box>
-
-                    <Stack
-                      flex={1}
-                      ml={2}
-                      width="100%"
-                      direction="column"
-                      justifyContent="space"
-                      alignItems="start"
-                    >
-                      <Typography
-                        fontSize={isMobile ? "4vw" : "1vw"}
-                        fontFamily={theme.fonts.text}
-                        color={theme.colors.green}
-                      >
-                        {productTitle}
-                      </Typography>
-                      <Typography
-                        fontSize={isMobile ? "3.5vw" : "0.9vw"}
-                        fontFamily={theme.fonts.text}
-                        color={theme.colors.pink}
-                      >
-                        ₹{item.cost?.subtotalAmount?.amount || "N/A"}/-
-                      </Typography>
-                    </Stack>
-
-                    <Stack direction="row" alignItems="center">
-                      <IconButton
-                        sx={{ color: theme.colors.green }}
-                        onClick={() =>
-                          updateQuantity(
-                            item.id,
-                            Math.max(1, item.quantity - 1)
-                          )
-                        }
-                        size="medium"
-                      >
-                        <RemoveIcon fontSize="medium" />
-                      </IconButton>
-
-                      <Typography
-                        sx={{
-                          fontFamily: theme.fonts.text,
-                          color: theme.colors.green,
-                          fontSize: isMobile ? "4vw" : "1vw",
-                        }}
-                      >
-                        {item.quantity}
-                      </Typography>
-
-                      <IconButton
-                        sx={{ color: theme.colors.green }}
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
-                        size="medium"
-                      >
-                        <AddIcon fontSize="medium" />
-                      </IconButton>
-
-                      <IconButton
-                        sx={{ color: theme.colors.pink }}
-                        onClick={() => removeItem(item.id)}
-                        size="medium"
-                      >
-                        <DeleteIcon fontSize="medium" />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                  <Divider
-                    sx={{ mt: 1, border: `1px solid ${theme.colors.pink}` }}
-                  />
-                </div>
-              );
-            })}
-          </Box>
-
-          <Stack
-            direction="column"
-            spacing={1}
+          Proceed to Checkout
+        </Button>
+      </Drawer>
+      {snackOpen && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 100,
+            right: 44,
+            zIndex: 3999,
+            transformOrigin: "right center",
+            animation: "thoughtBubbleGrow 2s ease-in-out forwards",
+          }}
+        >
+          <Box
             sx={{
-              mb: 3,
-              mt: 4,
-              textAlign: "left",
-              fontFamily: theme.fonts.text,
-              color: theme.colors.green,
-            }}
-          >
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography sx={summaryStylesLeft} width={200}>
-                Qty:
-              </Typography>
-              <Typography sx={summaryStylesRight}>
-                {cartSummary.totalQuantity}
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography sx={summaryStylesLeft} width={200}>
-                Subtotal:
-              </Typography>
-              <Typography sx={summaryStylesRight}>
-                ₹{cartSummary.subtotal.toFixed(0)}/-
-              </Typography>
-            </Stack>
-          </Stack>
-
-          <Button
-            fullWidth={!isMobile}
-            variant="contained"
-            href={checkoutUrl}
-            target="_blank"
-            sx={{
-              mt: 4,
-              bgcolor: theme.colors.pink,
+              position: "relative",
+              px: 2.5,
+              py: 1.5,
+              backgroundColor:
+                navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige,
               color: theme.colors.beige,
               fontFamily: theme.fonts.text,
-              fontSize: isMobile ? "4vw" : "1.2vw",
-              "&:hover": {
-                bgcolor: theme.colors.green,
-                color: theme.colors.beige,
+              fontWeight: 500,
+              fontSize: isMobile ? "3.8vw" : "0.95rem",
+              borderRadius: "18px",
+              boxShadow: `0 6px 18px rgba(0, 0, 0, 0.15)`,
+              whiteSpace: "nowrap",
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                right: 16,
+                top: "100%",
+                width: 12,
+                height: 12,
+                backgroundColor:
+                  navbarTheme === "pink"
+                    ? theme.colors.pink
+                    : theme.colors.beige,
+                borderRadius: "50%",
+              },
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                right: 8,
+                top: "100%",
+                width: 8,
+                height: 8,
+                backgroundColor: theme.colors.pink,
+                borderRadius: "50%",
               },
             }}
           >
-            Checkout
-          </Button>
+            Item added to cart!
+          </Box>
         </Box>
-      </Drawer>
+      )}
     </>
   );
 };
