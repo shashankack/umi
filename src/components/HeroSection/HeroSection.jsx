@@ -3,6 +3,9 @@ import "./HeroSection.scss";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+
+import { fetchShopifyProducts } from "../../utils/shopify";
+
 gsap.registerPlugin(ScrollTrigger);
 
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -14,18 +17,14 @@ import leaf3 from "../../assets/images/vectors/leaf3.png";
 import soupBowl from "../../assets/images/vectors/soup_bowl.png";
 import whisk from "../../assets/images/vectors/whisk.png";
 
-import haruTin from "../../assets/images/products/haru_tin.png";
-import nakaiTin from "../../assets/images/products/nakai_tin.png";
-import matchaLatte from "../../assets/images/products/matcha_latte.png";
-import whiskk from "../../assets/images/products/whisk.png";
-import whiskHolder from "../../assets/images/products/whisk_holder.png";
-import scoop from "../../assets/images/products/scoop.png";
-import bowl from "../../assets/images/products/bowl.png";
-
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 import { useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const hasPlayed = sessionStorage.getItem("hasPlayed");
+  const navigate = useNavigate();
+
   const containerRef = useRef(null);
   const imageRef = useRef(null);
   const nameRef = useRef(null);
@@ -46,47 +45,73 @@ const HeroSection = () => {
 
   homeTextRefs.current = [];
 
-  const productsData = [
-    {
-      title: "Haru Ceremonial",
-      image: haruTin,
-      price: 2999.0,
-    },
+  // const productsData = [
+  //   {
+  //     id: "9694988501272",
+  //     title: "Haru Ceremonial",
+  //     image: haruTin,
+  //     price: 2999.0,
+  //   },
 
-    {
-      title: "Nakai Ceremonial",
-      image: nakaiTin,
-      price: 1999.0,
-    },
+  //   {
+  //     id: "9692515008792",
+  //     title: "Nakai Ceremonial",
+  //     image: nakaiTin,
+  //     price: 1999.0,
+  //   },
 
-    {
-      title: "Instant Matcha Latte",
-      image: matchaLatte,
-      price: 999.0,
-    },
-    {
-      title: "Umi Bowl Chawan",
-      image: bowl,
-      price: 1949.0,
-    },
-    {
-      title: "Umi Whisk - Chasen",
-      image: whiskk,
-      price: 1049.0,
-    },
-    {
-      title: "Umi Scoop - Chashaku",
-      image: scoop,
-      price: 499.0,
-    },
-    {
-      title: "Umi Whisk Holder",
-      image: whiskHolder,
-      price: 1349.0,
-    },
-  ];
+  //   {
+  //     title: "Instant Matcha Latte",
+  //     image: matchaLatte,
+  //     price: 999.0,
+  //   },
+  //   {
+  //     title: "Umi Bowl Chawan",
+  //     image: bowl,
+  //     price: 1949.0,
+  //   },
+  //   {
+  //     title: "Umi Whisk - Chasen",
+  //     image: whiskk,
+  //     price: 1049.0,
+  //   },
+  //   {
+  //     title: "Umi Scoop - Chashaku",
+  //     image: scoop,
+  //     price: 499.0,
+  //   },
+  //   {
+  //     title: "Umi Whisk Holder",
+  //     image: whiskHolder,
+  //     price: 1349.0,
+  //   },
+  // ];
 
-  const [products] = useState(productsData);
+  useEffect(() => {
+    const loadFilteredProducts = async () => {
+      try {
+        const allProducts = await fetchShopifyProducts();
+        const filtered = allProducts.filter(
+          (p) =>
+            p.productType.toLowerCase() === "matcha" ||
+            p.productType.toLowerCase() === "matchaware"
+        );
+        const mapped = filtered.map((product) => ({
+          id: product.id.split("/").pop(),
+          title: product.title,
+          image: product.images.edges[0]?.node.url,
+          price: parseFloat(product.variants.edges[0]?.node.price.amount),
+        }));
+        setProducts(mapped);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    loadFilteredProducts();
+  }, []);
+
+  const [products, setProducts] = useState([]);
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef(null);
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
@@ -121,11 +146,11 @@ const HeroSection = () => {
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top 80%",
+        trigger: isMobile ? undefined : containerRef.current,
+        start: hasPlayed ? "top 180%" : "top 80%",
         toggleActions: "play none none none",
+
         onEnter: () => {
-          // Floating animations
           gsap.to(
             [
               leaf1Ref.current,
@@ -328,8 +353,10 @@ const HeroSection = () => {
     handleSlide(-1);
   };
 
+  if (!products.length) return null;
+
   const currentProduct = products[current];
-  const imageUrl = currentProduct.image;
+  console.log("Current product:", currentProduct);
 
   return (
     <section
@@ -367,7 +394,23 @@ const HeroSection = () => {
                 </div>
               </div>
               <div className="image-container">
-                <img src={imageUrl} ref={imageRef} />
+                <div
+                  onClick={() => {
+                    navigate(
+                      `/product/${currentProduct.id}`,
+                      window.scrollTo(0, 0)
+                    );
+                  }}
+                  onMouseEnter={() => clearInterval(intervalRef.current)}
+                  onMouseLeave={resetAutoSlide}
+                  style={{ cursor: "pointer", pointerEvents: "auto" }}
+                >
+                  <img
+                    src={currentProduct.image}
+                    ref={imageRef}
+                    alt={currentProduct.title}
+                  />
+                </div>
               </div>
             </div>
             <div className="product-info">

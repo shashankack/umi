@@ -1,46 +1,145 @@
-import { Box, Typography, useTheme } from "@mui/material";
-const Test = () => {
+import { useRef, useEffect, useState } from "react";
+import { Box, useTheme, useMediaQuery } from "@mui/material";
+import gsap from "gsap";
+
+import emptyCloud from "../assets/images/vectors/empty_cloud.png";
+import umiText from "../assets/images/vectors/umi_text.png";
+
+const Test = ({ NextComponent }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [showNext, setShowNext] = useState(false);
+  const [hasPlayed] = useState(sessionStorage.getItem("hasPlayed") === "true");
+
+  const cloudRef = useRef(null);
+  const textRef = useRef(null);
+  const introContainerRef = useRef(null);
+  const nextComponentRef = useRef(null);
+
+  useEffect(() => {
+    if (hasPlayed) {
+      setShowNext(true);
+      introContainerRef.current.style.display = "none";
+      nextComponentRef.current.style.transform = "translateY(0)";
+      nextComponentRef.current.style.visibility = "visible";
+      return;
+    }
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        sessionStorage.setItem("hasPlayed", "true");
+        setShowNext(true);
+
+        gsap
+          .timeline()
+          .to(
+            introContainerRef.current,
+            {
+              y: "-100vh",
+              duration: 1.2,
+              ease: "power2.inOut",
+            },
+            0
+          )
+          .fromTo(
+            nextComponentRef.current,
+            { y: "100vh" },
+            {
+              y: 0,
+              duration: 1.2,
+              ease: "power2.inOut",
+              onComplete: () => {
+                introContainerRef.current.style.display = "none";
+              },
+            },
+            0
+          );
+      },
+    });
+
+    tl.fromTo(
+      cloudRef.current,
+      { scale: 40 },
+      { scale: 1, duration: 1, ease: "back.out(.5)", delay: 0.6 }
+    ).fromTo(
+      textRef.current,
+      { scale: 0, xPercent: -50, yPercent: -50 },
+      {
+        scale: 1,
+        xPercent: -50,
+        yPercent: -50,
+        ease: "back.out",
+      },
+      "+=.2"
+    );
+  }, []);
+
   return (
-    <Box
-      height="100vh"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      bgcolor={theme.colors.green}
-      p={2}
-    >
-      <Typography color={theme.colors.beige}>
-        <p className="tagline">
-          Premium Ceremonial Grade Matcha{" "}
-          <em>
-            {" "}
-            From Kirishima, Kagoshima, Japan - Single origin, Three farmers
-          </em>
-        </p>
-        <p className="description">
-          <strong>Floral, Umami &amp; Fresh </strong> <br />
-          Single origin, 100% certified organic, First Harvest matcha grown in
-          the mineral rich volcanic soils of Kagoshima. This matcha is grown at
-          the edge of the volcano in the pristine regions of southern Japan,
-          where the unique misty weather pattern fosters the flavour and growth
-          of this matcha. This matcha is naturally grown in a pesticide free
-          environment. Double cover shading for 20 days. Stone milled &amp;
-          ground.
-        </p>
-        <p className="summary">
-          We taste: Jasmine, Wildflower Honey and Cream.
-        </p>
-        <p className="full-description">
-          Full description: Nozomi by Umi is a ceremonial matcha that is
-          vibrant, smooth and umami rich. This ceremonial matcha is emerald
-          green and is complemented by light floral sweetness, the absence of
-          bitterness, smooth and velvety texture, which makes it ideal for
-          mindful rituals and sustained energy with unmatched quality.
-        </p>
-      </Typography>
-    </Box>
+    <>
+      <Box
+        ref={introContainerRef}
+        height="100vh"
+        bgcolor={theme.colors?.pink || "#ffcdd2"}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        position="absolute" // Changed to absolute
+        top={0}
+        left={0}
+        right={0}
+        overflow="hidden"
+        zIndex={2000}
+      >
+        <Box position="relative">
+          <Box width={200} ref={cloudRef}>
+            <Box
+              component="img"
+              src={emptyCloud}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </Box>
+
+          <Box
+            ref={textRef}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 120,
+              scale: 0,
+            }}
+          >
+            <Box
+              component="img"
+              src={umiText}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </Box>
+        </Box>
+      </Box>
+
+      <Box
+        ref={nextComponentRef}
+        width="100%"
+        position="relative" // Changed to relative
+        style={{
+          transform: "translateY(100vh)", // Start off-screen
+          zIndex: 1,
+          visibility: showNext ? "visible" : "hidden",
+        }}
+      >
+        {showNext && <NextComponent />}
+      </Box>
+    </>
   );
 };
 

@@ -100,7 +100,7 @@ const MobileNavbar = () => {
 
     const handleScroll = () => {
       const currentScroll = window.scrollY;
-      const threshold = pathname === "/" ? 1000 : 100;
+      const threshold = pathname === "/" ? 600 : 100;
 
       if (!tickingRef.current) {
         window.requestAnimationFrame(() => {

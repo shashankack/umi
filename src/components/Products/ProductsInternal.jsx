@@ -180,7 +180,7 @@ const ProductsInternal = () => {
             color: theme.colors.pink,
             fontFamily: theme.fonts.text,
             backgroundColor: theme.colors.beige,
-            fontSize: isMobile ? "3vw" : ".6vw",
+            fontSize: isMobile ? "3vw" : ".9vw",
             boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
           }}
         >
@@ -485,7 +485,7 @@ const ProductsInternal = () => {
                       color: theme.colors.pink,
                       fontFamily: theme.fonts.text,
                       backgroundColor: theme.colors.beige,
-                      fontSize: isMobile ? "3vw" : ".6vw",
+                      fontSize: isMobile ? "3vw" : ".9vw",
                       boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
                     }}
                   >

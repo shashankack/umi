@@ -81,7 +81,7 @@ const App = () => {
               <MobileNavbar />
               <CartUI />
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Test NextComponent={Home} />} />
                 <Route path="/about" element={<About />} />
                 <Route
                   path="/product/:productId"
@@ -95,8 +95,8 @@ const App = () => {
                 <Route path="/shipping-policy" element={<Policies />} />
                 <Route path="/faq" element={<FAQ data={faqData} />} />
                 <Route path="/load" element={<Hero />} />
-                <Route path="/test" element={<Test />} />
-                <Route path="*" element={<Home />} />
+                <Route path="/test" element={<Test NextComponent={Home} />} />
+                <Route path="*" element={<div>Not Found</div>} />
               </Routes>
               <Footer />
             </LoadingHandler>

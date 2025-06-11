@@ -26,10 +26,12 @@ const ProductsSection = () => {
   const titleRef = useRef(null);
   const svgRef = useRef(null);
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
+  const [hasPlayed] = useState(sessionStorage.getItem("hasPlayed") === "true");
   const [products, setProducts] = useState([]);
   const { addItem } = useCart();
 
   useEffect(() => {
+    console.log(hasPlayed);
     const loadProducts = async () => {
       try {
         const data = await fetchShopifyProducts();
@@ -122,7 +124,6 @@ const ProductsSection = () => {
         slidesPerView={3}
         navigation={{ clickable: true }}
         loop
-        freeMode
         breakpoints={{
           320: {
             slidesPerView: 1,
@@ -141,7 +142,6 @@ const ProductsSection = () => {
           const title = product.title;
           const imageUrl = product.images.edges[0]?.node.url;
           const price = product.variants.edges[0]?.node.price.amount;
-          const currency = product.variants.edges[0]?.node.price.currencyCode;
           const variantId = product.variants.edges[0]?.node.id;
           const productId = product.id.split("/").pop();
 
