@@ -33,7 +33,7 @@ export async function fetchShopifyProducts(limit = 20) {
             productType
             tags
             descriptionHtml
-            images(first:10) {
+            images(first: 10) {
               edges {
                 node {
                   url
@@ -44,12 +44,16 @@ export async function fetchShopifyProducts(limit = 20) {
               edges {
                 node {
                   id
+                  title
                   price {
                     amount
                     currencyCode
                   }
                   weight
                   weightUnit
+                  image {
+                    url
+                  }
                 }
               }
             }

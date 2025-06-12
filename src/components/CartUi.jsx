@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Drawer,
@@ -10,7 +10,6 @@ import {
   useTheme,
   useMediaQuery,
   GlobalStyles,
-  Alert as MuiAlert,
 } from "@mui/material";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -197,9 +196,28 @@ const CartUI = () => {
                   }}
                 />
                 <Box flex={1}>
-                  <Typography sx={{ ...textStyle, color: theme.colors.green }}>
+                  <Typography
+                    sx={{
+                      fontFamily: theme.fonts.text,
+                      fontSize: isMobile ? "3.8vw" : "0.95vw", // smaller than original
+                      fontWeight: 600,
+                      color: theme.colors.green,
+                    }}
+                  >
                     {title}
                   </Typography>
+                  <Typography
+                    sx={{
+                      fontFamily: theme.fonts.text,
+                      fontSize: isMobile ? "3.5vw" : "0.85vw",
+                      fontWeight: 400,
+                      color: theme.colors.green,
+                      mt: 0.2,
+                    }}
+                  >
+                    {variant?.title}
+                  </Typography>
+
                   <Typography
                     sx={{ ...textStyle, color: theme.colors.pink, mt: 0.5 }}
                   >

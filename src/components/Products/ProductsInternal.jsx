@@ -28,12 +28,15 @@ import Loading from "../Loading/Loading";
 
 const ProductsInternal = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const { productId } = useParams();
+  const { addItem } = useCart();
+
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { addItem } = useCart();
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   const handleThumbnailClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -44,7 +47,7 @@ const ProductsInternal = () => {
   };
 
   const handleAddToCart = () => {
-    const variantId = product.variants.edges[0]?.node.id;
+    const variantId = selectedVariant?.id;
     if (variantId) {
       addItem(variantId, quantity);
     }
@@ -239,8 +242,11 @@ const ProductsInternal = () => {
         const fullProductId = `gid://shopify/Product/${productId}`;
         const foundProduct = data.find((p) => p.id === fullProductId);
         setProduct(foundProduct);
-        console.log("Incoming product data:", foundProduct);
+        const defaultVariant = foundProduct.variants.edges[0]?.node;
+        setSelectedVariant(defaultVariant);
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
+
+        console.log("Incoming product data:", foundProduct);
       } catch (error) {
         console.error("Failed to fetch product", error);
       }
@@ -248,6 +254,21 @@ const ProductsInternal = () => {
 
     loadProduct();
   }, [productId]);
+
+  const handleVariantChange = (e) => {
+    const variantId = e.target.value;
+    const newVariant = product.variants.edges.find(
+      (edge) => edge.node.id === variantId
+    )?.node;
+
+    if (newVariant) {
+      setSelectedVariant(newVariant);
+
+      if (newVariant.image?.url) {
+        setSelectedImage(newVariant.image.url);
+      }
+    }
+  };
 
   if (!product) return <Loading />;
 
@@ -408,15 +429,69 @@ const ProductsInternal = () => {
               mb={isMobile ? 2 : 0}
               width="100%"
             >
-              <Stack direction="row" gap={1}>
+              <Stack gap={1}>
                 <Typography
                   variant="h1"
                   fontWeight={800}
                   sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
                 >
-                  ₹ {Math.floor(product.variants.edges[0]?.node.price.amount)}
-                  /-
+                  ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
                 </Typography>
+
+                {product.variants.edges.length > 1 && (
+                  <Select
+                    value={selectedVariant?.id || ""}
+                    onChange={handleVariantChange}
+                    size="small"
+                    displayEmpty
+                    sx={{
+                      width: "30%",
+                      backgroundColor: theme.colors.beige,
+                      color: theme.colors.pink,
+                      borderRadius: 2,
+                      boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                      fontFamily: theme.fonts.text,
+                      fontWeight: 500,
+                      fontSize: isMobile ? "0.7rem" : "0.9vw",
+                      minWidth: 160,
+                      "& .MuiSelect-icon": {
+                        color: theme.colors.pink,
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "none",
+                      },
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          mt: 1,
+                          backgroundColor: theme.colors.beige,
+                          color: theme.colors.pink,
+                          boxShadow: `2px 4px 8px rgba(0, 0, 0, 0.15)`,
+                          borderRadius: 2,
+                          "& .MuiMenuItem-root": {
+                            fontFamily: theme.fonts.text,
+                            fontSize: isMobile ? "3.5vw" : "0.9vw",
+                            "&:hover": {
+                              backgroundColor: theme.colors.pink,
+                              color: theme.colors.beige,
+                            },
+                            "&.Mui-selected": {
+                              backgroundColor: theme.colors.pink,
+                              color: theme.colors.beige,
+                            },
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    {product.variants.edges.map(({ node }) => (
+                      <MenuItem key={node.id} value={node.id}>
+                        {node.title} — ₹{Math.floor(node.price.amount)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
               </Stack>
 
               <Stack
@@ -431,17 +506,51 @@ const ProductsInternal = () => {
                   value={quantity}
                   onChange={handleQuantityChange}
                   size="small"
+                  displayEmpty
                   sx={{
-                    fontSize: isMobile ? "0.7rem" : ".8vw",
                     backgroundColor: theme.colors.beige,
                     color: theme.colors.pink,
                     borderRadius: 2,
                     boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
+                    fontFamily: theme.fonts.text,
+                    fontWeight: 500,
+                    fontSize: isMobile ? "0.7rem" : "0.9vw",
+                    minWidth: 80,
                     "& .MuiSelect-icon": {
                       color: theme.colors.pink,
                     },
                     "& .MuiOutlinedInput-notchedOutline": {
                       border: "none",
+                    },
+                    "&:hover": {
+                      backgroundColor: theme.colors.pink,
+                      color: theme.colors.beige,
+                      "& .MuiSelect-icon": {
+                        color: theme.colors.beige,
+                      },
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        mt: 1,
+                        backgroundColor: theme.colors.beige,
+                        color: theme.colors.pink,
+                        boxShadow: `2px 4px 8px rgba(0, 0, 0, 0.15)`,
+                        borderRadius: 2,
+                        "& .MuiMenuItem-root": {
+                          fontFamily: theme.fonts.text,
+                          fontSize: isMobile ? "3.5vw" : "0.9vw",
+                          "&:hover": {
+                            backgroundColor: theme.colors.pink,
+                            color: theme.colors.beige,
+                          },
+                          "&.Mui-selected": {
+                            backgroundColor: theme.colors.pink,
+                            color: theme.colors.beige,
+                          },
+                        },
+                      },
                     },
                   }}
                 >
@@ -451,6 +560,7 @@ const ProductsInternal = () => {
                     </MenuItem>
                   ))}
                 </Select>
+
                 <Button
                   onClick={handleAddToCart}
                   variant="contained"
@@ -484,7 +594,7 @@ const ProductsInternal = () => {
                 mb={isMobile ? 0 : 4}
               >
                 {parsedHighlightedAttributes}
-                {product.variants.edges[0]?.node.weight !== 0 && (
+                {selectedVariant?.weight !== 0 && (
                   <Typography
                     variant="h5"
                     sx={{
@@ -499,10 +609,8 @@ const ProductsInternal = () => {
                       boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
                     }}
                   >
-                    weight: {product.variants.edges[0]?.node.weight}
-                    {product.variants.edges[0]?.node.weightUnit === "GRAMS"
-                      ? "g"
-                      : ""}
+                    weight: {selectedVariant?.weight}
+                    {selectedVariant?.weightUnit === "GRAMS" ? "g" : ""}
                   </Typography>
                 )}
               </Stack>
