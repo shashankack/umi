@@ -134,7 +134,10 @@ const Test = () => {
                 boxShadow: `3px 3px 0 ${theme.colors.green}`,
               },
             }}
-            onClick={() => navigate("/shop")}
+            onClick={() => {
+              navigate("/shop");
+              window.scrollTo(0, 0);
+            }}
           >
             Shop Now
           </Button>
@@ -161,7 +164,7 @@ const Test = () => {
             sx={{
               position: "absolute",
               top: "50%",
-              left: isMobile ? -15 : 40,
+              left: isMobile ? -15 : 10,
               transform: "translateY(-50%)",
               zIndex: 20,
               color: theme.colors.pink,
@@ -183,7 +186,7 @@ const Test = () => {
             sx={{
               position: "absolute",
               top: "50%",
-              right: isMobile ? -15 : 40,
+              right: isMobile ? -15 : 10,
               transform: "translateY(-50%)",
               zIndex: 20,
               color: theme.colors.pink,
@@ -211,7 +214,8 @@ const Test = () => {
             breakpoints={{
               320: { slidesPerView: 1, spaceBetween: 40 },
               640: { slidesPerView: 2, spaceBetween: 20 },
-              1024: { slidesPerView: 4, spaceBetween: 30 },
+              1024: { slidesPerView: 3, spaceBetween: 60 },
+              1500: { slidesPerView: 4, spaceBetween: 30 },
             }}
             autoplay={{ delay: 3000 }}
             style={{

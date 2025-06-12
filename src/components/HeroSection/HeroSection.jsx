@@ -45,48 +45,6 @@ const HeroSection = () => {
 
   homeTextRefs.current = [];
 
-  // const productsData = [
-  //   {
-  //     id: "9694988501272",
-  //     title: "Haru Ceremonial",
-  //     image: haruTin,
-  //     price: 2999.0,
-  //   },
-
-  //   {
-  //     id: "9692515008792",
-  //     title: "Nakai Ceremonial",
-  //     image: nakaiTin,
-  //     price: 1999.0,
-  //   },
-
-  //   {
-  //     title: "Instant Matcha Latte",
-  //     image: matchaLatte,
-  //     price: 999.0,
-  //   },
-  //   {
-  //     title: "Umi Bowl Chawan",
-  //     image: bowl,
-  //     price: 1949.0,
-  //   },
-  //   {
-  //     title: "Umi Whisk - Chasen",
-  //     image: whiskk,
-  //     price: 1049.0,
-  //   },
-  //   {
-  //     title: "Umi Scoop - Chashaku",
-  //     image: scoop,
-  //     price: 499.0,
-  //   },
-  //   {
-  //     title: "Umi Whisk Holder",
-  //     image: whiskHolder,
-  //     price: 1349.0,
-  //   },
-  // ];
-
   useEffect(() => {
     const loadFilteredProducts = async () => {
       try {
@@ -147,8 +105,8 @@ const HeroSection = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: isMobile ? undefined : containerRef.current,
-        start: hasPlayed ? "top 180%" : "top 80%",
-        toggleActions: "play none none none",
+        start: hasPlayed ? "top 180%" : "top 100%",
+        toggleActions: "play none none reverse",
 
         onEnter: () => {
           gsap.to(
@@ -255,7 +213,7 @@ const HeroSection = () => {
           stagger: 0.3,
           ease: "power2.out",
         },
-        "-=0.8"
+        "<"
       );
 
     return () => {

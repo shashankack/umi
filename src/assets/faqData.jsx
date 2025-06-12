@@ -334,9 +334,9 @@ export const faqData = [
     type: "section",
     answer: (
       <ul>
-        <li>Sift 1-2 tsps of Umi Matcha into a Chawan (Bowl)</li>
+        <li>Sift 2-3 tsps of Umi Matcha into a Chawan (Bowl)</li>
         <li>
-          Add 80ml of warm water (80 Degree Celsius) and whisk in W motion until
+          Add 30ml of warm water (65-80 Degree Celsius) and whisk in W motion until
           smooth and frothy.
         </li>
         <li>Pour milk of your choice. (Regular, Oat, Almond)</li>

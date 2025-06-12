@@ -3,15 +3,7 @@ import badge from "../../assets/images/vectors/about/badge.png";
 
 import { useTheme } from "@mui/material/styles";
 
-import {
-  Box,
-  Stack,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 
 import { useRef, useEffect, useState } from "react";
 

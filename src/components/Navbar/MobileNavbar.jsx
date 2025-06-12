@@ -273,7 +273,7 @@ const MobileNavbar = () => {
                         setIsMenuOpen(false);
                         setTimeout(
                           () => navigate(`/product/${product.id}`),
-                          300
+                          600
                         );
                       }}
                     >
@@ -479,8 +479,8 @@ const MobileNavbar = () => {
                               setShowShopSubmenu(false);
                               setIsMenuOpen(false);
                               setTimeout(() => {
-                                navigate(`/shop?scrollTo=${cat}`);
-                              }, 300);
+                                window.location.href = `/shop?scrollTo=${cat}`;
+                              }, 600);
                             }}
                             fontFamily={theme.fonts.heading}
                             fontSize="1.4rem"
