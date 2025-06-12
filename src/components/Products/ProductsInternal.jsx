@@ -243,7 +243,7 @@ const ProductsInternal = () => {
         const foundProduct = data.find((p) => p.id === fullProductId);
         setProduct(foundProduct);
         const defaultVariant = foundProduct.variants.edges[0]?.node;
-        setSelectedVariant(defaultVariant);
+        setSelectedVariant(null);
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
 
         console.log("Incoming product data:", foundProduct);
@@ -442,8 +442,8 @@ const ProductsInternal = () => {
                   <Select
                     value={selectedVariant?.id || ""}
                     onChange={handleVariantChange}
-                    size="small"
                     displayEmpty
+                    size="small"
                     sx={{
                       width: "30%",
                       backgroundColor: theme.colors.beige,
@@ -485,6 +485,10 @@ const ProductsInternal = () => {
                       },
                     }}
                   >
+                    <MenuItem disabled value="">
+                      Choose your matcha
+                    </MenuItem>
+
                     {product.variants.edges.map(({ node }) => (
                       <MenuItem key={node.id} value={node.id}>
                         {node.title} — ₹{Math.floor(node.price.amount)}
@@ -564,6 +568,7 @@ const ProductsInternal = () => {
                 <Button
                   onClick={handleAddToCart}
                   variant="contained"
+                  disabled={!selectedVariant}
                   fullWidth={isMobile}
                   sx={{
                     fontFamily: theme.fonts.text,
