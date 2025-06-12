@@ -25,6 +25,7 @@ import FAQ from "./pages/FAQ.jsx";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { faqData } from "./assets/faqData.jsx";
 import Policies from "./pages/Policies";
+import Intro from "./components/Intro.jsx";
 import Test from "./components/Test.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
@@ -81,7 +82,7 @@ const App = () => {
               <MobileNavbar />
               <CartUI />
               <Routes>
-                <Route path="/" element={<Test NextComponent={Home} />} />
+                <Route path="/" element={<Intro NextComponent={Home} />} />
                 <Route path="/about" element={<About />} />
                 <Route
                   path="/product/:productId"
@@ -94,11 +95,10 @@ const App = () => {
                 <Route path="/refund-policy" element={<Policies />} />
                 <Route path="/shipping-policy" element={<Policies />} />
                 <Route path="/faq" element={<FAQ data={faqData} />} />
-                <Route path="/load" element={<Hero />} />
-                <Route path="/test" element={<Test NextComponent={Home} />} />
+                <Route path="/test" element={<Test />} />
                 <Route path="*" element={<div>Not Found</div>} />
               </Routes>
-              <Footer />
+              {location.pathname !== "/test" && <Footer />}
             </LoadingHandler>
           </Router>
         </CartProvider>

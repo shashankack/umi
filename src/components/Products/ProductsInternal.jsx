@@ -268,7 +268,7 @@ const ProductsInternal = () => {
         flexDirection="column"
         justifyContent="center"
         alignItems="start"
-        mt={isMobile ? 8 : 0}
+        mt={isMobile ? 8 : 10}
         mb={
           isMobile
             ? parsedProductProfile.left.length > 0
@@ -280,25 +280,8 @@ const ProductsInternal = () => {
         }
         px={isMobile ? 4 : 10}
       >
-        {!isMobile && (
-          <Typography
-            mt={isMobile ? 2 : 0}
-            fontSize={isMobile ? "7vw" : "2.6vw"}
-            fontFamily={theme.fonts.title}
-            fontWeight={500}
-            textAlign="center"
-            width={isMobile ? "100%" : "30vw"}
-            color={theme.colors.beige}
-            sx={{
-              textShadow: `1px 5px 0px ${theme.colors.pink}`,
-            }}
-          >
-            {product.title}
-          </Typography>
-        )}
-
         {/* Image Section */}
-        <Stack direction={isMobile ? "column" : "row"} width="100%" gap={2}>
+        <Stack direction={isMobile ? "column" : "row"} width="100%" gap={5}>
           <Stack
             width={isMobile ? "100%" : "30vw"}
             height="100%"
@@ -316,12 +299,18 @@ const ProductsInternal = () => {
                 width: "100%",
                 height: "100%",
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "space-evenly",
                 alignItems: "center",
                 flexDirection: "column",
               }}
             >
-              <Box height={"36vh"} mb={isMobile ? 2 : 0}>
+              <Box
+                height={"70%"}
+                mb={isMobile ? 2 : 0}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
                 <Box
                   component="img"
                   src={selectedImage}
@@ -378,29 +367,44 @@ const ProductsInternal = () => {
             color={theme.colors.beige}
             alignItems="start"
             justifyContent={!parsedTagline ? "start" : "space-between"}
-            gap={2}
+            gap={
+              isMobile
+                ? parsedFullDescription
+                  ? 0
+                  : 2
+                : parsedFullDescription
+                ? 0
+                : 4
+            }
           >
-            {isMobile && (
-              <Typography
-                mt={isMobile ? 2 : 0}
-                fontSize={isMobile ? "7vw" : "2.6vw"}
-                fontFamily={theme.fonts.title}
-                fontWeight={500}
-                textAlign="start"
-                width="100%"
-                color={theme.colors.beige}
-                sx={{
-                  textShadow: `1px 5px 0px ${theme.colors.pink}`,
-                }}
-              >
-                {product.title}
-              </Typography>
-            )}
+            <Typography
+              mt={isMobile ? 2 : 0}
+              fontSize={isMobile ? "7vw" : "2.6vw"}
+              fontFamily={theme.fonts.title}
+              fontWeight={500}
+              textAlign="start"
+              width="100%"
+              color={theme.colors.beige}
+              sx={{
+                textShadow: `1px 5px 0px ${theme.colors.pink}`,
+              }}
+            >
+              {product.title}
+            </Typography>
+
             {parsedTagline && <Box>{parsedTagline}</Box>}
 
             <Stack
               mt={isMobile ? 2 : 0}
-              gap={isMobile ? 0 : 2}
+              gap={
+                isMobile
+                  ? parsedFullDescription
+                    ? 0
+                    : 2
+                  : parsedFullDescription
+                  ? 2
+                  : 4
+              }
               mb={isMobile ? 2 : 0}
               width="100%"
             >
@@ -472,7 +476,13 @@ const ProductsInternal = () => {
                 </Button>
               </Stack>
 
-              <Stack mt={isMobile ? 2 : 0} direction="row" gap={2} width="100%">
+              <Stack
+                mt={isMobile ? 2 : 0}
+                direction="row"
+                gap={2}
+                width="100%"
+                mb={isMobile ? 0 : 4}
+              >
                 {parsedHighlightedAttributes}
                 {product.variants.edges[0]?.node.weight !== 0 && (
                   <Typography

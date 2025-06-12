@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // import HeroSection from "../../components/HeroSection/HeroSection";
 import HeroSection from "../../components/HeroSection/HeroSection";
-import ProductsSection from "../../components/Products/ProductsSection";
+import ProductsSection from "../../components/Test";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
@@ -142,7 +142,7 @@ const Home = () => {
         style={{ position: "relative" }}
       >
         <ProductsSection />
-        <div
+        {/* <div
           className="marquee"
           style={{
             position: "absolute",
@@ -165,7 +165,7 @@ const Home = () => {
           }}
         >
           <CurvedMarquee />
-        </div>
+        </div> */}
       </div>
       <div className="about-sec" ref={ourMatchaRef}>
         <AboutSection />

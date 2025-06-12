@@ -28,6 +28,7 @@ const CurvedMarquee = () => {
               ref={pathRef}
               d="M0,160 C900, 60 640,370 1400,90"
               fill="none"
+              
             />
           </defs>
 

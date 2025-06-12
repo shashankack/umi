@@ -98,30 +98,31 @@ const About = () => {
           </Typography>
 
           {isMobile ? (
-            <Accordion
-              elevation={0}
-              disableGutters
-              sx={{
-                mt: -4,
-                backgroundColor: "transparent",
-                color: theme.colors.pink,
-                fontFamily: theme.fonts.text,
-                "&::before": { display: "none" },
-              }}
-            >
-              <AccordionSummary
-                expandIcon={null}
+            <>
+              {!showMore && (
+                <Typography
+                  onClick={() => setShowMore(true)}
+                  sx={{
+                    mt: -2,
+                    fontSize: "3vw",
+                    color: theme.colors.pink,
+                    fontFamily: theme.fonts.text,
+                    cursor: "pointer",
+                    transition: "opacity 0.3s ease",
+                  }}
+                >
+                  Read more...
+                </Typography>
+              )}
+
+              <Box
                 sx={{
-                  p: 0,
-                  fontSize: "3vw",
-                  color: theme.colors.pink,
-                  fontFamily: theme.fonts.text,
-                  textTransform: "none",
+                  maxHeight: showMore ? "1000px" : "0px",
+                  opacity: showMore ? 1 : 0,
+                  overflow: "hidden",
+                  transition: "all 0.6s ease",
                 }}
               >
-                Read more...
-              </AccordionSummary>
-              <AccordionDetails sx={{ p: 0 }}>
                 <Typography
                   fontFamily={theme.fonts.text}
                   color={theme.colors.beige}
@@ -142,9 +143,10 @@ const About = () => {
                   have Umi become a part of your daily routine because it's
                   truly the most magical part of mine.
                 </Typography>
-              </AccordionDetails>
-            </Accordion>
+              </Box>
+            </>
           ) : (
+            // Desktop version remains unchanged
             <Typography
               fontFamily={theme.fonts.text}
               color={theme.colors.beige}

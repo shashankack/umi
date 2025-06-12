@@ -40,7 +40,7 @@ export async function fetchShopifyProducts(limit = 20) {
                 }
               }
             }
-            variants(first: 1) {
+            variants(first: 4) {
               edges {
                 node {
                   id
