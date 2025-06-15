@@ -6,8 +6,6 @@ import {
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import Hero from "./components/HeroSection.jsx";
-
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import ProductsInternal from "./components/Products/ProductsInternal";

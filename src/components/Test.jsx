@@ -239,7 +239,7 @@ const Test = () => {
                   key={product.id}
                   style={{
                     backgroundColor: theme.colors.beige,
-                    height: "100%",
+                    height: "90%",
                     border: `2px solid ${theme.colors.green}`,
                     borderRadius: "285.5px 285.5px 0px 0px",
                     boxShadow: isMobile

@@ -5,7 +5,19 @@
   align-items: center;
   padding: 5% 0 10%;
   position: relative;
-  overflow: hidden;
+
+  .bottom {
+    overflow: hidden;
+    width: 100vw;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    svg {
+      z-index: 1;
+    }
+  }
 
   .top {
     display: flex;
@@ -34,7 +46,7 @@
     h2 {
       color: #f6a09e;
       text-align: center;
-      text-shadow: 1px 7px 0px #b5d782;
+      text-shadow: 3px 3px 0px #b5d782;
       font-family: "Genty";
       font-size: 4rem;
       font-style: normal;
@@ -93,7 +105,8 @@
     width: 90%;
     height: 100%;
     margin: auto;
-    z-index: 10;
+    z-index: 20;
+    position: relative;
     padding: 70px 0;
 
     .swiper-button-next,
@@ -127,7 +140,7 @@
     padding: 30px;
     border-radius: 185.5px 185.5px 0px 0px;
     border: 2px solid #b5d782;
-    background: #fcf9e8;
+    background: #fdf8ce;
     box-shadow: 12px 16px 0px 0px #f6a09e;
     margin: 0 auto;
     position: relative;

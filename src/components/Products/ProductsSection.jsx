@@ -18,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
 
 import surfingNeko from "../../assets/images/vectors/neko/surfing.gif";
+import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -188,27 +189,27 @@ const ProductsSection = () => {
           );
         })}
       </Swiper>
-
-      <svg
-        ref={svgRef}
-        width={isMobile ? "300%" : "100vw"}
-        height={isMobile ? "150%" : "100%"}
-        viewBox="0 0 1440 200"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          zIndex: 1,
-        }}
-      >
-        <path fill="#F3EDB8">
-          <animate
-            attributeName="d"
-            dur="8s"
-            repeatCount="indefinite"
-            values="
+      <div className="bottom">
+        <svg
+          ref={svgRef}
+          width={isMobile ? "300%" : "100vw"}
+          height={isMobile ? "150%" : "100%"}
+          viewBox="0 0 1440 200"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            zIndex: 1,
+          }}
+        >
+          <path fill="#F3EDB8">
+            <animate
+              attributeName="d"
+              dur="8s"
+              repeatCount="indefinite"
+              values="
       M0,100 
       C180,120 360,90 540,100 
       C720,110 900,90 1080,100 
@@ -227,9 +228,22 @@ const ProductsSection = () => {
       C1260,110 1440,90 1620,100 
       L1440,200 L0,200 Z
     "
-          />
-        </path>
-      </svg>
+            />
+          </path>
+        </svg>
+      </div>
+      <div
+        className="curved-marquee-container"
+        style={{
+          position: "absolute",
+          bottom: isMobile ? -100 : -150,
+          left: 0,
+          width: "100%",
+          zIndex: 10,
+        }}
+      >
+        <CurvedMarquee />
+      </div>
     </section>
   );
 };

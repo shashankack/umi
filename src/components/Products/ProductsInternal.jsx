@@ -242,8 +242,10 @@ const ProductsInternal = () => {
         const fullProductId = `gid://shopify/Product/${productId}`;
         const foundProduct = data.find((p) => p.id === fullProductId);
         setProduct(foundProduct);
+
         const defaultVariant = foundProduct.variants.edges[0]?.node;
-        setSelectedVariant(null);
+        setSelectedVariant(defaultVariant);
+
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
 
         console.log("Incoming product data:", foundProduct);
@@ -438,7 +440,7 @@ const ProductsInternal = () => {
                   ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
                 </Typography>
 
-                {product.variants.edges.length > 1 && (
+                {product.variants.edges.length > 1 ? (
                   <Select
                     value={selectedVariant?.id || ""}
                     onChange={handleVariantChange}
@@ -485,9 +487,7 @@ const ProductsInternal = () => {
                       },
                     }}
                   >
-                    <MenuItem disabled value="">
-                      Choose your matcha
-                    </MenuItem>
+                    <MenuItem value="">Choose your matcha</MenuItem>
 
                     {product.variants.edges.map(({ node }) => (
                       <MenuItem key={node.id} value={node.id}>
@@ -495,6 +495,8 @@ const ProductsInternal = () => {
                       </MenuItem>
                     ))}
                   </Select>
+                ) : (
+                  <Box></Box>
                 )}
               </Stack>
 
