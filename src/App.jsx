@@ -27,6 +27,7 @@ import Intro from "./components/Intro.jsx";
 import Test from "./components/Test.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
+import founder from "./assets/images/vectors/about/founder.png";
 
 const theme = createTheme({
   colors: {
@@ -69,6 +70,12 @@ const App = () => {
     <NavbarThemeProvider>
       <img
         src={navbarBg}
+        style={{
+          display: "none",
+        }}
+      />
+      <img
+        src={founder}
         style={{
           display: "none",
         }}

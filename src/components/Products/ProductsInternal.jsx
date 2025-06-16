@@ -68,6 +68,7 @@ const ProductsInternal = () => {
           fontWeight: 700,
           textAlign: "justify",
           fontSize: isMobile ? "3.4vw" : "1.2vw",
+          lineHeight: 0.8,
         }}
         dangerouslySetInnerHTML={{ __html: taglineElement.innerHTML }}
       />
@@ -87,6 +88,7 @@ const ProductsInternal = () => {
           fontWeight: 800,
           textAlign: isMobile ? "justify" : "start",
           fontSize: isMobile ? "3vw" : "1.2vw",
+          mt: 2,
           mb: 2,
         }}
         dangerouslySetInnerHTML={{ __html: summaryElement.innerHTML }}
@@ -131,11 +133,12 @@ const ProductsInternal = () => {
           fontWeight: 200,
           textAlign: "justify",
           fontSize: isMobile ? "2.8vw" : "1vw",
+          mt: 2,
+
           "& strong": {
             fontWeight: 900,
             fontSize: isMobile ? "3vw" : "1.2vw",
           },
-          mb: 2,
         }}
         dangerouslySetInnerHTML={{ __html: p.innerHTML }}
       />
@@ -389,19 +392,20 @@ const ProductsInternal = () => {
             height="100%"
             color={theme.colors.beige}
             alignItems="start"
-            justifyContent={!parsedTagline ? "start" : "space-between"}
+            justifyContent={"start"}
             gap={
               isMobile
                 ? parsedFullDescription
                   ? 0
                   : 2
                 : parsedFullDescription
-                ? 0
-                : 4
+                ? 2
+                : 2
             }
           >
             <Typography
               mt={isMobile ? 2 : 0}
+              mb={-2}
               fontSize={isMobile ? "7vw" : "2.6vw"}
               fontFamily={theme.fonts.title}
               fontWeight={500}
@@ -426,15 +430,16 @@ const ProductsInternal = () => {
                     : 2
                   : parsedFullDescription
                   ? 2
-                  : 4
+                  : 3
               }
               mb={isMobile ? 2 : 0}
               width="100%"
             >
-              <Stack gap={1}>
+              <Stack>
                 <Typography
                   variant="h1"
                   fontWeight={800}
+                  mt={2}
                   sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
                 >
                   ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
@@ -447,6 +452,7 @@ const ProductsInternal = () => {
                     displayEmpty
                     size="small"
                     sx={{
+                      mt: 2,
                       width: "30%",
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
@@ -502,7 +508,6 @@ const ProductsInternal = () => {
 
               <Stack
                 width="100%"
-                mt={1}
                 direction="row"
                 alignItems="center"
                 justifyContent="start"
@@ -593,13 +598,7 @@ const ProductsInternal = () => {
                 </Button>
               </Stack>
 
-              <Stack
-                mt={isMobile ? 2 : 0}
-                direction="row"
-                gap={2}
-                width="100%"
-                mb={isMobile ? 0 : 4}
-              >
+              <Stack mt={isMobile ? 2 : 0} direction="row" gap={2} width="100%">
                 {parsedHighlightedAttributes}
                 {selectedVariant?.weight !== 0 && (
                   <Typography

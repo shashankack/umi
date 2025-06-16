@@ -100,7 +100,7 @@ const Shop = () => {
 
   const titleStyles = {
     mt: isMobile ? 4 : 7,
-    marginBottom: isMobile ? 4 : 0,
+    mb: isMobile ? 4 : -6,
     width: "100%",
     textAlign: "center",
     fontSize: isMobile ? "10vw" : "4vw",
@@ -479,14 +479,13 @@ const Shop = () => {
       )}
 
       {/* Stack for Matchaware & Bundles */}
-      <Stack spacing={10}>
+      <Stack spacing={10} mt={-6}>
         {["matchaware", "bundles"].map((category) =>
           categories[category] ? (
             <Box
               key={category}
               ref={(el) => (categoryRefs.current[category] = el)}
               id={category}
-              mt={isMobile ? 0 : 10}
               display="flex"
               flexDirection="column"
               alignItems="center"
@@ -497,7 +496,7 @@ const Shop = () => {
               <Grid
                 container
                 columnSpacing={isMobile ? 5 : 5}
-                rowSpacing={isMobile ? 5 : 15}
+                rowSpacing={isMobile ? 5 : 20}
                 display="flex"
                 justifyContent="space-evenly"
                 p={isMobile ? 0 : 12}
@@ -657,7 +656,7 @@ const Shop = () => {
         )}
       </Stack>
 
-      <Box position="relative" mt={isMobile ? 6 : 0}>
+      <Box position="relative" mt={isMobile ? 6 : 10}>
         {isMobile ? (
           <Box
             component="svg"

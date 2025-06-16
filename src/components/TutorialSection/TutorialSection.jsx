@@ -4,7 +4,6 @@ import {
   useTheme,
   useMediaQuery,
   Stack,
-  Grid,
   Divider,
 } from "@mui/material";
 
@@ -22,11 +21,11 @@ const TutorialSection = () => {
   const stepsData = [
     {
       image: step1,
-      text: "Sift 1-2 tsp of <br />umi matcha into <br />a bowl.",
+      text: "Sift 2-3 tsp of <br />umi matcha into <br />a bowl.",
     },
     {
       image: step2,
-      text: "Add 80ml of warm <br />water and whisk <br />until smooth.",
+      text: "Add 30ml of warm <br />water and whisk <br />until smooth.",
     },
     {
       image: step3,
