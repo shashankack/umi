@@ -14,9 +14,8 @@ const VideoSection = () => {
     <Grid container bgcolor={theme.colors.beige} p={1} gap={1} spacing={1}>
       <Grid container>
         <Grid size={isMobile ? 12 : 6}>
-          <Box
-            component="video"
-            sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+          <video
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
             autoPlay
             muted
             loop
@@ -25,12 +24,11 @@ const VideoSection = () => {
           >
             <source src={horizontal1} type="video/mp4" />
             Your browser does not support the video tag.
-          </Box>
+          </video>
         </Grid>
         <Grid size={isMobile ? 12 : 6}>
-          <Box
-            component="video"
-            sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+          <video
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
             autoPlay
             muted
             loop
@@ -39,16 +37,15 @@ const VideoSection = () => {
           >
             <source src={horizontal2} type="video/mp4" />
             Your browser does not support the video tag.
-          </Box>
+          </video>
         </Grid>
       </Grid>
 
       {!isMobile && (
         <Grid container size={12} justifyContent="space-evenly" height="60vh">
           <Grid size={3} height="100%">
-            <Box
-              component="video"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            <video
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
               muted
               loop
@@ -57,12 +54,11 @@ const VideoSection = () => {
             >
               <source src={vertical1} type="video/mp4" />
               Your browser does not support the video tag.
-            </Box>
+            </video>
           </Grid>
           <Grid size={3} height="100%">
-            <Box
-              component="video"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            <video
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
               muted
               loop
@@ -71,12 +67,11 @@ const VideoSection = () => {
             >
               <source src={vertical2} type="video/mp4" />
               Your browser does not support the video tag.
-            </Box>
+            </video>
           </Grid>
           <Grid size={3} height="100%">
-            <Box
-              component="video"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            <video
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
               muted
               loop
@@ -85,7 +80,7 @@ const VideoSection = () => {
             >
               <source src={vertical3} type="video/mp4" />
               Your browser does not support the video tag.
-            </Box>
+            </video>
           </Grid>
         </Grid>
       )}

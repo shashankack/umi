@@ -132,6 +132,10 @@
     @media screen and (max-width: 1400px) {
       width: 100%;
     }
+
+    @media screen and (max-width: 500px) {
+      padding: 40px 0;
+    }
   }
 
   .product-card {

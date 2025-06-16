@@ -19,7 +19,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-import { FaSearch, FaUser } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import navbarBg from "../../assets/images/navbar_bg.png";
 import beigeMenu from "../../assets/images/icons/beige_menu.png";
@@ -377,9 +377,7 @@ const MobileNavbar = () => {
               display="flex"
               justifyContent="end"
               alignItems="center"
-            >
-              <FaUser fontSize={30} color={theme.colors.beige} />
-            </Box>
+            />
           </Box>
           <List
             sx={{

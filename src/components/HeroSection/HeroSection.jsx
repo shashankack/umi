@@ -342,15 +342,15 @@ const HeroSection = () => {
           <div className="product-frame">
             <div className="slider">
               <h2 ref={nameRef}>{currentProduct.title}</h2>
-              <div className="navigation">
-                <div className="arrow left" onClick={prevSlide}>
-                  <IoIosArrowBack color={theme.colors.pink} size={45} />
-                </div>
 
-                <div className="arrow right" onClick={nextSlide}>
-                  <IoIosArrowForward color={theme.colors.pink} size={45} />
-                </div>
+              <div className="arrow left" onClick={prevSlide}>
+                <IoIosArrowBack color={theme.colors.pink} size={45} />
               </div>
+
+              <div className="arrow right" onClick={nextSlide}>
+                <IoIosArrowForward color={theme.colors.pink} size={45} />
+              </div>
+
               <div className="image-container">
                 <div
                   onClick={() => {
