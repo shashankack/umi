@@ -219,22 +219,13 @@ const MobileNavbar = () => {
                 sx={{
                   display: isSearchOpen ? "block" : "none",
                   right: 0,
-                  backgroundColor:
-                    navbarTheme === "pink"
-                      ? theme.colors.pink
-                      : theme.colors.beige,
-                  color:
-                    navbarTheme === "pink"
-                      ? theme.colors.beige
-                      : theme.colors.pink,
+                  backgroundColor: theme.colors.beige,
+                  color: theme.colors.pink,
                   borderRadius: 2,
                   border: `2px solid ${theme.colors.green}`,
                   padding: "0 12px",
                   "&.Mui-focused": {
-                    borderColor:
-                      navbarTheme === "pink"
-                        ? theme.colors.beige
-                        : theme.colors.pink,
+                    borderColor: theme.colors.pink,
                   },
                 }}
               />

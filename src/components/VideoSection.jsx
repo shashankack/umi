@@ -16,24 +16,30 @@ const VideoSection = () => {
         <Grid size={isMobile ? 12 : 6}>
           <Box
             component="video"
-            src={horizontal1}
             sx={{ width: "100%", height: "100%", objectFit: "cover" }}
             autoPlay
             muted
             loop
+            preload="auto"
             playsInline
-          />
+          >
+            <source src={horizontal1} type="video/mp4" />
+            Your browser does not support the video tag.
+          </Box>
         </Grid>
         <Grid size={isMobile ? 12 : 6}>
           <Box
             component="video"
-            src={horizontal2}
             sx={{ width: "100%", height: "100%", objectFit: "cover" }}
             autoPlay
             muted
             loop
+            preload="auto"
             playsInline
-          />
+          >
+            <source src={horizontal2} type="video/mp4" />
+            Your browser does not support the video tag.
+          </Box>
         </Grid>
       </Grid>
 
@@ -42,35 +48,44 @@ const VideoSection = () => {
           <Grid size={3} height="100%">
             <Box
               component="video"
-              src={vertical1}
               sx={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
               muted
               loop
+              preload="auto"
               playsInline
-            />
+            >
+              <source src={vertical1} type="video/mp4" />
+              Your browser does not support the video tag.
+            </Box>
           </Grid>
           <Grid size={3} height="100%">
             <Box
               component="video"
-              src={vertical2}
               sx={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
               muted
               loop
+              preload="auto"
               playsInline
-            />
+            >
+              <source src={vertical2} type="video/mp4" />
+              Your browser does not support the video tag.
+            </Box>
           </Grid>
           <Grid size={3} height="100%">
             <Box
               component="video"
-              src={vertical3}
               sx={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
               muted
               loop
+              preload="auto"
               playsInline
-            />
+            >
+              <source src={vertical3} type="video/mp4" />
+              Your browser does not support the video tag.
+            </Box>
           </Grid>
         </Grid>
       )}

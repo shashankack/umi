@@ -479,7 +479,7 @@ const Shop = () => {
       )}
 
       {/* Stack for Matchaware & Bundles */}
-      <Stack spacing={10} mt={-6}>
+      <Stack spacing={6} mt={-6}>
         {["matchaware", "bundles"].map((category) =>
           categories[category] ? (
             <Box

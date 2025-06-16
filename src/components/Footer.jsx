@@ -63,7 +63,7 @@ const Footer = () => {
     [
       { name: "FAQ", path: "/faq" },
       { name: "Shop", path: "/shop" },
-      { name: "Story", path: "/about" },
+      { name: "About", path: "/about" },
       { name: "Contact", path: "/contact" },
       { name: "Our matcha", path: "/?scrollTo=ourmatcha" },
     ],

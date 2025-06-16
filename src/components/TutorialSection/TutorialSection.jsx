@@ -21,7 +21,7 @@ const TutorialSection = () => {
   const stepsData = [
     {
       image: step1,
-      text: "Sift 2-3 tsp of <br />umi matcha into <br />a bowl.",
+      text: "Sift 2-3 tsp of <br />Umi matcha into <br />a bowl.",
     },
     {
       image: step2,
