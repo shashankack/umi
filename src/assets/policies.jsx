@@ -683,6 +683,7 @@ export const shippingPolicy = {
       content: `
         <ul>
           <li>Estimated delivery times may vary depending on your location and the shipping partner’s logistics.</li>
+          <li>Orders will be delivered within 3-7 days from the date of dispatch, depending on the pincode of the consignee.</li>
           <li>Delivery dates and time slots are managed solely by the shipping provider, and Umi has no control over the exact time of delivery.</li>
           <li>We recommend tracking your order using the link provided by the shipping partner for the most accurate updates.</li>
         </ul>
