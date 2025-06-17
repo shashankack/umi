@@ -69,6 +69,8 @@ const ProductsInternal = () => {
           textAlign: "justify",
           fontSize: isMobile ? "3.4vw" : "1.2vw",
           lineHeight: isMobile ? 1.3 : 0.8,
+          mb: -4,
+          
         }}
         dangerouslySetInnerHTML={{ __html: taglineElement.innerHTML }}
       />
@@ -444,7 +446,7 @@ const ProductsInternal = () => {
                 <Typography
                   variant="h1"
                   fontWeight={800}
-                  mt={isMobile ? 0 : 2}
+                  mt={isMobile ? 2 : 2}
                   mb={isMobile ? 2 : 0}
                   sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
                 >
