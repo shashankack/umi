@@ -11,9 +11,9 @@ const VideoSection = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Grid container bgcolor={theme.colors.beige} p={1} gap={1} spacing={1}>
-      <Grid container>
-        <Grid size={isMobile ? 12 : 6}>
+    <Grid container bgcolor={theme.colors.beige} p={1} spacing={1}>
+      <Grid container spacing={1}>
+        <Grid item size={isMobile ? 12 : 6}>
           <video
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
             autoPlay
@@ -26,7 +26,7 @@ const VideoSection = () => {
             Your browser does not support the video tag.
           </video>
         </Grid>
-        <Grid size={isMobile ? 12 : 6}>
+        <Grid item size={isMobile ? 12 : 6}>
           <video
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
             autoPlay
@@ -43,7 +43,7 @@ const VideoSection = () => {
 
       {!isMobile && (
         <Grid container size={12} justifyContent="space-evenly" height="60vh">
-          <Grid size={3} height="100%">
+          <Grid item size={3} height="100%">
             <video
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
@@ -53,10 +53,9 @@ const VideoSection = () => {
               playsInline
             >
               <source src={vertical1} type="video/mp4" />
-              Your browser does not support the video tag.
             </video>
           </Grid>
-          <Grid size={3} height="100%">
+          <Grid item size={3} height="100%">
             <video
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
@@ -66,10 +65,9 @@ const VideoSection = () => {
               playsInline
             >
               <source src={vertical2} type="video/mp4" />
-              Your browser does not support the video tag.
             </video>
           </Grid>
-          <Grid size={3} height="100%">
+          <Grid item size={3} height="100%">
             <video
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               autoPlay
@@ -79,7 +77,6 @@ const VideoSection = () => {
               playsInline
             >
               <source src={vertical3} type="video/mp4" />
-              Your browser does not support the video tag.
             </video>
           </Grid>
         </Grid>
