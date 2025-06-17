@@ -22,7 +22,7 @@ const VideoSection = () => {
     [h1Ref, h2Ref, v1Ref, v2Ref, v3Ref].forEach((ref) => {
       if (ref.current) {
         ref.current.play().catch((err) => {
-          alert("Autoplay blocked:", err);
+          alert(`Autoplay blocked: ${err.message || err}`);
         });
       }
     });
