@@ -186,14 +186,7 @@ const MobileNavbar = () => {
             <Box position="relative" zIndex={30}>
               {isSearchOpen ? (
                 <IconButton onClick={handleSearchToggle} size="small">
-                  <IoClose
-                    fontSize={30}
-                    color={
-                      navbarTheme === "pink"
-                        ? theme.colors.beige
-                        : theme.colors.pink
-                    }
-                  />
+                  <IoClose fontSize={30} color={theme.colors.pink} />
                 </IconButton>
               ) : (
                 <IconButton onClick={handleSearchToggle} size="small">
@@ -243,9 +236,7 @@ const MobileNavbar = () => {
                   ? `2px solid ${theme.colors.green}`
                   : "none",
               }}
-              bgcolor={
-                navbarTheme === "pink" ? theme.colors.pink : theme.colors.beige
-              }
+              bgcolor={theme.colors.beige}
             >
               {isSearchOpen &&
                 filteredProducts.map((product) => (
@@ -282,11 +273,7 @@ const MobileNavbar = () => {
                       <Typography
                         fontSize="12px"
                         fontFamily={"Stolzl"}
-                        color={
-                          navbarTheme === "pink"
-                            ? theme.colors.beige
-                            : theme.colors.pink
-                        }
+                        color={theme.colors.pink}
                         sx={{
                           transition: "all 0.3s ease",
 
