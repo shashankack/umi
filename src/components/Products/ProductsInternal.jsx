@@ -68,7 +68,7 @@ const ProductsInternal = () => {
           fontWeight: 700,
           textAlign: "justify",
           fontSize: isMobile ? "3.4vw" : "1.2vw",
-          lineHeight: 0.8,
+          lineHeight: isMobile ? 1.3 : 0.8,
         }}
         dangerouslySetInnerHTML={{ __html: taglineElement.innerHTML }}
       />
@@ -133,7 +133,8 @@ const ProductsInternal = () => {
           fontWeight: 200,
           textAlign: "justify",
           fontSize: isMobile ? "2.8vw" : "1vw",
-          mt: 2,
+          mt: isMobile ? 0 : 2,
+          mb: 2,
 
           "& strong": {
             fontWeight: 900,
@@ -160,7 +161,7 @@ const ProductsInternal = () => {
           fontFamily: theme.fonts.text,
           fontWeight: 200,
           textAlign: "justify",
-          fontSize: isMobile ? "3.4vw" : "1vw",
+          fontSize: isMobile ? "2.8vw" : "1vw",
         }}
       >
         {li.textContent}
@@ -307,7 +308,11 @@ const ProductsInternal = () => {
         px={isMobile ? 4 : 10}
       >
         {/* Image Section */}
-        <Stack direction={isMobile ? "column" : "row"} width="100%" gap={5}>
+        <Stack
+          direction={isMobile ? "column" : "row"}
+          width="100%"
+          gap={isMobile ? 2 : 5}
+        >
           <Stack
             width={isMobile ? "100%" : "30vw"}
             height="100%"
@@ -396,7 +401,7 @@ const ProductsInternal = () => {
             gap={
               isMobile
                 ? parsedFullDescription
-                  ? 0
+                  ? 4
                   : 2
                 : parsedFullDescription
                 ? 2
@@ -405,8 +410,8 @@ const ProductsInternal = () => {
           >
             <Typography
               mt={isMobile ? 2 : 0}
-              mb={-2}
-              fontSize={isMobile ? "7vw" : "2.6vw"}
+              mb={isMobile ? -4 : -2}
+              fontSize={isMobile ? "8vw" : "2.6vw"}
               fontFamily={theme.fonts.title}
               fontWeight={500}
               textAlign="start"
@@ -422,7 +427,7 @@ const ProductsInternal = () => {
             {parsedTagline && <Box>{parsedTagline}</Box>}
 
             <Stack
-              mt={isMobile ? 2 : 0}
+              mt={isMobile ? 0 : 0}
               gap={
                 isMobile
                   ? parsedFullDescription
@@ -439,7 +444,8 @@ const ProductsInternal = () => {
                 <Typography
                   variant="h1"
                   fontWeight={800}
-                  mt={2}
+                  mt={isMobile ? 0 : 2}
+                  mb={isMobile ? 2 : 0}
                   sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
                 >
                   ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
@@ -598,7 +604,13 @@ const ProductsInternal = () => {
                 </Button>
               </Stack>
 
-              <Stack mt={isMobile ? 2 : 0} direction="row" gap={2} width="100%">
+              <Stack
+                mt={isMobile ? 2 : 0}
+                direction="row"
+                gap={2}
+                width="100%"
+                mb={isMobile ? -2 : 0}
+              >
                 {parsedHighlightedAttributes}
                 {selectedVariant?.weight !== 0 && (
                   <Typography
@@ -628,7 +640,9 @@ const ProductsInternal = () => {
               textAlign="justify"
             >
               {parsedParagraphs}
-              <Stack gap={1}>{parsedAttributes}</Stack>
+              <Stack direction="row" gap={4}>
+                {parsedAttributes}
+              </Stack>
               <Box>{parsedSummary}</Box>
             </Stack>
           </Stack>
@@ -770,6 +784,8 @@ const ProductsInternal = () => {
                         <Typography
                           variant="body1"
                           sx={{
+                            position: "relative",
+                            zIndex: 2000,
                             textAlign: "start",
                             fontWeight: "bold",
                             mb: 1,
@@ -794,8 +810,8 @@ const ProductsInternal = () => {
                               "& .MuiSlider-thumb::after": {
                                 background: `url(${sliderThumb}) no-repeat center center`,
                                 backgroundSize: "cover",
-                                width: "55px",
-                                height: "55px",
+                                width: " 50px",
+                                height: "50px",
                                 position: "absolute",
                                 top: "5px",
                                 left: "-5px",
