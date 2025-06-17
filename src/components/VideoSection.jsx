@@ -18,15 +18,15 @@ const VideoSection = () => {
   const v2Ref = useRef();
   const v3Ref = useRef();
 
-  useEffect(() => {
-    [h1Ref, h2Ref, v1Ref, v2Ref, v3Ref].forEach((ref) => {
-      if (ref.current) {
-        ref.current.play().catch((err) => {
-          alert(`Autoplay blocked: ${err.message || err}`);
-        });
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   [h1Ref, h2Ref, v1Ref, v2Ref, v3Ref].forEach((ref) => {
+  //     if (ref.current) {
+  //       ref.current.play().catch((err) => {
+  //         alert(`Autoplay blocked: ${err.message || err}`);
+  //       });
+  //     }
+  //   });
+  // }, []);
 
   return (
     <Grid container bgcolor={theme.colors.beige} p={1} spacing={1}>
