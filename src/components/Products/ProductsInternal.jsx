@@ -70,7 +70,6 @@ const ProductsInternal = () => {
           fontSize: isMobile ? "3.4vw" : "1.2vw",
           lineHeight: isMobile ? 1.3 : 0.8,
           mb: -4,
-          
         }}
         dangerouslySetInnerHTML={{ __html: taglineElement.innerHTML }}
       />
@@ -249,8 +248,12 @@ const ProductsInternal = () => {
         const foundProduct = data.find((p) => p.id === fullProductId);
         setProduct(foundProduct);
 
-        const defaultVariant = foundProduct.variants.edges[0]?.node;
-        setSelectedVariant(defaultVariant);
+        const variants = foundProduct.variants.edges;
+        if (variants.length === 1) {
+          setSelectedVariant(variants[0].node); // Auto-select for single-variant
+        } else {
+          setSelectedVariant(null); // Let user pick
+        }
 
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
 
@@ -443,15 +446,25 @@ const ProductsInternal = () => {
               width="100%"
             >
               <Stack>
-                <Typography
-                  variant="h1"
-                  fontWeight={800}
-                  mt={isMobile ? 2 : 2}
-                  mb={isMobile ? 2 : 0}
-                  sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
-                >
-                  ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
-                </Typography>
+                {selectedVariant && (
+                  <Typography
+                    variant="h1"
+                    fontWeight={800}
+                    mt={
+                      isMobile
+                        ? parsedFullDescription
+                          ? 0
+                          : 2
+                        : parsedFullDescription
+                        ? 4
+                        : 0
+                    }
+                    mb={isMobile ? 2 : 0}
+                    sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
+                  >
+                    ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
+                  </Typography>
+                )}
 
                 {product.variants.edges.length > 1 ? (
                   <Select
@@ -461,14 +474,14 @@ const ProductsInternal = () => {
                     size="small"
                     sx={{
                       mt: 2,
-                      width: "30%",
+                      width: isMobile ? "100%" : "30%",
                       backgroundColor: theme.colors.beige,
                       color: theme.colors.pink,
                       borderRadius: 2,
                       boxShadow: `0px 4px 0px 0px ${theme.colors.pink}`,
                       fontFamily: theme.fonts.text,
                       fontWeight: 500,
-                      fontSize: isMobile ? "0.7rem" : "0.9vw",
+                      fontSize: isMobile ? "1rem" : "0.9vw",
                       minWidth: 160,
                       "& .MuiSelect-icon": {
                         color: theme.colors.pink,
@@ -501,16 +514,25 @@ const ProductsInternal = () => {
                       },
                     }}
                   >
-                    <MenuItem value="">Choose your matcha</MenuItem>
-
+                    <MenuItem value="" disabled>
+                      Choose your matcha
+                    </MenuItem>
                     {product.variants.edges.map(({ node }) => (
                       <MenuItem key={node.id} value={node.id}>
-                        {node.title} — ₹{Math.floor(node.price.amount)}
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          width="100%"
+                          alignItems="center"
+                        >
+                          <span>{node.title}</span>
+                          <span>₹{Math.floor(node.price.amount)}</span>
+                        </Box>
                       </MenuItem>
                     ))}
                   </Select>
                 ) : (
-                  <Box></Box>
+                  <Box />
                 )}
               </Stack>
 
@@ -798,7 +820,7 @@ const ProductsInternal = () => {
                           {label}
                         </Typography>
                         <Slider
-                          defaultValue={value}
+                          defaultValue={""}
                           disabled
                           sx={{
                             width: "90%",
