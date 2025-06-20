@@ -238,6 +238,7 @@ const ProductsInternal = () => {
     });
 
     return { left, right };
+    console.log("Parsed Tasting Notes:", { left, right });
   }, [product?.descriptionHtml]);
 
   useEffect(() => {
@@ -820,7 +821,7 @@ const ProductsInternal = () => {
                           {label}
                         </Typography>
                         <Slider
-                          defaultValue={""}
+                          value={parseInt(value) || 0}
                           disabled
                           sx={{
                             width: "90%",
