@@ -454,7 +454,7 @@ const ProductsInternal = () => {
                     mt={
                       isMobile
                         ? parsedFullDescription
-                          ? 0
+                          ? 1
                           : 2
                         : parsedFullDescription
                         ? 4
