@@ -461,7 +461,7 @@ const ProductsInternal = () => {
                         : 0
                     }
                     mb={isMobile ? 2 : 0}
-                    sx={{ fontSize: isMobile ? "7vw" : "1.6vw" }}
+                    sx={{ fontSize: isMobile ? "4vw" : "1.6vw" }}
                   >
                     ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
                   </Typography>
