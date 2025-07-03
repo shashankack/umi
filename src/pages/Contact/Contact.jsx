@@ -80,7 +80,7 @@ const Contact = () => {
         >
           <Grid size={isMobile ? 12 : 6}>
             <Stack
-              mt={isMobile ? -6 : 0}
+              mt={isMobile ? -2 : 0}
               gap={isMobile ? 2 : 4}
               padding={isMobile ? 1 : 5}
               alignItems={isMobile ? "center" : "start"}
