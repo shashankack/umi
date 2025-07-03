@@ -15,7 +15,7 @@ const Contact = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
-  const isLargeDesktop = useMediaQuery(theme.breakpoints.up("lg"));
+  const isMac = window.innerHeight <= 850;
 
   return (
     <Box
@@ -32,9 +32,8 @@ const Contact = () => {
         color={theme.colors.beige}
         fontFamily={"Genty"}
         fontSize={isMobile ? "12vw" : "4.6vw"}
-        marginTop={10}
         fontWeight={400}
-        mt={isMobile ? 4 : 6}
+        mt={isMobile ? 4 : isMac ? 10 : 0}
         sx={{
           textShadow: `4px 4px 0  ${theme.colors.pink}`,
         }}
@@ -50,8 +49,7 @@ const Contact = () => {
         maxWidth={isMobile ? "90%" : isTablet ? "90%" : "60%"}
         maxHeight={isMobile ? "100%" : 500}
         height="100%"
-        mb={isMobile ? -5 : isSmallDesktop ? 20 : 0}
-        gap={0}
+        mb={isMobile ? 5 : isSmallDesktop ? 20 : 0}
       >
         <Grid
           size={12}
@@ -82,6 +80,7 @@ const Contact = () => {
         >
           <Grid size={isMobile ? 12 : 6}>
             <Stack
+              mt={isMobile ? -6 : 0}
               gap={isMobile ? 2 : 4}
               padding={isMobile ? 1 : 5}
               alignItems={isMobile ? "center" : "start"}
