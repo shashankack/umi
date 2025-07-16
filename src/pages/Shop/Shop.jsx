@@ -41,6 +41,9 @@ const Shop = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { addItem, updateQuantity, lineItems, removeItem } = useCart();
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   const location = useLocation();
 
   const categoryRefs = useRef({});
@@ -140,8 +143,12 @@ const Shop = () => {
       try {
         const data = await fetchShopifyProducts();
         setProducts(data);
+        setError(false);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -162,53 +169,6 @@ const Shop = () => {
     }
   }, [location.search, products]);
 
-  const generateSquares = (
-    width,
-    height,
-    rows,
-    cols,
-    color1,
-    color2,
-    flipped = false
-  ) => {
-    const squares = [];
-    const squareWidth = width;
-    const squareHeight = height;
-
-    const gridStyle = {
-      display: "grid",
-      gridTemplateColumns: `repeat(${cols}, ${squareWidth}px)`,
-      gridTemplateRows: `repeat(${rows}, ${squareHeight}px)`,
-      width: "100%",
-      height: "100%",
-      overflow: "hidden",
-    };
-
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const rowIndex = flipped ? rows - 1 - i : i;
-        const colIndex = flipped ? cols - 1 - j : j;
-
-        const isEven = (rowIndex + colIndex) % 2 === 0;
-        const squareColor = isEven ? color1 : color2;
-
-        squares.push(
-          <div
-            key={`${rowIndex}-${colIndex}`}
-            style={{
-              width: `${squareWidth}px`,
-              height: `${squareHeight}px`,
-              backgroundColor: squareColor,
-              boxSizing: "border-box",
-            }}
-          />
-        );
-      }
-    }
-
-    return <div style={gridStyle}>{squares}</div>;
-  };
-
   const categories = products.reduce((acc, product) => {
     const { productType } = product;
     if (!acc[productType]) {
@@ -217,6 +177,53 @@ const Shop = () => {
     acc[productType].push(product);
     return acc;
   }, {});
+
+  if (loading || error || products.length === 0) {
+    return (
+      <Box
+        sx={{
+          backgroundColor: theme.colors.beige,
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 4,
+          textAlign: "center",
+          p: 4,
+        }}
+      >
+        <Typography
+          fontSize={isMobile ? "6vw" : "2vw"}
+          fontFamily={theme.fonts.heading}
+          color={theme.colors.pink}
+        >
+          {error
+            ? "Oops! We couldn't load the products :("
+            : "Loading the freshest matcha..."}
+        </Typography>
+
+        {error && (
+          <Button
+            variant="contained"
+            onClick={() => window.location.reload()}
+            sx={{
+              backgroundColor: theme.colors.pink,
+              color: theme.colors.beige,
+              fontFamily: "Stolzl",
+              fontSize: isMobile ? "4vw" : "1vw",
+              px: 4,
+              py: 1.5,
+              borderRadius: 10,
+              textTransform: "none",
+            }}
+          >
+            Try Again
+          </Button>
+        )}
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ backgroundColor: theme.colors.beige }} overflow="hidden">
