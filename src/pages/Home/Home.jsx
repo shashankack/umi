@@ -1,6 +1,6 @@
 import { useTheme, Box, useMediaQuery } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -11,7 +11,7 @@ import HeroSection from "../../components/HeroSection/HeroSection";
 import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
-import CurvedMarquee from "../../components/CurvedMarquee/CurvedMarquee";
+import videoThumbnail from "../../assets/videos/intro_video_thumbnail.png";
 
 import introVideo from "../../assets/videos/intro.mp4";
 import VideoSection from "../../components/VideoSection";
@@ -29,6 +29,7 @@ const Home = () => {
   const ourMatchaRef = useRef(null);
   const brewingRef = useRef(null);
   const videosRef = useRef(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -116,7 +117,29 @@ const Home = () => {
   return (
     <>
       {!isMobile && (
-        <Box bgcolor={theme.colors.pink} height="100vh" ref={videoContainerRef}>
+        <Box
+          bgcolor={theme.colors.pink}
+          height="100vh"
+          ref={videoContainerRef}
+          position="relative"
+        >
+          {!videoLoaded && (
+            <Box
+              component="img"
+              src={videoThumbnail}
+              alt="Video Thumbnail"
+              sx={{
+                height: "100%",
+                width: "100%",
+                objectFit: "cover",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: 1,
+              }}
+            />
+          )}
+
           <Box
             ref={introVideoRef}
             component="video"
@@ -125,14 +148,18 @@ const Home = () => {
             loop
             playsInline
             src={introVideo}
+            onLoadedData={() => setVideoLoaded(true)}
             sx={{
               height: "100%",
               width: "100%",
               objectFit: "cover",
+              position: "relative",
+              zIndex: 2,
             }}
           />
         </Box>
       )}
+
       <div ref={heroRef}>
         <HeroSection theme={theme} />
       </div>

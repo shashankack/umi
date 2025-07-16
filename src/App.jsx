@@ -28,6 +28,7 @@ import Test from "./components/Test.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
 import founder from "./assets/images/vectors/about/founder.png";
+import videoThumbnail from "./assets/videos/intro_video_thumbnail.png";
 
 const theme = createTheme({
   colors: {
@@ -68,6 +69,12 @@ const LoadingHandler = ({ children }) => {
 const App = () => {
   return (
     <NavbarThemeProvider>
+      <img
+        src={videoThumbnail}
+        style={{
+          display: "none",
+        }}
+      />
       <img
         src={navbarBg}
         style={{
