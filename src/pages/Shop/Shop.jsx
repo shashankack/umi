@@ -114,28 +114,42 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    setNavbarTheme("pink");
-    const marquee = marqueeRef.current;
+    let attempts = 0;
+    const maxAttempts = 20;
+    let interval;
 
-    if (!marquee) return;
+    const tryStart = () => {
+      const marquee = marqueeRef.current;
+      if (marquee && marquee.children.length) {
+        clearInterval(interval);
 
-    const [text1] = marquee.children;
+        const totalWidth = Array.from(marquee.children).reduce(
+          (acc, el) => acc + el.offsetWidth,
+          0
+        );
 
-    const totalWidth = text1.offsetWidth;
+        gsap.set(marquee, { x: 0 });
 
-    gsap.set(marquee, { x: 0 });
+        gsap.to(marquee, {
+          x: `-=${totalWidth / 2}`,
+          duration: 20,
+          ease: "none",
+          repeat: -1,
+          modifiers: {
+            x: gsap.utils.unitize((x) => parseFloat(x) % (totalWidth / 2)),
+          },
+        });
+      } else {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          clearInterval(interval);
+        }
+      }
+    };
 
-    const tween = gsap.to(marquee, {
-      x: `-=${totalWidth}`,
-      duration: 20,
-      ease: "linear",
-      repeat: -1,
-      modifiers: {
-        x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth),
-      },
-    });
+    interval = setInterval(tryStart, 100);
 
-    return () => tween.kill();
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -736,45 +750,3 @@ const Shop = () => {
 };
 
 export default Shop;
-
-{
-  /* <Box ml="-5%">
-              {generateSquares(
-                isMobile ? 20 : 40,
-                isMobile ? 20 : 40,
-                2,
-                isMobile
-                  ? 6
-                  : isTablet
-                  ? 6
-                  : isSmallDesktop
-                  ? 8
-                  : isLargeDesktop
-                  ? 10
-                  : 20,
-                theme.colors.green,
-                theme.colors.beige
-              )}
-            </Box> */
-}
-{
-  /* <Box mr="-5%">
-              {generateSquares(
-                isMobile ? 20 : 40,
-                isMobile ? 20 : 40,
-                2,
-                isMobile
-                  ? 6
-                  : isTablet
-                  ? 6
-                  : isSmallDesktop
-                  ? 8
-                  : isLargeDesktop
-                  ? 10
-                  : 20,
-                theme.colors.green,
-                theme.colors.beige,
-                true
-              )}
-            </Box> */
-}
