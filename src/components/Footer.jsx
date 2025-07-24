@@ -81,140 +81,175 @@ const Footer = () => {
   ];
 
   return (
-    <Stack
-      zIndex={500}
-      direction="row"
-      bgcolor={theme.colors.beige}
-      overflow="hidden"
-      justifyContent="space-around"
-      position="relative"
-      py={isMobile ? 3 : 6}
-      px={isMobile ? 0 : 6}
-    >
-      <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>
-        <Box width={isMobile ? "15vw" : "8vw"}>
-          <Box
-            component="img"
-            src={pinkMonogram}
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                cursor: "pointer",
-                transform: "scale(1.05)",
-              },
-            }}
-            onClick={() => (window.location.href = "/")}
-          />
-        </Box>
-        <Box width={isMobile ? "15vw" : "8vw"}>
-          <Box
-            component="img"
-            src={bowl}
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-            }}
-          />
-        </Box>
-        <Typography
-          variant="h5"
-          fontSize={isMobile ? "2.3vw" : "1.2vw"}
-          fontFamily={theme.fonts.text}
-          fontWeight={500}
-          color={theme.colors.pink}
-          textAlign="center"
-        >
-          Kinder rituals that <br />
-          fill your cup
-        </Typography>
-      </Stack>
-      <Stack justifyContent="space-between">
-        <Stack gap={isMobile ? 0.5 : 2}>
-          {navLinks[0].map((linkGroup, index) => (
-            <Link
-              key={index}
-              sx={navLinkStyles}
-              onClick={() => {
-                setTimeout(() => {
-                  if (linkGroup.name === "Our Matcha") {
-                    navigate("/?scrollTo=ourmatcha");
-                  } else {
-                    window.location.href = linkGroup.path;
-                  }
-                }, 300);
+    <>
+      <Stack
+        zIndex={500}
+        direction="row"
+        bgcolor={theme.colors.beige}
+        overflow="hidden"
+        justifyContent="space-around"
+        position="relative"
+        py={isMobile ? 3 : 6}
+        px={isMobile ? 0 : 6}
+      >
+        <Stack direction="column" alignItems="center" gap={isMobile ? 2 : 4}>
+          <Box width={isMobile ? "15vw" : "8vw"}>
+            <Box
+              component="img"
+              src={pinkMonogram}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  cursor: "pointer",
+                  transform: "scale(1.05)",
+                },
               }}
-            >
-              {linkGroup.name}
-            </Link>
-          ))}
+              onClick={() => (window.location.href = "/")}
+            />
+          </Box>
+          <Box width={isMobile ? "15vw" : "8vw"}>
+            <Box
+              component="img"
+              src={bowl}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </Box>
+          <Typography
+            variant="h5"
+            fontSize={isMobile ? "2.3vw" : "1.2vw"}
+            fontFamily={theme.fonts.text}
+            fontWeight={500}
+            color={theme.colors.pink}
+            textAlign="center"
+          >
+            Kinder rituals that <br />
+            fill your cup
+          </Typography>
         </Stack>
-        <Stack direction="row" justifyContent="space-between">
-          {navLinks[2].map((linkGroup, index) => (
-            <Link
-              key={index}
-              sx={iconStyles}
-              href={linkGroup.path}
-              target="_blank"
-            >
-              {linkGroup.name === "Instagram" && (
-                <FaInstagram size={isMobile ? 14 : "1.7vw"} />
-              )}
-              {linkGroup.name === "Pinterest" && (
-                <FaPinterestP size={isMobile ? 14 : "1.7vw"} />
-              )}
-              {linkGroup.name === "WhatsApp" && (
-                <FaWhatsapp size={isMobile ? 14 : "1.7vw"} />
-              )}
-            </Link>
-          ))}
+        <Stack justifyContent="space-between">
+          <Stack gap={isMobile ? 0.5 : 2}>
+            {navLinks[0].map((linkGroup, index) => (
+              <Link
+                key={index}
+                sx={navLinkStyles}
+                onClick={() => {
+                  setTimeout(() => {
+                    if (linkGroup.name === "Our Matcha") {
+                      navigate("/?scrollTo=ourmatcha");
+                    } else {
+                      window.location.href = linkGroup.path;
+                    }
+                  }, 300);
+                }}
+              >
+                {linkGroup.name}
+              </Link>
+            ))}
+          </Stack>
+          <Stack direction="row" justifyContent="space-between">
+            {navLinks[2].map((linkGroup, index) => (
+              <Link
+                key={index}
+                sx={iconStyles}
+                href={linkGroup.path}
+                target="_blank"
+              >
+                {linkGroup.name === "Instagram" && (
+                  <FaInstagram size={isMobile ? 14 : "1.7vw"} />
+                )}
+                {linkGroup.name === "Pinterest" && (
+                  <FaPinterestP size={isMobile ? 14 : "1.7vw"} />
+                )}
+                {linkGroup.name === "WhatsApp" && (
+                  <FaWhatsapp size={isMobile ? 14 : "1.7vw"} />
+                )}
+              </Link>
+            ))}
+          </Stack>
+        </Stack>
+        <Stack justifyContent="space-between" alignItems="baseline">
+          <Stack gap={isMobile ? 0.5 : 2}>
+            {navLinks[1].map((linkGroup, index) => (
+              <Link key={index} sx={navLinkStyles} href={linkGroup.path}>
+                {linkGroup.name}
+              </Link>
+            ))}
+          </Stack>
+          <Box
+            display="flex"
+            justifyContent="end"
+            alignItems="end"
+            width={isMobile ? "16vw" : "6vw"}
+          >
+            <Box
+              component="img"
+              src={whisk}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </Box>
+          {!isMobile && (
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Box
+                component="img"
+                src={copyright}
+                style={{
+                  height: "1.4vw",
+                }}
+              />
+              <Typography
+                ml={1}
+                sx={{
+                  color: theme.colors.pink,
+                  fontFamily: theme.fonts.text,
+                  fontSize: isMobile ? "2.2vw" : "1vw",
+                }}
+              >
+                2025, Umi, All rights reserved.
+              </Typography>
+            </Box>
+          )}
         </Stack>
       </Stack>
-      <Stack justifyContent="space-between" alignItems="baseline">
-        <Stack gap={isMobile ? 0.5 : 2}>
-          {navLinks[1].map((linkGroup, index) => (
-            <Link key={index} sx={navLinkStyles} href={linkGroup.path}>
-              {linkGroup.name}
-            </Link>
-          ))}
-        </Stack>
+      {isMobile && (
         <Box
           display="flex"
-          justifyContent="end"
-          alignItems="end"
-          width={isMobile ? "16vw" : "6vw"}
+          justifyContent="center"
+          alignItems="center"
+          pb={2}
+          bgcolor={theme.colors.beige}
         >
           <Box
             component="img"
-            src={whisk}
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
+            src={copyright}
+            mb={.5}
+            style={{
+              width: "3vw",
             }}
           />
-        </Box>
-        <Typography
-          sx={{
-            color: theme.colors.pink,
-            fontFamily: theme.fonts.text,
-            fontSize: isMobile ? "2.2vw" : "1.4vw",
-          }}
-        >
-          Copyright{" "}
-          <img
-            src={copyright}
-            style={{
-              height: "1.4vw",
+          <Typography
+            ml={0.5}
+            sx={{
+              color: theme.colors.pink,
+              fontFamily: theme.fonts.text,
+              fontSize: "2.6vw",
             }}
-          />{" "}
-          2025 Umi
-        </Typography>
-      </Stack>
-    </Stack>
+          >
+            2025, Umi, All rights reserved.
+          </Typography>
+        </Box>
+      )}
+    </>
   );
 };
 

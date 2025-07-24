@@ -28,7 +28,8 @@ import Test from "./components/Test.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
 import founder from "./assets/images/vectors/about/founder.png";
-import videoThumbnail from "./assets/videos/intro_video_thumbnail.png";
+import desktopThumbnail from "./assets/images/desktop_thumbnail.png";
+import mobileThumbnail from "./assets/images/mobile_thumbnail.png";
 
 const theme = createTheme({
   colors: {
@@ -67,10 +68,12 @@ const LoadingHandler = ({ children }) => {
 };
 
 const App = () => {
+  const isMobile = window.innerWidth <= 500;
+
   return (
     <NavbarThemeProvider>
       <img
-        src={videoThumbnail}
+        src={isMobile ? mobileThumbnail : desktopThumbnail}
         style={{
           display: "none",
         }}

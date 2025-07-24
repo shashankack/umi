@@ -22,10 +22,11 @@ const Contact = () => {
       width="100%"
       height="100vh"
       py={isMobile ? 10 : 0}
+      pb={isMobile? 0 : "4%"}
       sx={{ background: theme.colors.green }}
       display="flex"
       alignItems="center"
-      justifyContent={isMobile ? "end" : "center"}
+      justifyContent={isMobile ? "end" : "end"}
       flexDirection="column"
     >
       <Typography
@@ -47,7 +48,7 @@ const Contact = () => {
         borderRadius={12}
         container
         maxWidth={isMobile ? "90%" : isTablet ? "90%" : "60%"}
-        maxHeight={isMobile ? "100%" : 500}
+        maxHeight={isMobile ? "100%" : "60vh"}
         height="100%"
         mb={isMobile ? 5 : isSmallDesktop ? 20 : 0}
       >
@@ -97,7 +98,7 @@ const Contact = () => {
                   fontWeight: 400,
                   textTransform: "none",
                   boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 14 : 20,
+                  fontSize: isMobile ? 14 : "1.2vw",
                   transition: "all .3s ease",
 
                   "&:hover": {
@@ -122,7 +123,7 @@ const Contact = () => {
                   fontWeight: 400,
                   textTransform: "none",
                   boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 14 : 20,
+                  fontSize: isMobile ? 14 : "1.2vw",
                   transition: "all .3s ease",
 
                   "&:hover": {
@@ -150,7 +151,7 @@ const Contact = () => {
                   fontWeight: 400,
                   textTransform: "none",
                   boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 14 : 20,
+                  fontSize: isMobile ? 14 : "1.2vw",
                   transition: "all .3s ease",
 
                   "&:hover": {
@@ -173,7 +174,7 @@ const Contact = () => {
             alignItems="center"
             justifyContent="center"
           >
-            <Box width={isMobile ? "40%" : "100%"} height={"80%"}>
+            <Box width={isMobile ? "40%" : "100%"} height={"70%"}>
               <Box
                 component="img"
                 sx={{

@@ -11,9 +11,11 @@ import HeroSection from "../../components/HeroSection/HeroSection";
 import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
-import videoThumbnail from "../../assets/videos/intro_video_thumbnail.png";
 
+import desktopThumbnail from "../../assets/images/desktop_thumbnail.png";
+import mobileThumbnail from "../../assets/images/mobile_thumbnail.png";
 import introVideo from "../../assets/videos/intro.mp4";
+import mobileIntroVideo from "../../assets/videos/mobile_intro.mp4";
 import VideoSection from "../../components/VideoSection";
 
 const Home = () => {
@@ -116,49 +118,48 @@ const Home = () => {
 
   return (
     <>
-      {!isMobile && (
-        <Box
-          bgcolor={theme.colors.pink}
-          height="100vh"
-          ref={videoContainerRef}
-          position="relative"
-        >
-          {!videoLoaded && (
-            <Box
-              component="img"
-              src={videoThumbnail}
-              alt="Video Thumbnail"
-              sx={{
-                height: "100%",
-                width: "100%",
-                objectFit: "cover",
-                position: "absolute",
-                top: 0,
-                left: 0,
-                zIndex: 1,
-              }}
-            />
-          )}
-
+      <Box
+        bgcolor={theme.colors.pink}
+        height="100vh"
+        ref={videoContainerRef}
+        position="relative"
+      >
+        {!videoLoaded && (
           <Box
-            ref={introVideoRef}
-            component="video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            src={introVideo}
-            onLoadedData={() => setVideoLoaded(true)}
+            component="img"
+            src={isMobile ? mobileThumbnail : desktopThumbnail}
+            alt="Video Thumbnail"
             sx={{
               height: "100%",
               width: "100%",
               objectFit: "cover",
-              position: "relative",
-              zIndex: 2,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: 1,
             }}
           />
-        </Box>
-      )}
+        )}
+
+        <Box
+          ref={introVideoRef}
+          component="video"
+          autoPlay
+          muted
+          loop
+          preload="auto"
+          playsInline
+          src={isMobile ? mobileIntroVideo : introVideo}
+          onLoadedData={() => setVideoLoaded(true)}
+          sx={{
+            height: "100%",
+            width: "100%",
+            objectFit: "cover",
+            position: "relative",
+            zIndex: 2,
+          }}
+        />
+      </Box>
 
       <div ref={heroRef}>
         <HeroSection theme={theme} />
@@ -169,30 +170,6 @@ const Home = () => {
         style={{ position: "relative" }}
       >
         <ProductsSection />
-        {/* <div
-          className="marquee"
-          style={{
-            position: "absolute",
-            zIndex: 100,
-            bottom:
-              window.innerWidth <= 400
-                ? "-9%"
-                : window.innerWidth <= 430
-                ? "-8.8%"
-                : window.innerWidth <= 500
-                ? "-8.2%"
-                : window.innerWidth <= 1440
-                ? "-11%"
-                : window.innerWidth <= 1500
-                ? "-10%"
-                : "-9%",
-            left: "0",
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
-          <CurvedMarquee />
-        </div> */}
       </div>
       <div className="about-sec" ref={ourMatchaRef}>
         <AboutSection />

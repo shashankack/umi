@@ -277,7 +277,7 @@ const Shop = () => {
         <Box
           sx={{
             position: "absolute",
-            bottom: isMobile ? 34 : 100,
+            bottom: isMobile ? 34 : "20%",
             left: 0,
             width: "100vw",
             overflow: "hidden",
@@ -354,10 +354,10 @@ const Shop = () => {
                         sx={{
                           position: "absolute",
                           transform: "rotate(20deg)",
-                          top: isMobile ? 20 : 0,
-                          right: isMobile ? -20 : 20,
+                          top: isMobile ? 20 : 20,
+                          right: isMobile ? -20 : 40,
                           zIndex: 1,
-                          width: isMobile ? "16vw" : "10vw",
+                          width: isMobile ? "16vw" : "8vw",
                           objectFit: "contain",
                         }}
                       />
@@ -547,10 +547,10 @@ const Shop = () => {
                           sx={{
                             transform: "rotate(20deg)",
                             position: "absolute",
-                            top: isMobile ? 20 : 0,
+                            top: isMobile ? 20 : 20,
                             right: isMobile ? -20 : 20,
                             zIndex: 1,
-                            width: isMobile ? "16vw" : "10vw",
+                            width: isMobile ? "16vw" : "8vw",
                             objectFit: "contain",
                           }}
                         />
@@ -698,7 +698,7 @@ const Shop = () => {
             component="svg"
             width="1920"
             height="100%"
-            viewBox="0 0 1920 600"
+            viewBox="0 0 1920 450"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -713,9 +713,9 @@ const Shop = () => {
         <Box
           position="absolute"
           sx={{
-            top: "50%",
+            top: "55%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -45%)",
           }}
           display="flex"
           alignItems="center"

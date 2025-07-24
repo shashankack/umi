@@ -274,7 +274,7 @@ export async function getCart(cartId) {
 export async function searchProducts(keyword) {
   const query = `
     query {
-      products(first: 10, query: "title:*${keyword}*") {
+      products(first: 10, query: "tag:*${keyword}*") {
         edges {
           node {
             id
