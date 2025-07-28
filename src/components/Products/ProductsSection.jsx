@@ -142,7 +142,8 @@ const ProductsSection = () => {
         {products.map((product) => {
           const title = product.title;
           const imageUrl = product.images.edges[0]?.node.url;
-          const price = product.variants.edges[0]?.node.price.amount;
+          // const price = product.variants.edges[0]?.node.price.amount;
+          const price = "Coming Soon";
           const variantId = product.variants.edges[0]?.node.id;
           const productId = product.id.split("/").pop();
 
@@ -179,7 +180,7 @@ const ProductsSection = () => {
                   <div
                     className="cart-icon"
                     style={{ cursor: "pointer" }}
-                    onClick={() => addItem(variantId, 1)}
+                    // onClick={() => addItem(variantId, 1)}
                   >
                     <FaShoppingCart size={20} />
                   </div>

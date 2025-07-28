@@ -58,7 +58,8 @@ const HeroSection = () => {
           id: product.id.split("/").pop(),
           title: product.title,
           image: product.images.edges[0]?.node.url,
-          price: parseFloat(product.variants.edges[0]?.node.price.amount),
+          // price: parseFloat(product.variants.edges[0]?.node.price.amount),
+          price: "Coming Soon",
         }));
         setProducts(mapped);
       } catch (error) {

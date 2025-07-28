@@ -400,7 +400,8 @@ const Shop = () => {
                           window.location.href = `/product/${productId}`;
                         }}
                       >
-                        ₹ {product.variants.edges[0]?.node.price.amount}
+                        {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
+                        ₹ Coming Soon
                       </Button>
 
                       {lineItem ? (
@@ -458,9 +459,9 @@ const Shop = () => {
                       ) : (
                         <Button
                           sx={rightButtonStyles}
-                          onClick={() => {
-                            if (variantId) addItem(variantId, 1);
-                          }}
+                          // onClick={() => {
+                          //   if (variantId) addItem(variantId, 1);
+                          // }}
                         >
                           <ShoppingCartIcon
                             sx={{
@@ -596,7 +597,8 @@ const Shop = () => {
                             window.location.href = `/product/${productId}`;
                           }}
                         >
-                          ₹ {product.variants.edges[0]?.node.price.amount}
+                          {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
+                          ₹ Coming Soon
                         </Button>
 
                         {lineItem ? (
@@ -656,9 +658,9 @@ const Shop = () => {
                         ) : (
                           <Button
                             sx={rightButtonStyles}
-                            onClick={() => {
-                              if (variantId) addItem(variantId, 1);
-                            }}
+                            // onClick={() => {
+                            //   if (variantId) addItem(variantId, 1);
+                            // }}
                           >
                             <ShoppingCartIcon
                               sx={{

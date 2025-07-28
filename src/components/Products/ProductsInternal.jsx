@@ -463,7 +463,8 @@ const ProductsInternal = () => {
                     mb={isMobile ? 2 : 0}
                     sx={{ fontSize: isMobile ? "4vw" : "1.6vw" }}
                   >
-                    ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/-
+                    {/* ₹ {Math.floor(selectedVariant?.price?.amount || 0)}/- */}
+                    ₹ Coming Soon
                   </Typography>
                 )}
 
@@ -527,7 +528,8 @@ const ProductsInternal = () => {
                           alignItems="center"
                         >
                           <span>{node.title}</span>
-                          <span>₹{Math.floor(node.price.amount)}</span>
+                          {/* <span>₹{Math.floor(node.price.amount)}</span> */}
+                          <span>₹ Coming Soon</span>
                         </Box>
                       </MenuItem>
                     ))}
@@ -604,7 +606,7 @@ const ProductsInternal = () => {
                 </Select>
 
                 <Button
-                  onClick={handleAddToCart}
+                  // onClick={handleAddToCart}
                   variant="contained"
                   disabled={!selectedVariant}
                   fullWidth={isMobile}
