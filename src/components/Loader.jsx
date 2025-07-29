@@ -28,7 +28,7 @@ const Loader = () => {
         src={nekoFace}
         alt="Loading..."
         sx={{
-          width: "10vw",
+          width: 100,
           objectFit: "contain",
           animation: `${spin} 2s linear infinite`,
         }}
@@ -37,7 +37,9 @@ const Loader = () => {
         textAlign="center"
         fontFamily={theme.fonts.primary}
         color={theme.colors.beige}
-        fontSize="2vw"
+        fontSize={32}
+        textTransform="uppercase"
+        fontWeight={900}
         mt={2}
       >
         Loading...

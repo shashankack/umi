@@ -84,7 +84,7 @@ const Intro = ({ NextComponent }) => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        position="absolute" // Changed to absolute
+        position="absolute"
         top={0}
         left={0}
         right={0}

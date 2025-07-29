@@ -1,3 +1,5 @@
+import { withCache } from './cache.js';
+
 const SHOPIFY_DOMAIN = "6ix8jh-qp.myshopify.com";
 const STOREFRONT_ACCESS_TOKEN = "2cba03757af47abdf34dea05d931f828";
 const endpoint = `https://${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`;
@@ -22,7 +24,8 @@ async function shopifyFetch(query, variables = {}) {
   return json.data;
 }
 
-export async function fetchShopifyProducts(limit = 20) {
+// Cached version with 10 minute cache
+const fetchShopifyProductsBase = async (limit = 20) => {
   const query = `
     {
       products(first: ${limit}) {
@@ -64,7 +67,13 @@ export async function fetchShopifyProducts(limit = 20) {
   `;
   const data = await shopifyFetch(query);
   return data.products.edges.map((edge) => edge.node);
-}
+};
+
+export const fetchShopifyProducts = withCache(
+  fetchShopifyProductsBase, 
+  'shopify_products', 
+  10 * 60 * 1000 // 10 minutes cache
+);
 
 export async function createCart() {
   const query = `
@@ -271,7 +280,8 @@ export async function getCart(cartId) {
   return data.cart;
 }
 
-export async function searchProducts(keyword) {
+// Cached search with 5 minute cache
+const searchProductsBase = async (keyword) => {
   const query = `
     query {
       products(first: 10, query: "tag:*${keyword}*") {
@@ -307,4 +317,10 @@ export async function searchProducts(keyword) {
     title: edge.node.title,
     image: edge.node.images.edges[0]?.node.url || null,
   }));
-}
+};
+
+export const searchProducts = withCache(
+  searchProductsBase,
+  'search_products',
+  5 * 60 * 1000 // 5 minutes cache
+);
