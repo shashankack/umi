@@ -92,10 +92,13 @@ const Home = () => {
             scrollMid >= productsRef.current.offsetTop
           ) {
             setNavbarTheme("pink");
-          } else if (heroRef.current && scrollMid >= heroRef.current.offsetTop) {
+          } else if (
+            heroRef.current &&
+            scrollMid >= heroRef.current.offsetTop
+          ) {
             setNavbarTheme("beige");
           }
-          
+
           ticking = false;
         });
         ticking = true;
@@ -132,7 +135,7 @@ const Home = () => {
 
   // Simplified video event handlers - only essential ones
   const handleVideoLoadedData = () => {
-    console.log("✅ Video loaded successfully");
+    // console.log("✅ Video loaded successfully");
     setVideoLoaded(true);
     setVideoError(null);
   };
@@ -143,11 +146,11 @@ const Home = () => {
   };
 
   const handleVideoPlay = () => {
-    console.log("▶️ Video playing");
+    // console.log("▶️ Video playing");
   };
 
   const handleVideoPause = () => {
-    console.log("⏸️ Video paused");
+    // console.log("⏸️ Video paused");
   };
 
   return (

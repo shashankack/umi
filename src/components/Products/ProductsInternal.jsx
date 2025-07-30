@@ -238,7 +238,6 @@ const ProductsInternal = () => {
     });
 
     return { left, right };
-    console.log("Parsed Tasting Notes:", { left, right });
   }, [product?.descriptionHtml]);
 
   useEffect(() => {
@@ -258,7 +257,7 @@ const ProductsInternal = () => {
 
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
 
-        console.log("Incoming product data:", foundProduct);
+        // console.log("Incoming product data:", foundProduct);
       } catch (error) {
         console.error("Failed to fetch product", error);
       }

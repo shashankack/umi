@@ -6,6 +6,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useProducts } from "../../context/ProductContext";
+import { useResponsive, useHydration } from "../../hooks/useHydration";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,11 +46,17 @@ const HeroSection = () => {
   const { setNavbarTheme } = useNavbarTheme();
   const { getFilteredProducts } = useProducts();
   const [products, setProducts] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const intervalRef = useRef(null);
+  const isMobile = useResponsive(768);
+  const isHydrated = useHydration();
 
   homeTextRefs.current = [];
 
   useEffect(() => {
-    const filteredProducts = getFilteredProducts('matcha');
+    if (!isHydrated) return;
+    
+    const filteredProducts = getFilteredProducts("matcha");
     const mapped = filteredProducts.map((product) => ({
       id: product.id.split("/").pop(),
       title: product.title,
@@ -57,12 +64,23 @@ const HeroSection = () => {
       price: "Coming Soon",
     }));
     setProducts(mapped);
-  }, [getFilteredProducts]);
-  const [current, setCurrent] = useState(0);
-  const intervalRef = useRef(null);
-  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
+  }, [getFilteredProducts, isHydrated]);
+
+  // Refresh ScrollTrigger after hydration
+  useEffect(() => {
+    if (!isHydrated) return;
+    
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isHydrated]);
 
   const getAnimationPositions = () => {
+    // Ensure we're in the browser and have proper dimensions
+    if (typeof window === 'undefined') return {};
+    
     const vw = (percent) => (window.innerWidth * percent) / 100;
     const vh = (percent) => (window.innerHeight * percent) / 100;
 
@@ -86,15 +104,21 @@ const HeroSection = () => {
   useEffect(() => {
     setNavbarTheme("beige");
 
-    if (!products.length) return;
+    // Wait for hydration and products
+    if (!products.length || !isHydrated) return;
 
     const positions = getAnimationPositions();
 
+    // Early return if positions couldn't be calculated
+    if (!positions.leaf1) return;
+
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: isMobile ? undefined : containerRef.current,
-        start: hasPlayed ? "top 180%" : "top 100%",
+        trigger: containerRef.current,
+        start: hasPlayed ? "top center" : "top 100%",
         toggleActions: "play none none reverse",
+        markers: false, // Remove markers for production
+        refreshPriority: -1, // Lower priority to avoid conflicts
 
         onEnter: () => {
           gsap.to(
@@ -208,7 +232,7 @@ const HeroSection = () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
       clearInterval(intervalRef.current);
     };
-  }, [products]);
+  }, [products, isHydrated]); // Add isHydrated dependency
 
   useEffect(() => {
     window.history.scrollRestoration = "manual";
@@ -299,10 +323,11 @@ const HeroSection = () => {
     handleSlide(-1);
   };
 
-  if (!products.length) return null;
+  // Prevent rendering until hydrated to avoid mismatches
+  if (!isHydrated || !products.length) return null;
 
   const currentProduct = products[current];
-  console.log("Current product:", currentProduct);
+  // console.log("Current product:", currentProduct);
 
   return (
     <section

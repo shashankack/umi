@@ -17,6 +17,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useProducts } from "../../context/ProductContext";
+import { useResponsive } from "../../hooks/useHydration";
 
 import surfingNeko from "../../assets/images/vectors/neko/surfing.gif";
 import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
@@ -27,10 +28,15 @@ const ProductsSection = () => {
   const theme = useTheme();
   const titleRef = useRef(null);
   const svgRef = useRef(null);
-  const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
+  const isMobile = useResponsive(768);
   const [hasPlayed] = useState(sessionStorage.getItem("hasPlayed") === "true");
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const { addItem } = useCart();
+
+  // Debug: Log products count
+  useEffect(() => {
+    // console.log("📦 ProductsSection - Products count:", products.length);
+  }, [products]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -106,76 +112,108 @@ const ProductsSection = () => {
         DISCOVER OUR <br /> PRODUCTS
       </h3>
 
-      <Swiper
-        modules={[FreeMode, Navigation, Autoplay]}
-        slidesPerView={3}
-        navigation={{ clickable: true }}
-        loop
-        breakpoints={{
-          320: {
-            slidesPerView: 1,
-          },
-          640: {
-            slidesPerView: 2,
-          },
-          1024: {
-            slidesPerView: 3,
-          },
-        }}
-        autoplay={{ delay: 3000 }}
-        className="products-slider"
-      >
-        {products.map((product) => {
-          const title = product.title;
-          const imageUrl = product.images.edges[0]?.node.url;
-          // const price = product.variants.edges[0]?.node.price.amount;
-          const price = "Coming Soon";
-          const variantId = product.variants.edges[0]?.node.id;
-          const productId = product.id.split("/").pop();
+      {/* Only render Swiper when products are loaded and we have at least 1 product */}
+      {!loading && products.length > 0 && (
+        <Swiper
+          modules={[FreeMode, Navigation, Autoplay]}
+          slidesPerView={3}
+          navigation={{ clickable: true }}
+          loop={products.length >= 6} // Only enable loop if we have enough slides
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+              loop: products.length >= 3, // Need at least 3 slides for loop with slidesPerView: 1
+            },
+            640: {
+              slidesPerView: 2,
+              loop: products.length >= 4, // Need at least 4 slides for loop with slidesPerView: 2
+            },
+            1024: {
+              slidesPerView: 3,
+              loop: products.length >= 6, // Need at least 6 slides for loop with slidesPerView: 3
+            },
+          }}
+          autoplay={products.length >= 3 ? { delay: 3000 } : false} // Only autoplay if we have enough slides
+          className="products-slider"
+        >
+          {products.map((product) => {
+            const title = product.title;
+            const imageUrl = product.images.edges[0]?.node.url;
+            // const price = product.variants.edges[0]?.node.price.amount;
+            const price = "Coming Soon";
+            const variantId = product.variants.edges[0]?.node.id;
+            const productId = product.id.split("/").pop();
 
-          return (
-            <SwiperSlide key={product.id}>
-              <div className="product-card">
-                <div className="title">
-                  <h2
-                    style={{
-                      fontSize: isMobile ? "16px" : "18px",
-                      color: theme.colors.green,
-                    }}
-                  >
-                    {title}
-                  </h2>
-                </div>
-                <div className="rect" />
-                <div className="product-image">
-                  <img
-                    src={imageUrl}
-                    alt={product.title}
-                    onClick={() =>
-                      (window.location.href = `/product/${productId}`)
-                    }
-                  />
-                </div>
-
-                <div
-                  className="product-actions"
-                  style={{ color: theme.colors.beige }}
-                >
-                  <div className="price">₹ {price}</div>
+            return (
+              <SwiperSlide key={product.id}>
+                <div className="product-card">
+                  <div className="title">
+                    <h2
+                      style={{
+                        fontSize: isMobile ? "16px" : "18px",
+                        color: theme.colors.green,
+                      }}
+                    >
+                      {title}
+                    </h2>
+                  </div>
+                  <div className="rect" />
+                  <div className="product-image">
+                    <img
+                      src={imageUrl}
+                      alt={product.title}
+                      onClick={() =>
+                        (window.location.href = `/product/${productId}`)
+                      }
+                    />
+                  </div>
 
                   <div
-                    className="cart-icon"
-                    style={{ cursor: "pointer" }}
-                    // onClick={() => addItem(variantId, 1)}
+                    className="product-actions"
+                    style={{ color: theme.colors.beige }}
                   >
-                    <FaShoppingCart size={20} />
+                    <div className="price">₹ {price}</div>
+
+                    <div
+                      className="cart-icon"
+                      style={{ cursor: "pointer" }}
+                      // onClick={() => addItem(variantId, 1)}
+                    >
+                      <FaShoppingCart size={20} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      )}
+
+      {/* Loading state */}
+      {loading && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "40px",
+            color: theme.colors.pink,
+          }}
+        >
+          Loading products...
+        </div>
+      )}
+
+      {/* No products state */}
+      {!loading && products.length === 0 && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "40px",
+            color: theme.colors.pink,
+          }}
+        >
+          No products available
+        </div>
+      )}
       <div className="bottom">
         <svg
           ref={svgRef}

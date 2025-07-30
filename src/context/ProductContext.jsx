@@ -27,7 +27,7 @@ export const ProductProvider = ({ children }) => {
         if (isMounted) {
           setProducts(data);
           setError(null);
-          console.log('✅ Products loaded:', data.length);
+        //   console.log('✅ Products loaded:', data.length);
         }
       } catch (err) {
         if (isMounted) {

@@ -27,7 +27,6 @@ const VideoSection = () => {
             xs: 12,
             sm: 6,
           }}
-          item
           style={{ position: "relative" }}
           key={index}
         >
