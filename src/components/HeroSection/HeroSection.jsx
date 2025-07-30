@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 import { fetchShopifyProducts } from "../../utils/shopify";
+import { useProducts } from "../../context/ProductContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,35 +43,21 @@ const HeroSection = () => {
   const soupBowlRef = useRef(null);
   const whiskRef = useRef(null);
   const { setNavbarTheme } = useNavbarTheme();
+  const { getFilteredProducts } = useProducts();
+  const [products, setProducts] = useState([]);
 
   homeTextRefs.current = [];
 
   useEffect(() => {
-    const loadFilteredProducts = async () => {
-      try {
-        const allProducts = await fetchShopifyProducts();
-        const filtered = allProducts.filter(
-          (p) =>
-            p.productType.toLowerCase() === "matcha" ||
-            p.productType.toLowerCase() === "matchaware"
-        );
-        const mapped = filtered.map((product) => ({
-          id: product.id.split("/").pop(),
-          title: product.title,
-          image: product.images.edges[0]?.node.url,
-          // price: parseFloat(product.variants.edges[0]?.node.price.amount),
-          price: "Coming Soon",
-        }));
-        setProducts(mapped);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    loadFilteredProducts();
-  }, []);
-
-  const [products, setProducts] = useState([]);
+    const filteredProducts = getFilteredProducts('matcha');
+    const mapped = filteredProducts.map((product) => ({
+      id: product.id.split("/").pop(),
+      title: product.title,
+      image: product.images.edges[0]?.node.url,
+      price: "Coming Soon",
+    }));
+    setProducts(mapped);
+  }, [getFilteredProducts]);
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef(null);
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);

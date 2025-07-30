@@ -9,6 +9,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import { fetchShopifyProducts } from "../utils/shopify";
+import { useProducts } from "../context/ProductContext";
 import { useCart } from "../context/CartContext";
 
 import {
@@ -36,7 +37,7 @@ const Test = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
+  const { products } = useProducts();
 
   const titleRef = useRef(null);
   const svgRef = useRef(null);
@@ -45,20 +46,6 @@ const Test = () => {
   const prevRef = useRef(null);
 
   const { addItem } = useCart();
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const data = await fetchShopifyProducts();
-        console.log("Incoming products data:", data);
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      }
-    };
-
-    loadProducts();
-  }, []);
 
   useEffect(() => {
     if (svgRef.current) {

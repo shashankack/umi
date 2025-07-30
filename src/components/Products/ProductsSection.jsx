@@ -16,6 +16,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
+import { useProducts } from "../../context/ProductContext";
 
 import surfingNeko from "../../assets/images/vectors/neko/surfing.gif";
 import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
@@ -28,23 +29,8 @@ const ProductsSection = () => {
   const svgRef = useRef(null);
   const [isMobile] = useState(window.innerWidth <= 768 ? true : false);
   const [hasPlayed] = useState(sessionStorage.getItem("hasPlayed") === "true");
-  const [products, setProducts] = useState([]);
+  const { products } = useProducts();
   const { addItem } = useCart();
-
-  useEffect(() => {
-    console.log(hasPlayed);
-    const loadProducts = async () => {
-      try {
-        const data = await fetchShopifyProducts();
-        setProducts(data);
-        console.log("Incoming products data:", data);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      }
-    };
-
-    loadProducts();
-  }, []);
 
   useEffect(() => {
     if (titleRef.current) {

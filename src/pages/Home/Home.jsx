@@ -1,6 +1,6 @@
 import { useTheme, Box, useMediaQuery } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -32,6 +32,7 @@ const Home = () => {
   const brewingRef = useRef(null);
   const videosRef = useRef(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -72,34 +73,43 @@ const Home = () => {
   }, [location.search]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollMid = window.scrollY + window.innerHeight / 4.5;
+    let ticking = false;
 
-      if (brewingRef.current && scrollMid >= brewingRef.current.offsetTop) {
-        setNavbarTheme("beige");
-      } else if (
-        ourMatchaRef.current &&
-        scrollMid >= ourMatchaRef.current.offsetTop
-      ) {
-        setNavbarTheme("pink");
-      } else if (
-        productsRef.current &&
-        scrollMid >= productsRef.current.offsetTop
-      ) {
-        setNavbarTheme("pink");
-      } else if (heroRef.current && scrollMid >= heroRef.current.offsetTop) {
-        setNavbarTheme("beige");
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollMid = window.scrollY + window.innerHeight / 4.5;
+
+          if (brewingRef.current && scrollMid >= brewingRef.current.offsetTop) {
+            setNavbarTheme("beige");
+          } else if (
+            ourMatchaRef.current &&
+            scrollMid >= ourMatchaRef.current.offsetTop
+          ) {
+            setNavbarTheme("pink");
+          } else if (
+            productsRef.current &&
+            scrollMid >= productsRef.current.offsetTop
+          ) {
+            setNavbarTheme("pink");
+          } else if (heroRef.current && scrollMid >= heroRef.current.offsetTop) {
+            setNavbarTheme("beige");
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [setNavbarTheme]);
 
   useEffect(() => {
-    gsap.fromTo(
+    const scrollTriggerInstance = gsap.fromTo(
       introVideoRef.current,
       { filter: "blur(0px) brightness(1)", scale: 1 },
       {
@@ -114,7 +124,31 @@ const Home = () => {
         },
       }
     );
+
+    return () => {
+      scrollTriggerInstance.kill();
+    };
   }, []);
+
+  // Simplified video event handlers - only essential ones
+  const handleVideoLoadedData = () => {
+    console.log("✅ Video loaded successfully");
+    setVideoLoaded(true);
+    setVideoError(null);
+  };
+
+  const handleVideoError = (e) => {
+    console.error("❌ Video error:", e.target.error);
+    setVideoError(e.target.error);
+  };
+
+  const handleVideoPlay = () => {
+    console.log("▶️ Video playing");
+  };
+
+  const handleVideoPause = () => {
+    console.log("⏸️ Video paused");
+  };
 
   return (
     <>
@@ -141,6 +175,24 @@ const Home = () => {
           />
         )}
 
+        {videoError && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 20,
+              left: 20,
+              background: "rgba(255, 0, 0, 0.8)",
+              color: "white",
+              padding: "10px",
+              borderRadius: "5px",
+              zIndex: 10,
+              fontSize: "12px",
+            }}
+          >
+            Video Error: {videoError.code} - {videoError.message}
+          </Box>
+        )}
+
         <Box
           ref={introVideoRef}
           component="video"
@@ -150,7 +202,10 @@ const Home = () => {
           preload="auto"
           playsInline
           src={isMobile ? mobileIntroVideo : introVideo}
-          onLoadedData={() => setVideoLoaded(true)}
+          onLoadedData={handleVideoLoadedData}
+          onError={handleVideoError}
+          onPlay={handleVideoPlay}
+          onPause={handleVideoPause}
           sx={{
             height: "100%",
             width: "100%",

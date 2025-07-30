@@ -22,6 +22,7 @@ const FAQ = lazy(() => import("./pages/FAQ.jsx"));
 import MobileNavbar from "./components/Navbar/MobileNavbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 import { CartProvider } from "./context/CartContext";
+import { ProductProvider } from "./context/ProductContext";
 import CartUI from "./components/CartUi";
 import Footer from "./components/Footer";
 import Loader from "./components/Loader.jsx";
@@ -99,9 +100,10 @@ const App = () => {
           }}
         />
         <ThemeProvider theme={theme}>
-          <CartProvider>
-            <Router basename="/" window={window}>
-              <LoadingHandler>
+          <ProductProvider>
+            <CartProvider>
+              <Router basename="/" window={window}>
+                <LoadingHandler>
                 <MobileNavbar />
                 <CartUI />
                 <Routes>
@@ -157,6 +159,7 @@ const App = () => {
               </LoadingHandler>
             </Router>
           </CartProvider>
+        </ProductProvider>
         </ThemeProvider>
       </ErrorBoundary>
     </NavbarThemeProvider>
