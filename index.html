@@ -1,17 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager with Error Handling -->
     <script>
+      console.log('🔍 GTM: Starting initialization...');
       (function (w, d, s, l, i) {
+        console.log('🔍 GTM: Container ID:', i);
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        console.log('✅ GTM: dataLayer initialized:', w[l]);
+        
         var f = d.getElementsByTagName(s)[0],
           j = d.createElement(s),
           dl = l != "dataLayer" ? "&l=" + l : "";
         j.async = true;
         j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        
+        console.log('🔍 GTM: Loading script from:', j.src);
+        
+        j.onload = function() {
+          console.log('✅ GTM: Script loaded successfully');
+          console.log('✅ GTM: google_tag_manager:', typeof w.google_tag_manager);
+        };
+        
+        j.onerror = function(e) {
+          console.error('❌ GTM: Script failed to load:', e);
+          console.error('❌ GTM: Please check container ID and publication status');
+          // Fallback: create basic dataLayer for custom events
+          w[l] = w[l] || [];
+          console.log('🔄 GTM: Fallback dataLayer created');
+        };
+        
+        // Add timeout fallback
+        setTimeout(function() {
+          if (typeof w.google_tag_manager === 'undefined') {
+            console.warn('⚠️ GTM: Script took too long to load, check container status');
+          }
+        }, 5000);
+        
         f.parentNode.insertBefore(j, f);
+        console.log('✅ GTM: Script tag inserted');
       })(window, document, "script", "dataLayer", "GTM-52Q92CJ3");
     </script>
     <!-- End Google Tag Manager -->
@@ -22,14 +50,16 @@
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
+    <noscript>
+      <iframe
         src="https://www.googletagmanager.com/ns.html?id=GTM-52Q92CJ3"
         height="0"
         width="0"
         style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
+        onload="console.log('✅ GTM: Noscript iframe loaded')"
+        onerror="console.error('❌ GTM: Noscript iframe failed')"
+      ></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

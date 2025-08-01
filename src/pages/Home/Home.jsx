@@ -197,6 +197,15 @@ const Home = () => {
         )}
 
         <Box
+          sx={{
+            fontSize: 40,
+            color: theme.colors.beige,
+            zIndex: 1000,
+          }}
+        >
+          TEMP TEXT
+        </Box>
+        <Box
           ref={introVideoRef}
           component="video"
           autoPlay
