@@ -237,15 +237,6 @@ const Home = () => {
       </div>
       <div ref={brewingRef}>
         <TutorialSection />
-        <Box
-          sx={{
-            fontSize: 40,
-            color: theme.colors.pink,
-            zIndex: 1000,
-          }}
-        >
-          TEMP TEXT
-        </Box>
       </div>
     </>
   );

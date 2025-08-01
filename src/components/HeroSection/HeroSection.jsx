@@ -55,7 +55,7 @@ const HeroSection = () => {
 
   useEffect(() => {
     if (!isHydrated) return;
-    
+
     const filteredProducts = getFilteredProducts("matcha");
     const mapped = filteredProducts.map((product) => ({
       id: product.id.split("/").pop(),
@@ -69,7 +69,7 @@ const HeroSection = () => {
   // Refresh ScrollTrigger after hydration
   useEffect(() => {
     if (!isHydrated) return;
-    
+
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 100);
@@ -77,20 +77,66 @@ const HeroSection = () => {
     return () => clearTimeout(timer);
   }, [isHydrated]);
 
+  // Add resize handler to refresh ScrollTrigger when window dimensions change
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const handleResize = () => {
+      // Debounce resize events
+      clearTimeout(window.resizeTimeout);
+      window.resizeTimeout = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 250);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(window.resizeTimeout);
+    };
+  }, [isHydrated]);
+
   const getAnimationPositions = () => {
     // Ensure we're in the browser and have proper dimensions
-    if (typeof window === 'undefined') return {};
-    
-    const vw = (percent) => (window.innerWidth * percent) / 100;
-    const vh = (percent) => (window.innerHeight * percent) / 100;
+    if (typeof window === "undefined" || !containerRef.current) return {};
+
+    // Use container dimensions if available, fallback to window
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    const vw = (percent) => (viewportWidth * percent) / 100;
+    const vh = (percent) => (viewportHeight * percent) / 100;
+
+    // Adjust positions based on screen size
+    const isMobileCalc = viewportWidth <= 768;
+    const scale = isMobileCalc ? 0.6 : 1;
 
     return {
-      leaf1: { from: { x: -vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
-      leaf2: { from: { x: vw(10), y: -vh(2) }, to: { x: 0, y: 0 } },
-      leaf3: { from: { x: -vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
-      leaf4: { from: { x: vw(8), y: vh(3) }, to: { x: 0, y: 0 } },
-      soupBowl: { from: { y: vh(5) }, to: { y: 0 } },
-      whisk: { from: { x: vw(4), y: vh(3) }, to: { x: 0, y: 0 } },
+      leaf1: {
+        from: { x: -vw(10) * scale, y: -vh(2) * scale },
+        to: { x: 0, y: 0 },
+      },
+      leaf2: {
+        from: { x: vw(10) * scale, y: -vh(2) * scale },
+        to: { x: 0, y: 0 },
+      },
+      leaf3: {
+        from: { x: -vw(8) * scale, y: vh(3) * scale },
+        to: { x: 0, y: 0 },
+      },
+      leaf4: {
+        from: { x: vw(8) * scale, y: vh(3) * scale },
+        to: { x: 0, y: 0 },
+      },
+      soupBowl: {
+        from: { y: vh(5) * scale },
+        to: { y: 0 },
+      },
+      whisk: {
+        from: { x: vw(4) * scale, y: vh(3) * scale },
+        to: { x: 0, y: 0 },
+      },
     };
   };
 
@@ -107,126 +153,165 @@ const HeroSection = () => {
     // Wait for hydration and products
     if (!products.length || !isHydrated) return;
 
-    const positions = getAnimationPositions();
+    // Wait for a frame to ensure DOM is fully rendered
+    const setupAnimation = () => {
+      const positions = getAnimationPositions();
 
-    // Early return if positions couldn't be calculated
-    if (!positions.leaf1) return;
+      // Early return if positions couldn't be calculated
+      if (!positions.leaf1) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: hasPlayed ? "top center" : "top 100%",
-        toggleActions: "play none none reverse",
-        markers: false, // Remove markers for production
-        refreshPriority: -1, // Lower priority to avoid conflicts
+      // Refresh ScrollTrigger to ensure accurate calculations
+      ScrollTrigger.refresh();
 
-        onEnter: () => {
-          gsap.to(
-            [
-              leaf1Ref.current,
-              leaf2Ref.current,
-              leaf3Ref.current,
-              leaf4Ref.current,
-            ],
-            {
-              y: "+=10",
-              duration: 2,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 75%", // Fixed value instead of dynamic
+          end: "bottom 25%",
+          toggleActions: "play none none reverse",
+          // markers: true,
+          refreshPriority: -1,
+          invalidateOnRefresh: true, // Recalculate on refresh
+
+          onEnter: () => {
+            // Continuous animations
+            gsap.to(
+              [
+                leaf1Ref.current,
+                leaf2Ref.current,
+                leaf3Ref.current,
+                leaf4Ref.current,
+              ],
+              {
+                y: "+=10",
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+              }
+            );
+
+            gsap.to(whiskRef.current, {
+              y: "-=6",
+              duration: 1.5,
               repeat: -1,
               yoyo: true,
               ease: "sine.inOut",
-            }
-          );
-
-          gsap.to(whiskRef.current, {
-            y: "-=6",
-            duration: 1.5,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          });
-
-          gsap.to(soupBowlRef.current, {
-            rotate: -360,
-            duration: 30,
-            repeat: -1,
-            ease: "none",
-          });
-
-          if (imageRef.current) {
-            gsap.to(imageRef.current, {
-              y: -10,
-              duration: 2,
-              repeat: -1,
-              yoyo: true,
-              ease: "power1.inOut",
             });
-          }
 
-          // Auto slide
-          intervalRef.current = setInterval(() => {
-            handleSlide(1);
-          }, 5000);
-        },
-        onLeaveBack: () => {
-          clearInterval(intervalRef.current);
-        },
-      },
-    });
+            gsap.to(soupBowlRef.current, {
+              rotate: -360,
+              duration: 30,
+              repeat: -1,
+              ease: "none",
+            });
 
-    // Main entrance animations with opacity
-    tl.fromTo(
-      leaf1Ref.current,
-      { ...positions.leaf1.from, opacity: 0 },
-      { ...positions.leaf1.to, opacity: 1, duration: 1, ease: "power3.out" }
-    )
-      .fromTo(
-        leaf2Ref.current,
-        { ...positions.leaf2.from, opacity: 0 },
-        { ...positions.leaf2.to, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.9"
-      )
-      .fromTo(
-        leaf3Ref.current,
-        { ...positions.leaf3.from, opacity: 0 },
-        { ...positions.leaf3.to, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.9"
-      )
-      .fromTo(
-        leaf4Ref.current,
-        { ...positions.leaf4.from, opacity: 0 },
-        { ...positions.leaf4.to, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.9"
-      )
-      .fromTo(
-        soupBowlRef.current,
-        { ...positions.soupBowl.from, opacity: 0 },
-        {
-          ...positions.soupBowl.to,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+            if (imageRef.current) {
+              gsap.to(imageRef.current, {
+                y: -10,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut",
+              });
+            }
+
+            // Auto slide
+            intervalRef.current = setInterval(() => {
+              handleSlide(1);
+            }, 5000);
+          },
+          onLeaveBack: () => {
+            clearInterval(intervalRef.current);
+          },
         },
-        "-=0.9"
-      )
-      .fromTo(
-        whiskRef.current,
-        { ...positions.whisk.from, opacity: 0 },
-        { ...positions.whisk.to, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.9"
-      )
-      .fromTo(
+      });
+
+      // Main entrance animations with opacity
+      tl.fromTo(
         homeTextRefs.current,
         { yPercent: -110, opacity: 0 },
         {
           yPercent: 0,
-          delay: 0.3,
+          delay: 0.2,
           opacity: 1,
           duration: 0.5,
-          stagger: 0.3,
+          stagger: 0.2,
           ease: "power2.out",
-        },
-        "<"
-      );
+        }
+      )
+        .fromTo(
+          leaf1Ref.current,
+          { ...positions.leaf1.from, opacity: 0 },
+          {
+            ...positions.leaf1.to,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "+=0.2"
+        )
+        .fromTo(
+          leaf2Ref.current,
+          { ...positions.leaf2.from, opacity: 0 },
+          {
+            ...positions.leaf2.to,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          leaf3Ref.current,
+          { ...positions.leaf3.from, opacity: 0 },
+          {
+            ...positions.leaf3.to,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          leaf4Ref.current,
+          { ...positions.leaf4.from, opacity: 0 },
+          {
+            ...positions.leaf4.to,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          soupBowlRef.current,
+          { ...positions.soupBowl.from, opacity: 0 },
+          {
+            ...positions.soupBowl.to,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          whiskRef.current,
+          { ...positions.whisk.from, opacity: 0 },
+          {
+            ...positions.whisk.to,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.9"
+        );
+    };
+
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      requestAnimationFrame(setupAnimation);
+    });
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
