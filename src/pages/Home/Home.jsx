@@ -197,15 +197,6 @@ const Home = () => {
         )}
 
         <Box
-          sx={{
-            fontSize: 40,
-            color: theme.colors.beige,
-            zIndex: 1000,
-          }}
-        >
-          TEMP TEXT
-        </Box>
-        <Box
           ref={introVideoRef}
           component="video"
           autoPlay
@@ -246,6 +237,15 @@ const Home = () => {
       </div>
       <div ref={brewingRef}>
         <TutorialSection />
+        <Box
+          sx={{
+            fontSize: 40,
+            color: theme.colors.pink,
+            zIndex: 1000,
+          }}
+        >
+          TEMP TEXT
+        </Box>
       </div>
     </>
   );
