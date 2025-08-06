@@ -82,7 +82,7 @@ const Shop = () => {
     borderRadius: "25px 0 0 25px",
     cursor: "pointer",
     fontFamily: "Stolzl",
-    fontSize: isMobile ? "3vw" : ".9vw",
+    fontSize: isMobile ? "2vw" : ".9vw",
     whiteSpace: "nowrap",
     transition: "all 0.3s ease",
     "&:hover": {
@@ -401,7 +401,7 @@ const Shop = () => {
                         }}
                       >
                         {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
-                        ₹ Coming Soon
+                        ₹ Coming soon
                       </Button>
 
                       {lineItem ? (

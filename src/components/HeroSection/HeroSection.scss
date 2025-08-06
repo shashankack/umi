@@ -237,8 +237,8 @@
     height: 100vh;
 
     .leaf1 {
-      top: 10%;
-      width: 120px;
+      top: 0%;
+      width: 100px;
     }
 
     .leaf2 {
@@ -250,9 +250,9 @@
     }
 
     .leaf4 {
-      width: 100px;
+      width: 90px;
       right: 0;
-      top: 15%;
+      top: 20%;
       left: auto;
       transform: rotate(0deg) rotateY(180deg);
     }

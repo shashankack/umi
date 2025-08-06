@@ -17,7 +17,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useProducts } from "../../context/ProductContext";
-import { useResponsive } from "../../hooks/useHydration";
+import { useResponsive, useHydration } from "../../hooks/useHydration";
 
 import surfingNeko from "../../assets/images/vectors/neko/surfing.gif";
 import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
@@ -29,6 +29,7 @@ const ProductsSection = () => {
   const titleRef = useRef(null);
   const svgRef = useRef(null);
   const isMobile = useResponsive(768);
+  const isHydrated = useHydration();
   const [hasPlayed] = useState(sessionStorage.getItem("hasPlayed") === "true");
   const { products, loading } = useProducts();
   const { addItem } = useCart();
@@ -39,7 +40,28 @@ const ProductsSection = () => {
   }, [products]);
 
   useEffect(() => {
-    if (titleRef.current) {
+    // Wait for hydration before setting up animations
+    if (!isHydrated) return;
+
+    const setupAnimations = () => {
+      // Ensure refs are available
+      if (!titleRef.current) return;
+
+      // Kill existing ScrollTriggers to avoid duplicates
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === titleRef.current || t.trigger === svgRef.current) {
+          t.kill();
+        }
+      });
+
+      // Refresh ScrollTrigger to ensure accurate calculations
+      ScrollTrigger.refresh();
+
+      // Check if we're near the section for better trigger positioning
+      const sectionTop =
+        titleRef.current.getBoundingClientRect().top + window.scrollY;
+      const isNearSection = window.scrollY > sectionTop - window.innerHeight;
+
       const titleAnimation = gsap.fromTo(
         titleRef.current,
         { y: "50%", opacity: 0 },
@@ -50,8 +72,10 @@ const ProductsSection = () => {
           ease: "power4.out",
           scrollTrigger: {
             trigger: titleRef.current,
-            start: "top 80%",
+            start: isNearSection ? "top 85%" : "top 80%",
             toggleActions: "play none none reverse",
+            refreshPriority: -1,
+            invalidateOnRefresh: true,
           },
         }
       );
@@ -66,18 +90,72 @@ const ProductsSection = () => {
             ease: "back.out(1.4)",
             scrollTrigger: {
               trigger: svgRef.current,
-              start: "top 80%",
+              start: isNearSection ? "top 85%" : "top 80%",
               toggleActions: "play none none reverse",
+              refreshPriority: -1,
+              invalidateOnRefresh: true,
             },
           }
         );
       }
 
-      return () => {
-        titleAnimation.kill();
-      };
-    }
-  }, []);
+      return titleAnimation;
+    };
+
+    // Use multiple frames and delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(setupAnimations);
+        });
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === titleRef.current || t.trigger === svgRef.current) {
+          t.kill();
+        }
+      });
+    };
+  }, [isHydrated, isMobile]);
+
+  // Add resize handler to refresh ScrollTrigger when window dimensions change
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    let resizeTimeout;
+
+    const handleResize = () => {
+      // Debounce resize events
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Only refresh if refs are still mounted
+        if (titleRef.current || svgRef.current) {
+          ScrollTrigger.refresh();
+        }
+      }, 250);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [isHydrated]);
+
+  // Refresh ScrollTrigger after hydration to ensure accurate calculations
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [isHydrated]);
 
   return (
     <section

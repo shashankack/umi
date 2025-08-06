@@ -38,7 +38,7 @@ const Loader = () => {
         fontFamily={theme.fonts.primary}
         color={theme.colors.beige}
         fontSize={32}
-        textTransform="uppercase"
+        textTransform="lowercase"
         fontWeight={900}
         mt={2}
       >

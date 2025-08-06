@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-import { fetchShopifyProducts } from "../../utils/shopify";
 import { useProducts } from "../../context/ProductContext";
 import { useResponsive, useHydration } from "../../hooks/useHydration";
 
@@ -66,13 +65,13 @@ const HeroSection = () => {
     setProducts(mapped);
   }, [getFilteredProducts, isHydrated]);
 
-  // Refresh ScrollTrigger after hydration
+  // Refresh ScrollTrigger after hydration and ensure DOM is ready
   useEffect(() => {
     if (!isHydrated) return;
 
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 100);
+    }, 300); // Increased delay to ensure DOM is fully rendered
 
     return () => clearTimeout(timer);
   }, [isHydrated]);
@@ -81,11 +80,16 @@ const HeroSection = () => {
   useEffect(() => {
     if (!isHydrated) return;
 
+    let resizeTimeout;
+
     const handleResize = () => {
       // Debounce resize events
-      clearTimeout(window.resizeTimeout);
-      window.resizeTimeout = setTimeout(() => {
-        ScrollTrigger.refresh();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Only refresh if container is still mounted
+        if (containerRef.current) {
+          ScrollTrigger.refresh();
+        }
       }, 250);
     };
 
@@ -93,13 +97,18 @@ const HeroSection = () => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      clearTimeout(window.resizeTimeout);
+      clearTimeout(resizeTimeout);
     };
   }, [isHydrated]);
 
   const getAnimationPositions = () => {
     // Ensure we're in the browser and have proper dimensions
-    if (typeof window === "undefined" || !containerRef.current) return {};
+    if (typeof window === "undefined" || !containerRef.current || !isHydrated) return {};
+
+    // Wait for container to be properly mounted
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    if (containerRect.width === 0 || containerRect.height === 0) return {};
 
     // Use container dimensions if available, fallback to window
     const viewportWidth = window.innerWidth;
@@ -153,28 +162,47 @@ const HeroSection = () => {
     // Wait for hydration and products
     if (!products.length || !isHydrated) return;
 
+    // Ensure all refs are available
+    if (!containerRef.current || !homeTextRefs.current.length) return;
+
     // Wait for a frame to ensure DOM is fully rendered
     const setupAnimation = () => {
       const positions = getAnimationPositions();
 
       // Early return if positions couldn't be calculated
-      if (!positions.leaf1) return;
+      if (!positions.leaf1) {
+        // Retry after a short delay if positions aren't ready
+        setTimeout(setupAnimation, 100);
+        return;
+      }
+
+      // Kill existing ScrollTriggers to avoid duplicates
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === containerRef.current) {
+          t.kill();
+        }
+      });
 
       // Refresh ScrollTrigger to ensure accurate calculations
       ScrollTrigger.refresh();
 
+      // Check if we're at the top of the page (hero section likely visible)
+      const isAtTop = window.scrollY < 100;
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 75%", // Fixed value instead of dynamic
-          end: "bottom 25%",
+          start: isAtTop ? "top 95%" : "top 85%", // More aggressive trigger if at top of page
+          end: "bottom 20%",
           toggleActions: "play none none reverse",
-          // markers: true,
+          // markers: true, // Uncomment to debug trigger points
           refreshPriority: -1,
-          invalidateOnRefresh: true, // Recalculate on refresh
+          invalidateOnRefresh: true,
+          anticipatePin: 1, // Helps with smoother animations
+          fastScrollEnd: true, // Better performance on fast scrolling
 
           onEnter: () => {
-            // Continuous animations
+            // Continuous animations that start after scroll trigger
             gsap.to(
               [
                 leaf1Ref.current,
@@ -308,13 +336,22 @@ const HeroSection = () => {
         );
     };
 
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(() => {
-      requestAnimationFrame(setupAnimation);
-    });
+    // Use multiple frames and longer delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(setupAnimation);
+        });
+      });
+    }, 100);
 
     return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      clearTimeout(timeoutId);
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === containerRef.current) {
+          t.kill();
+        }
+      });
       clearInterval(intervalRef.current);
     };
   }, [products, isHydrated]); // Add isHydrated dependency
@@ -409,7 +446,24 @@ const HeroSection = () => {
   };
 
   // Prevent rendering until hydrated to avoid mismatches
-  if (!isHydrated || !products.length) return null;
+  if (!isHydrated || !products.length) {
+    return (
+      <section 
+        ref={containerRef}
+        className="hero-section"
+        style={{ 
+          backgroundColor: theme.colors.pink,
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        {/* Placeholder content to maintain layout during hydration */}
+        <div style={{ opacity: 0 }}>Loading...</div>
+      </section>
+    );
+  }
 
   const currentProduct = products[current];
   // console.log("Current product:", currentProduct);

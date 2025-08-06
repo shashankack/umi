@@ -2,6 +2,7 @@ import { useTheme, Box, useMediaQuery } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
+import { useHydration } from "../../hooks/useHydration";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
@@ -21,6 +22,7 @@ import VideoSection from "../../components/VideoSection";
 const Home = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isHydrated = useHydration();
 
   const { setNavbarTheme } = useNavbarTheme();
   const location = useLocation();
@@ -153,6 +155,71 @@ const Home = () => {
     // console.log("⏸️ Video paused");
   };
 
+  // Handle video lifecycle and ensure proper playback
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const handleVideoPlayback = async () => {
+      if (introVideoRef.current) {
+        try {
+          // Reset video to beginning
+          introVideoRef.current.currentTime = 0;
+          
+          // Ensure video is ready to play
+          if (introVideoRef.current.readyState >= 2) {
+            await introVideoRef.current.play();
+          } else {
+            // Wait for video to be ready
+            introVideoRef.current.addEventListener('canplay', async () => {
+              try {
+                await introVideoRef.current.play();
+              } catch (error) {
+                console.warn('Intro video autoplay failed:', error);
+              }
+            }, { once: true });
+          }
+        } catch (error) {
+          console.warn('Intro video play failed:', error);
+        }
+      }
+    };
+
+    // Initial playback setup with delay
+    const timeoutId = setTimeout(handleVideoPlayback, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (introVideoRef.current) {
+        introVideoRef.current.pause();
+      }
+    };
+  }, [isHydrated]);
+
+  // Handle page visibility changes to restart video
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden && introVideoRef.current) {
+        // Page became visible, restart video
+        setTimeout(async () => {
+          try {
+            introVideoRef.current.currentTime = 0;
+            await introVideoRef.current.play();
+          } catch (error) {
+            console.warn('Intro video restart failed:', error);
+          }
+        }, 100);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isHydrated]);
+
   return (
     <>
       <Box
@@ -161,7 +228,7 @@ const Home = () => {
         ref={videoContainerRef}
         position="relative"
       >
-        {!videoLoaded && (
+        {(!videoLoaded || !isHydrated) && (
           <Box
             component="img"
             src={isMobile ? mobileThumbnail : desktopThumbnail}
@@ -196,27 +263,29 @@ const Home = () => {
           </Box>
         )}
 
-        <Box
-          ref={introVideoRef}
-          component="video"
-          autoPlay
-          muted
-          loop
-          preload="auto"
-          playsInline
-          src={isMobile ? mobileIntroVideo : introVideo}
-          onLoadedData={handleVideoLoadedData}
-          onError={handleVideoError}
-          onPlay={handleVideoPlay}
-          onPause={handleVideoPause}
-          sx={{
-            height: "100%",
-            width: "100%",
-            objectFit: "cover",
-            position: "relative",
-            zIndex: 2,
-          }}
-        />
+        {isHydrated && (
+          <Box
+            ref={introVideoRef}
+            component="video"
+            autoPlay
+            muted
+            loop
+            preload="metadata"
+            playsInline
+            src={isMobile ? mobileIntroVideo : introVideo}
+            onLoadedData={handleVideoLoadedData}
+            onError={handleVideoError}
+            onPlay={handleVideoPlay}
+            onPause={handleVideoPause}
+            sx={{
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
+              position: "relative",
+              zIndex: 2,
+            }}
+          />
+        )}
       </Box>
 
       <div ref={heroRef}>

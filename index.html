@@ -3,50 +3,37 @@
   <head>
     <!-- Google Tag Manager with Error Handling -->
     <script>
-      console.log('🔍 GTM: Starting initialization...');
       (function (w, d, s, l, i) {
-        console.log('🔍 GTM: Container ID:', i);
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        console.log('✅ GTM: dataLayer initialized:', w[l]);
-        
+
         var f = d.getElementsByTagName(s)[0],
           j = d.createElement(s),
           dl = l != "dataLayer" ? "&l=" + l : "";
         j.async = true;
         j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        
-        console.log('🔍 GTM: Loading script from:', j.src);
-        
-        j.onload = function() {
-          console.log('✅ GTM: Script loaded successfully');
-          console.log('✅ GTM: google_tag_manager:', typeof w.google_tag_manager);
-        };
-        
-        j.onerror = function(e) {
-          console.error('❌ GTM: Script failed to load:', e);
-          console.error('❌ GTM: Please check container ID and publication status');
+
+        j.onload = function () {};
+
+        j.onerror = function (e) {
           // Fallback: create basic dataLayer for custom events
           w[l] = w[l] || [];
-          console.log('🔄 GTM: Fallback dataLayer created');
         };
-        
+
         // Add timeout fallback
-        setTimeout(function() {
-          if (typeof w.google_tag_manager === 'undefined') {
-            console.warn('⚠️ GTM: Script took too long to load, check container status');
+        setTimeout(function () {
+          if (typeof w.google_tag_manager === "undefined") {
           }
         }, 5000);
-        
+
         f.parentNode.insertBefore(j, f);
-        console.log('✅ GTM: Script tag inserted');
       })(window, document, "script", "dataLayer", "GTM-52Q92CJ3");
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" sizes="90x90" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UMI Matcha Shop</title>
+    <title>Umi Matcha Shop</title>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -56,8 +43,6 @@
         height="0"
         width="0"
         style="display: none; visibility: hidden"
-        onload="console.log('✅ GTM: Noscript iframe loaded')"
-        onerror="console.error('❌ GTM: Noscript iframe failed')"
       ></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
