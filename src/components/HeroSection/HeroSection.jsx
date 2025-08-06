@@ -7,7 +7,11 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import { useProducts } from "../../context/ProductContext";
 import { useResponsive, useHydration } from "../../hooks/useHydration";
 
+// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
+
+// Safari detection
+const isSafari = typeof navigator !== 'undefined' && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
@@ -71,7 +75,7 @@ const HeroSection = () => {
 
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 300); // Increased delay to ensure DOM is fully rendered
+    }, isSafari ? 500 : 300); // Longer delay for Safari
 
     return () => clearTimeout(timer);
   }, [isHydrated]);
@@ -83,14 +87,14 @@ const HeroSection = () => {
     let resizeTimeout;
 
     const handleResize = () => {
-      // Debounce resize events
+      // Debounce resize events - longer delay for Safari
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         // Only refresh if container is still mounted
         if (containerRef.current) {
           ScrollTrigger.refresh();
         }
-      }, 250);
+      }, isSafari ? 400 : 250);
     };
 
     window.addEventListener("resize", handleResize);
@@ -117,34 +121,34 @@ const HeroSection = () => {
     const vw = (percent) => (viewportWidth * percent) / 100;
     const vh = (percent) => (viewportHeight * percent) / 100;
 
-    // Adjust positions based on screen size
+    // Adjust positions based on screen size - more conservative for Safari
     const isMobileCalc = viewportWidth <= 768;
-    const scale = isMobileCalc ? 0.6 : 1;
+    const scale = isMobileCalc ? 0.6 : (isSafari ? 0.8 : 1);
 
     return {
       leaf1: {
-        from: { x: -vw(10) * scale, y: -vh(2) * scale },
-        to: { x: 0, y: 0 },
+        from: { x: -vw(10) * scale, y: -vh(2) * scale, opacity: 0 },
+        to: { x: 0, y: 0, opacity: 1 },
       },
       leaf2: {
-        from: { x: vw(10) * scale, y: -vh(2) * scale },
-        to: { x: 0, y: 0 },
+        from: { x: vw(10) * scale, y: -vh(2) * scale, opacity: 0 },
+        to: { x: 0, y: 0, opacity: 1 },
       },
       leaf3: {
-        from: { x: -vw(8) * scale, y: vh(3) * scale },
-        to: { x: 0, y: 0 },
+        from: { x: -vw(8) * scale, y: vh(3) * scale, opacity: 0 },
+        to: { x: 0, y: 0, opacity: 1 },
       },
       leaf4: {
-        from: { x: vw(8) * scale, y: vh(3) * scale },
-        to: { x: 0, y: 0 },
+        from: { x: vw(8) * scale, y: vh(3) * scale, opacity: 0 },
+        to: { x: 0, y: 0, opacity: 1 },
       },
       soupBowl: {
-        from: { y: vh(5) * scale },
-        to: { y: 0 },
+        from: { y: vh(5) * scale, opacity: 0 },
+        to: { y: 0, opacity: 1 },
       },
       whisk: {
-        from: { x: vw(4) * scale, y: vh(3) * scale },
-        to: { x: 0, y: 0 },
+        from: { x: vw(4) * scale, y: vh(3) * scale, opacity: 0 },
+        to: { x: 0, y: 0, opacity: 1 },
       },
     };
   };
@@ -172,7 +176,7 @@ const HeroSection = () => {
       // Early return if positions couldn't be calculated
       if (!positions.leaf1) {
         // Retry after a short delay if positions aren't ready
-        setTimeout(setupAnimation, 100);
+        setTimeout(setupAnimation, isSafari ? 200 : 100);
         return;
       }
 
@@ -189,17 +193,30 @@ const HeroSection = () => {
       // Check if we're at the top of the page (hero section likely visible)
       const isAtTop = window.scrollY < 100;
 
+      // Safari-specific GSAP settings
+      const safariConfig = isSafari ? {
+        force3D: true,
+        transformPerspective: 1000,
+        backfaceVisibility: 'hidden',
+      } : {};
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: isAtTop ? "top 95%" : "top 85%", // More aggressive trigger if at top of page
+          start: isAtTop ? "top 95%" : "top 85%",
           end: "bottom 20%",
           toggleActions: "play none none reverse",
           // markers: true, // Uncomment to debug trigger points
           refreshPriority: -1,
           invalidateOnRefresh: true,
-          anticipatePin: 1, // Helps with smoother animations
-          fastScrollEnd: true, // Better performance on fast scrolling
+          anticipatePin: 1,
+          fastScrollEnd: true,
+          // Safari-specific optimizations
+          ...(isSafari && {
+            scroller: window,
+            pin: false,
+            scrub: false,
+          }),
 
           onEnter: () => {
             // Continuous animations that start after scroll trigger
@@ -212,35 +229,40 @@ const HeroSection = () => {
               ],
               {
                 y: "+=10",
-                duration: 2,
+                duration: isSafari ? 2.5 : 2,
                 repeat: -1,
                 yoyo: true,
                 ease: "sine.inOut",
+                ...safariConfig,
               }
             );
 
             gsap.to(whiskRef.current, {
               y: "-=6",
-              duration: 1.5,
+              duration: isSafari ? 2 : 1.5,
               repeat: -1,
               yoyo: true,
               ease: "sine.inOut",
+              ...safariConfig,
             });
 
             gsap.to(soupBowlRef.current, {
-              rotate: -360,
-              duration: 30,
+              rotation: -360,
+              duration: isSafari ? 35 : 30,
               repeat: -1,
               ease: "none",
+              transformOrigin: "center center",
+              ...safariConfig,
             });
 
             if (imageRef.current) {
               gsap.to(imageRef.current, {
                 y: -10,
-                duration: 2,
+                duration: isSafari ? 2.5 : 2,
                 repeat: -1,
                 yoyo: true,
                 ease: "power1.inOut",
+                ...safariConfig,
               });
             }
 
@@ -258,92 +280,126 @@ const HeroSection = () => {
       // Main entrance animations with opacity
       tl.fromTo(
         homeTextRefs.current,
-        { yPercent: -110, opacity: 0 },
+        { 
+          yPercent: -110, 
+          opacity: 0,
+          ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+        },
         {
           yPercent: 0,
-          delay: 0.2,
+          delay: isSafari ? 0.3 : 0.2,
           opacity: 1,
-          duration: 0.5,
-          stagger: 0.2,
+          duration: isSafari ? 0.7 : 0.5,
+          stagger: isSafari ? 0.3 : 0.2,
           ease: "power2.out",
+          ...safariConfig,
         }
       )
         .fromTo(
           leaf1Ref.current,
-          { ...positions.leaf1.from, opacity: 0 },
+          { 
+            ...positions.leaf1.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          },
           {
             ...positions.leaf1.to,
-            opacity: 1,
-            duration: 1,
+            duration: isSafari ? 1.3 : 1,
             ease: "power3.out",
+            ...safariConfig,
           },
           "+=0.2"
         )
         .fromTo(
           leaf2Ref.current,
-          { ...positions.leaf2.from, opacity: 0 },
+          { 
+            ...positions.leaf2.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          },
           {
             ...positions.leaf2.to,
-            opacity: 1,
-            duration: 1,
+            duration: isSafari ? 1.3 : 1,
             ease: "power3.out",
+            ...safariConfig,
           },
           "-=0.9"
         )
         .fromTo(
           leaf3Ref.current,
-          { ...positions.leaf3.from, opacity: 0 },
+          { 
+            ...positions.leaf3.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          },
           {
             ...positions.leaf3.to,
-            opacity: 1,
-            duration: 1,
+            duration: isSafari ? 1.3 : 1,
             ease: "power3.out",
+            ...safariConfig,
           },
           "-=0.9"
         )
         .fromTo(
           leaf4Ref.current,
-          { ...positions.leaf4.from, opacity: 0 },
+          { 
+            ...positions.leaf4.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          },
           {
             ...positions.leaf4.to,
-            opacity: 1,
-            duration: 1,
+            duration: isSafari ? 1.3 : 1,
             ease: "power3.out",
+            ...safariConfig,
           },
           "-=0.9"
         )
         .fromTo(
           soupBowlRef.current,
-          { ...positions.soupBowl.from, opacity: 0 },
+          { 
+            ...positions.soupBowl.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          },
           {
             ...positions.soupBowl.to,
-            opacity: 1,
-            duration: 1,
+            duration: isSafari ? 1.3 : 1,
             ease: "power3.out",
+            ...safariConfig,
           },
           "-=0.9"
         )
         .fromTo(
           whiskRef.current,
-          { ...positions.whisk.from, opacity: 0 },
+          { 
+            ...positions.whisk.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          },
           {
             ...positions.whisk.to,
-            opacity: 1,
-            duration: 1,
+            duration: isSafari ? 1.3 : 1,
             ease: "power3.out",
+            ...safariConfig,
           },
           "-=0.9"
         );
     };
 
-    // Use multiple frames and longer delay to ensure DOM is ready
+    // Use multiple frames and longer delay to ensure DOM is ready - extra time for Safari
     const timeoutId = setTimeout(() => {
-      requestAnimationFrame(() => {
+      if (isSafari) {
+        // Safari needs more time to stabilize
         requestAnimationFrame(() => {
-          requestAnimationFrame(setupAnimation);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              requestAnimationFrame(setupAnimation);
+            });
+          });
         });
-      });
-    }, 100);
+      } else {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(setupAnimation);
+          });
+        });
+      }
+    }, isSafari ? 200 : 100);
 
     return () => {
       clearTimeout(timeoutId);
@@ -364,21 +420,29 @@ const HeroSection = () => {
   const animateOut = (direction = 1) => {
     const tl = gsap.timeline();
 
+    const safariConfig = isSafari ? {
+      force3D: true,
+      transformPerspective: 1000,
+      backfaceVisibility: 'hidden',
+    } : {};
+
     tl.to([nameRef.current, descRef.current, originRef.current], {
       opacity: 0,
       y: 10,
-      duration: 0.3,
+      duration: isSafari ? 0.4 : 0.3,
       ease: "power1.in",
+      ...safariConfig,
     });
 
     tl.to(
       imageRef.current,
       {
         x: direction * 100,
-        rotate: direction * 20,
+        rotation: direction * 20, // Use rotation instead of rotate for Safari
         opacity: 0,
-        duration: 0.4,
+        duration: isSafari ? 0.5 : 0.4,
         ease: "power2.in",
+        ...safariConfig,
       },
       "<"
     );
@@ -386,9 +450,11 @@ const HeroSection = () => {
     tl.to(
       sakuraRef.current,
       {
-        rotate: `+=${direction * 180}`,
-        duration: 0.5,
+        rotation: `+=${direction * 180}`, // Use rotation instead of rotate for Safari
+        duration: isSafari ? 0.6 : 0.5,
         ease: "power2.inOut",
+        transformOrigin: "center center",
+        ...safariConfig,
       },
       "<"
     );
@@ -397,26 +463,44 @@ const HeroSection = () => {
   const animateIn = (direction = 1) => {
     const tl = gsap.timeline();
 
+    const safariConfig = isSafari ? {
+      force3D: true,
+      transformPerspective: 1000,
+      backfaceVisibility: 'hidden',
+    } : {};
+
     tl.fromTo(
       imageRef.current,
       {
         x: -direction * 100,
-        rotate: -direction * 20,
+        rotation: -direction * 20, // Use rotation instead of rotate for Safari
         opacity: 0,
+        ...safariConfig,
       },
       {
         x: 0,
-        rotate: 0,
+        rotation: 0,
         opacity: 1,
-        duration: 0.5,
+        duration: isSafari ? 0.6 : 0.5,
         ease: "power2.out",
+        ...safariConfig,
       }
     );
 
     tl.fromTo(
       [nameRef.current, descRef.current, originRef.current],
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+      { 
+        opacity: 0, 
+        y: 10,
+        ...safariConfig,
+      },
+      { 
+        opacity: 1, 
+        y: 0, 
+        duration: isSafari ? 0.5 : 0.4, 
+        ease: "power2.out",
+        ...safariConfig,
+      },
       "-=0.3"
     );
   };
