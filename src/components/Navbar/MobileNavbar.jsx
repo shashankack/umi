@@ -56,9 +56,10 @@ const MobileNavbar = () => {
     { label: "Home", to: "/" },
     { label: "Shop", to: "/shop", hasDropdown: true },
     { label: "About", to: "/about" },
-    { label: "Contact", to: "/contact" },
     { label: "Brewing", to: "/?scrollTo=brewing" },
     { label: "Our Matcha", to: "/?scrollTo=ourmatcha" },
+    { label: "Contact", to: "/contact" },
+    { label: "Blogs", to: "/blogs" },
   ];
 
   const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);

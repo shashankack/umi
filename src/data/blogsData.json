@@ -1,0 +1,72 @@
+[
+  {
+    "id": "matcha-ceremony-guide",
+    "title": "The Art of Japanese Matcha Ceremony: A Beginner's Guide",
+    "excerpt": "Discover the ancient traditions and mindful practices behind the Japanese tea ceremony with matcha. Learn how to create your own peaceful ritual at home.",
+    "content": "The Japanese tea ceremony, known as 'chanoyu' or 'sado', is more than just preparing tea—it's a meditative practice that connects us to centuries of tradition...",
+    "author": "Sakura Tanaka",
+    "date": "2024-12-15",
+    "readTime": "5 min read",
+    "category": "Culture",
+    "image": "https://byfood.b-cdn.net/api/public/assets/14628/matcha-bowl",
+    "tags": ["matcha", "ceremony", "tradition", "mindfulness"],
+    "featured": true,
+    "size": "large"
+  },
+  {
+    "id": "health-benefits-matcha",
+    "title": "10 Amazing Health Benefits of Matcha You Need to Know",
+    "excerpt": "From antioxidants to energy boosts, explore the incredible health benefits that make matcha a superfood worth adding to your daily routine.",
+    "content": "Matcha isn't just delicious—it's packed with nutrients that can transform your health. Here are the top 10 scientifically-backed benefits of this green superfood...",
+    "author": "Dr. Yuki Yamamoto",
+    "date": "2024-12-10",
+    "readTime": "7 min read",
+    "category": "Health",
+    "image": "https://kdahweb-static.kokilabenhospital.com/kdah-2019/tips/1636376853.jpg",
+    "tags": ["health", "antioxidants", "superfood", "wellness"],
+    "featured": false,
+    "size": "medium"
+  },
+  {
+    "id": "perfect-matcha-latte-recipe",
+    "title": "How to Make the Perfect Matcha Latte at Home",
+    "excerpt": "Master the art of creating café-quality matcha lattes in your own kitchen with our step-by-step guide and pro tips from Japanese tea masters.",
+    "content": "Creating the perfect matcha latte is both an art and a science. With the right technique and quality ingredients, you can craft a creamy, frothy masterpiece...",
+    "author": "Hiroshi Matsuda",
+    "date": "2024-12-05",
+    "readTime": "4 min read",
+    "category": "Recipe",
+    "image": "https://www.justonecookbook.com/wp-content/uploads/2022/12/Matcha-Latte-4598-I-1.jpg",
+    "tags": ["recipe", "latte", "tutorial", "brewing"],
+    "featured": false,
+    "size": "medium"
+  },
+  {
+    "id": "matcha-vs-green-tea",
+    "title": "Matcha vs Green Tea: What's the Real Difference?",
+    "excerpt": "Confused between matcha and regular green tea? Dive deep into the cultivation, processing, and health differences that set these two apart.",
+    "content": "While both matcha and green tea come from the same Camellia sinensis plant, their journey from leaf to cup couldn't be more different. Understanding these differences can help you choose the right green tea for your lifestyle...",
+    "author": "Tea Master Kenji",
+    "date": "2024-11-28",
+    "readTime": "6 min read",
+    "category": "Education",
+    "image": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&h=400&fit=crop",
+    "tags": ["matcha", "green tea", "comparison", "education"],
+    "featured": false,
+    "size": "small"
+  },
+  {
+    "id": "seasonal-matcha-desserts",
+    "title": "5 Seasonal Matcha Desserts to Try This Winter",
+    "excerpt": "Warm up your winter with these delightful matcha-infused desserts that perfectly capture the cozy spirit of the season.",
+    "content": "Winter is the perfect time to explore the comforting side of matcha. These seasonal desserts combine the earthy richness of matcha with warming spices and textures that embody the cozy winter spirit...",
+    "author": "Pastry Chef Mika",
+    "date": "2024-11-20",
+    "readTime": "8 min read",
+    "category": "Recipe",
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop",
+    "tags": ["desserts", "winter", "seasonal", "baking"],
+    "featured": true,
+    "size": "tall"
+  }
+]

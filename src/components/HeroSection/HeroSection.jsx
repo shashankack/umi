@@ -11,7 +11,9 @@ import { useResponsive, useHydration } from "../../hooks/useHydration";
 gsap.registerPlugin(ScrollTrigger);
 
 // Safari detection
-const isSafari = typeof navigator !== 'undefined' && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const isSafari =
+  typeof navigator !== "undefined" &&
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
@@ -73,9 +75,12 @@ const HeroSection = () => {
   useEffect(() => {
     if (!isHydrated) return;
 
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, isSafari ? 500 : 300); // Longer delay for Safari
+    const timer = setTimeout(
+      () => {
+        ScrollTrigger.refresh();
+      },
+      isSafari ? 500 : 300
+    ); // Longer delay for Safari
 
     return () => clearTimeout(timer);
   }, [isHydrated]);
@@ -89,12 +94,15 @@ const HeroSection = () => {
     const handleResize = () => {
       // Debounce resize events - longer delay for Safari
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        // Only refresh if container is still mounted
-        if (containerRef.current) {
-          ScrollTrigger.refresh();
-        }
-      }, isSafari ? 400 : 250);
+      resizeTimeout = setTimeout(
+        () => {
+          // Only refresh if container is still mounted
+          if (containerRef.current) {
+            ScrollTrigger.refresh();
+          }
+        },
+        isSafari ? 400 : 250
+      );
     };
 
     window.addEventListener("resize", handleResize);
@@ -107,7 +115,8 @@ const HeroSection = () => {
 
   const getAnimationPositions = () => {
     // Ensure we're in the browser and have proper dimensions
-    if (typeof window === "undefined" || !containerRef.current || !isHydrated) return {};
+    if (typeof window === "undefined" || !containerRef.current || !isHydrated)
+      return {};
 
     // Wait for container to be properly mounted
     const container = containerRef.current;
@@ -123,7 +132,7 @@ const HeroSection = () => {
 
     // Adjust positions based on screen size - more conservative for Safari
     const isMobileCalc = viewportWidth <= 768;
-    const scale = isMobileCalc ? 0.6 : (isSafari ? 0.8 : 1);
+    const scale = isMobileCalc ? 0.6 : isSafari ? 0.8 : 1;
 
     return {
       leaf1: {
@@ -194,19 +203,21 @@ const HeroSection = () => {
       const isAtTop = window.scrollY < 100;
 
       // Safari-specific GSAP settings
-      const safariConfig = isSafari ? {
-        force3D: true,
-        transformPerspective: 1000,
-        backfaceVisibility: 'hidden',
-      } : {};
+      const safariConfig = isSafari
+        ? {
+            force3D: true,
+            transformPerspective: 1000,
+            backfaceVisibility: "hidden",
+          }
+        : {};
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: isAtTop ? "top 95%" : "top 85%",
           end: "bottom 20%",
-          toggleActions: "play none none reverse",
-          // markers: true, // Uncomment to debug trigger points
+          toggleActions: "play none none none",
+          // markers: true,
           refreshPriority: -1,
           invalidateOnRefresh: true,
           anticipatePin: 1,
@@ -280,10 +291,10 @@ const HeroSection = () => {
       // Main entrance animations with opacity
       tl.fromTo(
         homeTextRefs.current,
-        { 
-          yPercent: -110, 
+        {
+          yPercent: -110,
           opacity: 0,
-          ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+          ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
         },
         {
           yPercent: 0,
@@ -297,9 +308,9 @@ const HeroSection = () => {
       )
         .fromTo(
           leaf1Ref.current,
-          { 
+          {
             ...positions.leaf1.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
           },
           {
             ...positions.leaf1.to,
@@ -311,9 +322,9 @@ const HeroSection = () => {
         )
         .fromTo(
           leaf2Ref.current,
-          { 
+          {
             ...positions.leaf2.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
           },
           {
             ...positions.leaf2.to,
@@ -325,9 +336,9 @@ const HeroSection = () => {
         )
         .fromTo(
           leaf3Ref.current,
-          { 
+          {
             ...positions.leaf3.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
           },
           {
             ...positions.leaf3.to,
@@ -339,9 +350,9 @@ const HeroSection = () => {
         )
         .fromTo(
           leaf4Ref.current,
-          { 
+          {
             ...positions.leaf4.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
           },
           {
             ...positions.leaf4.to,
@@ -353,9 +364,9 @@ const HeroSection = () => {
         )
         .fromTo(
           soupBowlRef.current,
-          { 
+          {
             ...positions.soupBowl.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
           },
           {
             ...positions.soupBowl.to,
@@ -367,9 +378,9 @@ const HeroSection = () => {
         )
         .fromTo(
           whiskRef.current,
-          { 
+          {
             ...positions.whisk.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: 'hidden' })
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
           },
           {
             ...positions.whisk.to,
@@ -382,24 +393,27 @@ const HeroSection = () => {
     };
 
     // Use multiple frames and longer delay to ensure DOM is ready - extra time for Safari
-    const timeoutId = setTimeout(() => {
-      if (isSafari) {
-        // Safari needs more time to stabilize
-        requestAnimationFrame(() => {
+    const timeoutId = setTimeout(
+      () => {
+        if (isSafari) {
+          // Safari needs more time to stabilize
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                requestAnimationFrame(setupAnimation);
+              });
+            });
+          });
+        } else {
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               requestAnimationFrame(setupAnimation);
             });
           });
-        });
-      } else {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(setupAnimation);
-          });
-        });
-      }
-    }, isSafari ? 200 : 100);
+        }
+      },
+      isSafari ? 200 : 100
+    );
 
     return () => {
       clearTimeout(timeoutId);
@@ -420,11 +434,13 @@ const HeroSection = () => {
   const animateOut = (direction = 1) => {
     const tl = gsap.timeline();
 
-    const safariConfig = isSafari ? {
-      force3D: true,
-      transformPerspective: 1000,
-      backfaceVisibility: 'hidden',
-    } : {};
+    const safariConfig = isSafari
+      ? {
+          force3D: true,
+          transformPerspective: 1000,
+          backfaceVisibility: "hidden",
+        }
+      : {};
 
     tl.to([nameRef.current, descRef.current, originRef.current], {
       opacity: 0,
@@ -463,11 +479,13 @@ const HeroSection = () => {
   const animateIn = (direction = 1) => {
     const tl = gsap.timeline();
 
-    const safariConfig = isSafari ? {
-      force3D: true,
-      transformPerspective: 1000,
-      backfaceVisibility: 'hidden',
-    } : {};
+    const safariConfig = isSafari
+      ? {
+          force3D: true,
+          transformPerspective: 1000,
+          backfaceVisibility: "hidden",
+        }
+      : {};
 
     tl.fromTo(
       imageRef.current,
@@ -489,15 +507,15 @@ const HeroSection = () => {
 
     tl.fromTo(
       [nameRef.current, descRef.current, originRef.current],
-      { 
-        opacity: 0, 
+      {
+        opacity: 0,
         y: 10,
         ...safariConfig,
       },
-      { 
-        opacity: 1, 
-        y: 0, 
-        duration: isSafari ? 0.5 : 0.4, 
+      {
+        opacity: 1,
+        y: 0,
+        duration: isSafari ? 0.5 : 0.4,
         ease: "power2.out",
         ...safariConfig,
       },
@@ -532,15 +550,15 @@ const HeroSection = () => {
   // Prevent rendering until hydrated to avoid mismatches
   if (!isHydrated || !products.length) {
     return (
-      <section 
+      <section
         ref={containerRef}
         className="hero-section"
-        style={{ 
+        style={{
           backgroundColor: theme.colors.pink,
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {/* Placeholder content to maintain layout during hydration */}

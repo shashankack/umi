@@ -66,6 +66,7 @@ const Footer = () => {
       { name: "About", path: "/about" },
       { name: "Contact", path: "/contact" },
       { name: "Our matcha", path: "/?scrollTo=ourmatcha" },
+      { name: "Blogs", path: "/blogs" },
     ],
     [
       { name: "Terms of service", path: "/terms-of-service" },
@@ -232,7 +233,7 @@ const Footer = () => {
           <Box
             component="img"
             src={copyright}
-            mb={.5}
+            mb={0.5}
             style={{
               width: "3vw",
             }}

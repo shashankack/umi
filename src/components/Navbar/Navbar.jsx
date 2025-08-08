@@ -238,6 +238,7 @@ const TestNavbar = () => {
           </a>
           <a href="/">home</a>
           <a href="/shop">shop</a>
+          <a href="/blogs">blogs</a>
         </Stack>
       </Box>
 
