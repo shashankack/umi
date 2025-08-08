@@ -10,6 +10,7 @@ import {
   CardContent,
   Chip,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
@@ -22,6 +23,7 @@ import { FiClock, FiUser, FiCalendar } from "react-icons/fi";
 
 const Blogs = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const { setNavbarTheme } = useNavbarTheme();
   const isHydrated = useHydration();
@@ -77,8 +79,12 @@ const Blogs = () => {
             variant="h1"
             sx={{
               fontFamily: theme.fonts.title,
-              fontSize: { xs: "2.5rem", md: "5rem" },
+              fontSize: { xs: "2.8rem", md: "5rem" },
               color: theme.colors.beige,
+              mt: {
+                xs: 10,
+                md: 0,
+              },
               mb: 2,
               textShadow: `4px 4px 0 ${theme.colors.pink}`,
             }}
@@ -88,6 +94,10 @@ const Blogs = () => {
           <Typography
             variant="h5"
             sx={{
+              fontSize: {
+                xs: "1rem",
+                md: "2rem",
+              },
               fontFamily: theme.fonts.text,
               color: theme.colors.beige,
               maxWidth: 700,
@@ -110,11 +120,11 @@ const Blogs = () => {
           }}
         >
           {/* Featured Article - Left Side */}
-          {blogs.length > 0 && (
+          {blogs.length > 0 && !isMobile && (
             <Box sx={{ flex: { xs: "1", lg: "3" } }}>
               <Card
                 sx={{
-                  height: { xs: "auto", lg: "600px" },
+                  height: { xs: "auto", lg: "700px" },
                   border: `4px solid ${theme.colors.beige}`,
                   backgroundColor: theme.colors.beige,
                   borderRadius: "20px",
@@ -170,6 +180,10 @@ const Blogs = () => {
                   <Typography
                     variant="h4"
                     sx={{
+                      fontSize: {
+                        xs: "1.2rem",
+                        md: "2rem",
+                      },
                       fontFamily: theme.fonts.heading,
                       color: theme.colors.green,
                       mb: 3,
@@ -282,10 +296,10 @@ const Blogs = () => {
           {/* Other Articles - Right Side Scrollable */}
           <Box sx={{ flex: { xs: "1", lg: "1" } }}>
             <Box
+              px={2}
               sx={{
-                height: { xs: "auto", lg: "600px" },
+                height: { xs: "auto", lg: "700px" },
                 overflowY: { xs: "visible", lg: "auto" },
-                pr: 1,
                 "&::-webkit-scrollbar": {
                   width: "8px",
                 },
@@ -303,7 +317,7 @@ const Blogs = () => {
               }}
             >
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                {blogs.slice(1).map((blog, index) => (
+                {(isMobile ? blogs : blogs.slice(1)).map((blog, index) => (
                   <Card
                     key={blog.id}
                     sx={{
