@@ -477,7 +477,7 @@ const Blogs = () => {
             }}
             onClick={() => {
               navigate("/contact");
-              window.scrollTo(0, 0);
+              // Removed forced scroll to top - let React Router handle scroll position
             }}
           >
             Get in Touch

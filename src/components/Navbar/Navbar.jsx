@@ -63,9 +63,7 @@ const TestNavbar = () => {
   }, [searchValue]);
 
   useEffect(() => {
-    if ("scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
-    }
+    // Scroll restoration is now handled globally in App.jsx
   }, []);
 
   useEffect(() => {

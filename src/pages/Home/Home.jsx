@@ -18,6 +18,7 @@ import mobileThumbnail from "../../assets/images/mobile_thumbnail.png";
 import introVideo from "../../assets/videos/intro.mp4";
 import mobileIntroVideo from "../../assets/videos/mobile_intro.mp4";
 import VideoSection from "../../components/VideoSection";
+import HeroSectionNew from "../../components/HeroSection/HeroSectionNew";
 
 const Home = () => {
   const theme = useTheme();
@@ -171,22 +172,26 @@ const Home = () => {
         try {
           // Reset video to beginning
           introVideoRef.current.currentTime = 0;
-          
+
           // Ensure video is ready to play
           if (introVideoRef.current.readyState >= 2) {
             await introVideoRef.current.play();
           } else {
             // Wait for video to be ready
-            introVideoRef.current.addEventListener('canplay', async () => {
-              try {
-                await introVideoRef.current.play();
-              } catch (error) {
-                console.warn('Intro video autoplay failed:', error);
-              }
-            }, { once: true });
+            introVideoRef.current.addEventListener(
+              "canplay",
+              async () => {
+                try {
+                  await introVideoRef.current.play();
+                } catch (error) {
+                  console.warn("Intro video autoplay failed:", error);
+                }
+              },
+              { once: true }
+            );
           }
         } catch (error) {
-          console.warn('Intro video play failed:', error);
+          console.warn("Intro video play failed:", error);
         }
       }
     };
@@ -214,16 +219,16 @@ const Home = () => {
             introVideoRef.current.currentTime = 0;
             await introVideoRef.current.play();
           } catch (error) {
-            console.warn('Intro video restart failed:', error);
+            console.warn("Intro video restart failed:", error);
           }
         }, 100);
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isHydrated]);
 
@@ -296,7 +301,8 @@ const Home = () => {
       </Box>
 
       <div ref={heroRef}>
-        <HeroSection theme={theme} />
+        {/* <HeroSection theme={theme} /> */}
+        <HeroSectionNew />
       </div>
       <div
         ref={productsRef}

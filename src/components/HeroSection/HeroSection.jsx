@@ -136,37 +136,50 @@ const HeroSection = () => {
 
     return {
       leaf1: {
-        from: { x: -vw(10) * scale, y: -vh(2) * scale, opacity: 0 },
-        to: { x: 0, y: 0, opacity: 1 },
+        from: { x: -vw(50) * scale, y: -vh(10) * scale },
+        to: { x: 0, y: 0 },
       },
       leaf2: {
-        from: { x: vw(10) * scale, y: -vh(2) * scale, opacity: 0 },
-        to: { x: 0, y: 0, opacity: 1 },
+        from: { x: vw(50) * scale, y: -vh(10) * scale },
+        to: { x: 0, y: 0 },
       },
       leaf3: {
-        from: { x: -vw(8) * scale, y: vh(3) * scale, opacity: 0 },
-        to: { x: 0, y: 0, opacity: 1 },
+        from: { x: -vw(0) * scale, y: vh(15) * scale },
+        to: { x: 0, y: 0 },
       },
       leaf4: {
-        from: { x: vw(8) * scale, y: vh(3) * scale, opacity: 0 },
-        to: { x: 0, y: 0, opacity: 1 },
+        from: { x: -vw(30) * scale, y: vh(15) * scale },
+        to: { x: 0, y: 0 },
       },
       soupBowl: {
-        from: { y: vh(5) * scale, opacity: 0 },
-        to: { y: 0, opacity: 1 },
+        from: { y: vh(30) * scale },
+        to: { y: 0 },
       },
       whisk: {
-        from: { x: vw(4) * scale, y: vh(3) * scale, opacity: 0 },
-        to: { x: 0, y: 0, opacity: 1 },
+        from: { x: vw(50) * scale, y: vh(25) * scale },
+        to: { x: 0, y: 0 },
       },
     };
   };
 
   const resetAutoSlide = () => {
-    clearInterval(intervalRef.current);
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // Set up new interval
     intervalRef.current = setInterval(() => {
-      handleSlide(1);
+      handleSlide(1).catch(console.error);
     }, 5000);
+  };
+
+  const stopAutoSlide = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
   };
 
   useEffect(() => {
@@ -236,7 +249,7 @@ const HeroSection = () => {
               leaf2Ref.current,
               leaf3Ref.current,
               leaf4Ref.current,
-            ].filter(ref => ref !== null); // Filter out null refs
+            ].filter((ref) => ref !== null); // Filter out null refs
 
             if (leafRefs.length > 0) {
               gsap.to(leafRefs, {
@@ -284,11 +297,11 @@ const HeroSection = () => {
 
             // Auto slide
             intervalRef.current = setInterval(() => {
-              handleSlide(1);
+              handleSlide(1).catch(console.error);
             }, 5000);
           },
           onLeaveBack: () => {
-            clearInterval(intervalRef.current);
+            stopAutoSlide();
           },
         },
       });
@@ -405,7 +418,32 @@ const HeroSection = () => {
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               requestAnimationFrame(() => {
-                requestAnimationFrame(setupAnimation);
+                requestAnimationFrame(() => {
+                  setupAnimation();
+                  // Safari mobile fallback - ensure elements are visible
+                  if (window.innerWidth <= 500) {
+                    setTimeout(() => {
+                      if (
+                        leaf4Ref.current &&
+                        parseFloat(
+                          window.getComputedStyle(leaf4Ref.current).opacity
+                        ) < 1
+                      ) {
+                        leaf4Ref.current.style.opacity = "1";
+                        leaf4Ref.current.style.visibility = "visible";
+                      }
+                      if (
+                        whiskRef.current &&
+                        parseFloat(
+                          window.getComputedStyle(whiskRef.current).opacity
+                        ) < 1
+                      ) {
+                        whiskRef.current.style.opacity = "1";
+                        whiskRef.current.style.visibility = "visible";
+                      }
+                    }, 1000);
+                  }
+                });
               });
             });
           });
@@ -427,110 +465,135 @@ const HeroSection = () => {
           t.kill();
         }
       });
-      clearInterval(intervalRef.current);
+      stopAutoSlide();
     };
   }, [products, isHydrated]); // Add isHydrated dependency
 
   useEffect(() => {
-    window.history.scrollRestoration = "manual";
-    window.scrollTo(0, 0);
+    // Scroll restoration is now handled globally in App.jsx
   }, []);
 
   const animateOut = (direction = 1) => {
-    const tl = gsap.timeline();
+    return new Promise((resolve) => {
+      const tl = gsap.timeline({
+        onComplete: resolve,
+      });
 
-    const safariConfig = isSafari
-      ? {
-          force3D: true,
-          transformPerspective: 1000,
-          backfaceVisibility: "hidden",
-        }
-      : {};
+      const safariConfig = isSafari
+        ? {
+            force3D: true,
+            transformPerspective: 1000,
+            backfaceVisibility: "hidden",
+          }
+        : {};
 
-    tl.to([nameRef.current, descRef.current, originRef.current], {
-      opacity: 0,
-      y: 10,
-      duration: isSafari ? 0.4 : 0.3,
-      ease: "power1.in",
-      ...safariConfig,
+      // Check if refs exist before animating
+      if (nameRef.current && descRef.current && originRef.current) {
+        tl.to([nameRef.current, descRef.current, originRef.current], {
+          opacity: 0,
+          y: 10,
+          duration: isSafari ? 0.4 : 0.3,
+          ease: "power1.in",
+          ...safariConfig,
+        });
+      }
+
+      if (imageRef.current) {
+        tl.to(
+          imageRef.current,
+          {
+            x: direction * 100,
+            rotation: direction * 20,
+            opacity: 0,
+            duration: isSafari ? 0.5 : 0.4,
+            ease: "power2.in",
+            ...safariConfig,
+          },
+          "<"
+        );
+      }
+
+      if (sakuraRef.current) {
+        tl.to(
+          sakuraRef.current,
+          {
+            rotation: `+=${direction * 180}`,
+            duration: isSafari ? 0.6 : 0.5,
+            ease: "power2.inOut",
+            transformOrigin: "center center",
+            ...safariConfig,
+          },
+          "<"
+        );
+      }
     });
-
-    tl.to(
-      imageRef.current,
-      {
-        x: direction * 100,
-        rotation: direction * 20, // Use rotation instead of rotate for Safari
-        opacity: 0,
-        duration: isSafari ? 0.5 : 0.4,
-        ease: "power2.in",
-        ...safariConfig,
-      },
-      "<"
-    );
-
-    tl.to(
-      sakuraRef.current,
-      {
-        rotation: `+=${direction * 180}`, // Use rotation instead of rotate for Safari
-        duration: isSafari ? 0.6 : 0.5,
-        ease: "power2.inOut",
-        transformOrigin: "center center",
-        ...safariConfig,
-      },
-      "<"
-    );
   };
 
   const animateIn = (direction = 1) => {
-    const tl = gsap.timeline();
+    return new Promise((resolve) => {
+      const tl = gsap.timeline({
+        onComplete: resolve,
+      });
 
-    const safariConfig = isSafari
-      ? {
-          force3D: true,
-          transformPerspective: 1000,
-          backfaceVisibility: "hidden",
-        }
-      : {};
+      const safariConfig = isSafari
+        ? {
+            force3D: true,
+            transformPerspective: 1000,
+            backfaceVisibility: "hidden",
+          }
+        : {};
 
-    tl.fromTo(
-      imageRef.current,
-      {
-        x: -direction * 100,
-        rotation: -direction * 20, // Use rotation instead of rotate for Safari
-        opacity: 0,
-        ...safariConfig,
-      },
-      {
-        x: 0,
-        rotation: 0,
-        opacity: 1,
-        duration: isSafari ? 0.6 : 0.5,
-        ease: "power2.out",
-        ...safariConfig,
+      if (imageRef.current) {
+        tl.fromTo(
+          imageRef.current,
+          {
+            x: -direction * 100,
+            rotation: -direction * 20,
+            opacity: 0,
+            ...safariConfig,
+          },
+          {
+            x: 0,
+            rotation: 0,
+            opacity: 1,
+            duration: isSafari ? 0.6 : 0.5,
+            ease: "power2.out",
+            ...safariConfig,
+          }
+        );
       }
-    );
 
-    tl.fromTo(
-      [nameRef.current, descRef.current, originRef.current],
-      {
-        opacity: 0,
-        y: 10,
-        ...safariConfig,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: isSafari ? 0.5 : 0.4,
-        ease: "power2.out",
-        ...safariConfig,
-      },
-      "-=0.3"
-    );
+      if (nameRef.current && descRef.current && originRef.current) {
+        tl.fromTo(
+          [nameRef.current, descRef.current, originRef.current],
+          {
+            opacity: 0,
+            y: 10,
+            ...safariConfig,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: isSafari ? 0.5 : 0.4,
+            ease: "power2.out",
+            ...safariConfig,
+          },
+          "-=0.3"
+        );
+      }
+    });
   };
 
-  const handleSlide = (dir) => {
-    animateOut(dir);
-    setTimeout(() => {
+  const handleSlide = async (dir) => {
+    // Prevent multiple slides from running simultaneously
+    if (window.isSliding) return;
+    window.isSliding = true;
+
+    try {
+      // Wait for the out animation to complete
+      await animateOut(dir);
+
+      // Update the current product
       setCurrent((prev) => {
         const nextIndex =
           dir === 1
@@ -538,18 +601,36 @@ const HeroSection = () => {
             : (prev - 1 + products.length) % products.length;
         return nextIndex;
       });
-      setTimeout(() => animateIn(dir), 50);
-    }, 300);
+
+      // Small delay to ensure state update
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Wait for the in animation to complete
+      await animateIn(dir);
+    } finally {
+      // Always reset sliding flag
+      window.isSliding = false;
+    }
   };
 
   const nextSlide = () => {
-    resetAutoSlide();
-    handleSlide(1);
+    stopAutoSlide();
+    handleSlide(1)
+      .then(() => {
+        // Restart autoplay after slide completes
+        resetAutoSlide();
+      })
+      .catch(console.error);
   };
 
   const prevSlide = () => {
-    resetAutoSlide();
-    handleSlide(-1);
+    stopAutoSlide();
+    handleSlide(-1)
+      .then(() => {
+        // Restart autoplay after slide completes
+        resetAutoSlide();
+      })
+      .catch(console.error);
   };
 
   // Prevent rendering until hydrated to avoid mismatches
@@ -613,10 +694,8 @@ const HeroSection = () => {
               <div className="image-container">
                 <div
                   onClick={() => {
-                    navigate(
-                      `/product/${currentProduct.id}`,
-                      window.scrollTo(0, 0)
-                    );
+                    window.scrollTo(0, 0);
+                    navigate(`/product/${currentProduct.id}`);
                   }}
                   onMouseEnter={() => clearInterval(intervalRef.current)}
                   onMouseLeave={resetAutoSlide}

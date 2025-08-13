@@ -69,6 +69,13 @@ const LoadingHandler = ({ children }) => {
     return () => clearTimeout(timer);
   }, [location]);
 
+  // Set scroll restoration once globally
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
   return (
     <>
       {loading && <Loader />}

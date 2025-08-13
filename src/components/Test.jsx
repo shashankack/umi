@@ -123,7 +123,7 @@ const Test = () => {
             }}
             onClick={() => {
               navigate("/shop");
-              window.scrollTo(0, 0);
+              // Removed forced scroll to top - let React Router handle scroll position
             }}
           >
             Shop Now
@@ -262,7 +262,7 @@ const Test = () => {
                     }}
                     onClick={() => {
                       navigate(`/product/${productId}`);
-                      window.scrollTo(0, 0);
+                      // Removed forced scroll to top - let React Router handle scroll position
                     }}
                   >
                     <Box
