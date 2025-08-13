@@ -67,6 +67,9 @@ const MobileNavbar = () => {
   const handleSearchToggle = () => {
     setIsSearchOpen((prev) => !prev);
 
+    // Ensure ref exists before animating
+    if (!searchRef.current) return;
+
     if (!isSearchOpen) {
       gsap.to(searchRef.current, { width: "300px", opacity: 1, duration: 0.5 });
     } else {

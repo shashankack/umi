@@ -231,40 +231,45 @@ const HeroSection = () => {
 
           onEnter: () => {
             // Continuous animations that start after scroll trigger
-            gsap.to(
-              [
-                leaf1Ref.current,
-                leaf2Ref.current,
-                leaf3Ref.current,
-                leaf4Ref.current,
-              ],
-              {
+            const leafRefs = [
+              leaf1Ref.current,
+              leaf2Ref.current,
+              leaf3Ref.current,
+              leaf4Ref.current,
+            ].filter(ref => ref !== null); // Filter out null refs
+
+            if (leafRefs.length > 0) {
+              gsap.to(leafRefs, {
                 y: "+=10",
                 duration: isSafari ? 2.5 : 2,
                 repeat: -1,
                 yoyo: true,
                 ease: "sine.inOut",
                 ...safariConfig,
-              }
-            );
+              });
+            }
 
-            gsap.to(whiskRef.current, {
-              y: "-=6",
-              duration: isSafari ? 2 : 1.5,
-              repeat: -1,
-              yoyo: true,
-              ease: "sine.inOut",
-              ...safariConfig,
-            });
+            if (whiskRef.current) {
+              gsap.to(whiskRef.current, {
+                y: "-=6",
+                duration: isSafari ? 2 : 1.5,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                ...safariConfig,
+              });
+            }
 
-            gsap.to(soupBowlRef.current, {
-              rotation: -360,
-              duration: isSafari ? 35 : 30,
-              repeat: -1,
-              ease: "none",
-              transformOrigin: "center center",
-              ...safariConfig,
-            });
+            if (soupBowlRef.current) {
+              gsap.to(soupBowlRef.current, {
+                rotation: -360,
+                duration: isSafari ? 35 : 30,
+                repeat: -1,
+                ease: "none",
+                transformOrigin: "center center",
+                ...safariConfig,
+              });
+            }
 
             if (imageRef.current) {
               gsap.to(imageRef.current, {

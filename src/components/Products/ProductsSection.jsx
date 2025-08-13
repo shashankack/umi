@@ -73,7 +73,7 @@ const ProductsSection = () => {
           scrollTrigger: {
             trigger: titleRef.current,
             start: isNearSection ? "top 85%" : "top 80%",
-            toggleActions: "play none none reverse",
+            toggleActions: "play none none none",
             refreshPriority: -1,
             invalidateOnRefresh: true,
           },
@@ -91,7 +91,7 @@ const ProductsSection = () => {
             scrollTrigger: {
               trigger: svgRef.current,
               start: isNearSection ? "top 85%" : "top 80%",
-              toggleActions: "play none none reverse",
+              toggleActions: "play none none none",
               refreshPriority: -1,
               invalidateOnRefresh: true,
             },

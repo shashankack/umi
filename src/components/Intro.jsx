@@ -18,6 +18,11 @@ const Intro = ({ NextComponent }) => {
   const nextComponentRef = useRef(null);
 
   useEffect(() => {
+    // Ensure refs exist before setting up animations
+    if (!cloudRef.current || !textRef.current || !introContainerRef.current || !nextComponentRef.current) {
+      return;
+    }
+
     if (hasPlayed) {
       setShowNext(true);
       introContainerRef.current.style.display = "none";
@@ -50,7 +55,9 @@ const Intro = ({ NextComponent }) => {
               duration: 1.2,
               ease: "power2.inOut",
               onComplete: () => {
-                introContainerRef.current.style.display = "none";
+                if (introContainerRef.current) {
+                  introContainerRef.current.style.display = "none";
+                }
               },
             },
             0
@@ -73,7 +80,13 @@ const Intro = ({ NextComponent }) => {
       },
       "+=.2"
     );
-  }, []);
+
+    return () => {
+      if (tl) {
+        tl.kill();
+      }
+    };
+  }, [hasPlayed]); // Add hasPlayed as dependency
 
   return (
     <>

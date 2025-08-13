@@ -8,14 +8,25 @@ const CurvedMarquee = () => {
   const [isMobile] = useState(window.innerWidth <= 500 ? true : false);
 
   useEffect(() => {
+    // Ensure refs exist before setting up animation
+    if (!pathRef.current || !textPathRef.current) {
+      return;
+    }
+
     const pathLength = pathRef.current.getTotalLength();
 
-    gsap.to(textPathRef.current, {
+    const animation = gsap.to(textPathRef.current, {
       attr: { startOffset: -pathLength + 300 },
       repeat: -1,
       ease: "none",
       duration: 15,
     });
+
+    return () => {
+      if (animation) {
+        animation.kill();
+      }
+    };
   }, []);
 
   return (

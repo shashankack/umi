@@ -114,6 +114,11 @@ const Home = () => {
   }, [setNavbarTheme]);
 
   useEffect(() => {
+    // Wait for hydration and ensure refs exist before setting up ScrollTrigger
+    if (!isHydrated || !introVideoRef.current || !videoContainerRef.current) {
+      return;
+    }
+
     const scrollTriggerInstance = gsap.fromTo(
       introVideoRef.current,
       { filter: "blur(0px) brightness(1)", scale: 1 },
@@ -131,9 +136,11 @@ const Home = () => {
     );
 
     return () => {
-      scrollTriggerInstance.kill();
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill();
+      }
     };
-  }, []);
+  }, [isHydrated]); // Add isHydrated as dependency
 
   // Simplified video event handlers - only essential ones
   const handleVideoLoadedData = () => {

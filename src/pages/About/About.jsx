@@ -16,12 +16,23 @@ const About = () => {
   const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
-    gsap.to(badgeRef.current, {
+    // Ensure ref exists before setting up animation
+    if (!badgeRef.current) {
+      return;
+    }
+
+    const animation = gsap.to(badgeRef.current, {
       rotation: 360,
       repeat: -1,
       duration: 5,
       ease: "none",
     });
+
+    return () => {
+      if (animation) {
+        animation.kill();
+      }
+    };
   }, []);
 
   return (
