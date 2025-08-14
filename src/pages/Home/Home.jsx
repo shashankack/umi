@@ -36,6 +36,9 @@ const Home = () => {
   const videosRef = useRef(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(null);
+  const [introCompleted, setIntroCompleted] = useState(
+    sessionStorage.getItem("hasPlayed") === "true"
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -120,28 +123,57 @@ const Home = () => {
       return;
     }
 
-    const scrollTriggerInstance = gsap.fromTo(
-      introVideoRef.current,
-      { filter: "blur(0px) brightness(1)", scale: 1 },
-      {
-        filter: "blur(5px) brightness(0.8)",
-        ease: "back.out",
-        scrollTrigger: {
-          trigger: videoContainerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-          toggleActions: "play none none reverse",
-        },
-      }
-    );
+    // Wait for intro to complete before setting up video ScrollTrigger
+    const setupVideoScrollTrigger = () => {
+      const scrollTriggerInstance = gsap.fromTo(
+        introVideoRef.current,
+        { filter: "blur(0px) brightness(1)", scale: 1 },
+        {
+          filter: "blur(5px) brightness(0.8)",
+          ease: "back.out",
+          scrollTrigger: {
+            trigger: videoContainerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            toggleActions: "play none none reverse",
+            refreshPriority: 1, // Higher priority
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+
+      return scrollTriggerInstance;
+    };
+
+    let scrollTriggerInstance;
+    
+    if (introCompleted) {
+      // Setup immediately if intro already completed
+      scrollTriggerInstance = setupVideoScrollTrigger();
+    } else {
+      // Wait for intro completion
+      const checkIntroCompleted = () => {
+        if (sessionStorage.getItem("hasPlayed") === "true") {
+          setIntroCompleted(true);
+          // Small delay to ensure intro exit animation is complete
+          setTimeout(() => {
+            scrollTriggerInstance = setupVideoScrollTrigger();
+            ScrollTrigger.refresh();
+          }, 1500);
+        } else {
+          setTimeout(checkIntroCompleted, 500);
+        }
+      };
+      checkIntroCompleted();
+    }
 
     return () => {
       if (scrollTriggerInstance) {
         scrollTriggerInstance.kill();
       }
     };
-  }, [isHydrated]); // Add isHydrated as dependency
+  }, [isHydrated, introCompleted]);
 
   // Simplified video event handlers - only essential ones
   const handleVideoLoadedData = () => {
@@ -206,6 +238,59 @@ const Home = () => {
       }
     };
   }, [isHydrated]);
+
+  // Prevent scroll jumping during intro completion
+  useEffect(() => {
+    if (!introCompleted && sessionStorage.getItem("hasPlayed") !== "true") {
+      // During intro, prevent any scroll restoration or jumping
+      const handleScroll = (e) => {
+        if (window.scrollY > 0) {
+          window.scrollTo(0, 0);
+        }
+      };
+
+      const handleScrollRestore = (e) => {
+        e.preventDefault();
+        window.scrollTo(0, 0);
+      };
+
+      // Prevent scroll restoration
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: false });
+      window.addEventListener('beforeunload', handleScrollRestore);
+
+      // Monitor for intro completion
+      const checkCompletion = () => {
+        if (sessionStorage.getItem("hasPlayed") === "true") {
+          setIntroCompleted(true);
+          window.removeEventListener('scroll', handleScroll);
+          window.removeEventListener('beforeunload', handleScrollRestore);
+          
+          // Re-enable scroll restoration after intro
+          if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'auto';
+          }
+          
+          // Refresh ScrollTrigger after intro completes
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+          }, 100);
+        } else {
+          setTimeout(checkCompletion, 100);
+        }
+      };
+
+      checkCompletion();
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('beforeunload', handleScrollRestore);
+      };
+    }
+  }, [introCompleted]);
 
   // Handle page visibility changes to restart video
   useEffect(() => {
@@ -302,7 +387,7 @@ const Home = () => {
 
       <div ref={heroRef}>
         {/* <HeroSection theme={theme} /> */}
-        <HeroSectionNew />
+        <HeroSection />
       </div>
       <div
         ref={productsRef}

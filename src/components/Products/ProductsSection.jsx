@@ -250,7 +250,7 @@ const ProductsSection = () => {
                     className="product-actions"
                     style={{ color: theme.colors.beige }}
                   >
-                    <div className="price">₹ {price}</div>
+                    <div className="price">{price}</div>
 
                     <div
                       className="cart-icon"

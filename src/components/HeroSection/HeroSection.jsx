@@ -1,11 +1,29 @@
-import "./HeroSection.scss";
-
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Grid,
+  Stack,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useNavigate } from "react-router-dom";
 
 import { useProducts } from "../../context/ProductContext";
-import { useResponsive, useHydration } from "../../hooks/useHydration";
+import { useHydration } from "../../hooks/useHydration";
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
+
+// Import images
+import sakura from "/images/vectors/sakura.png";
+import leaf1 from "/images/vectors/leaf1.png";
+import leaf2 from "/images/vectors/leaf2.png";
+import leaf3 from "/images/vectors/leaf3.png";
+import soupBowl from "/images/vectors/soup_bowl.png";
+import whisk from "/images/vectors/whisk.png";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -15,23 +33,15 @@ const isSafari =
   typeof navigator !== "undefined" &&
   /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-
-import sakura from "../../assets/images/vectors/sakura.png";
-import leaf1 from "../../assets/images/vectors/leaf1.png";
-import leaf2 from "../../assets/images/vectors/leaf2.png";
-import leaf3 from "../../assets/images/vectors/leaf3.png";
-import soupBowl from "../../assets/images/vectors/soup_bowl.png";
-import whisk from "../../assets/images/vectors/whisk.png";
-
-import { useNavbarTheme } from "../../context/NavbarThemeContext";
-import { useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-
-const HeroSection = () => {
-  const hasPlayed = sessionStorage.getItem("hasPlayed");
+const HeroSectionNew = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallMobile = useMediaQuery("(max-width:500px)");
+  const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
+  const isHydrated = useHydration();
 
+  // Refs for animations
   const containerRef = useRef(null);
   const imageRef = useRef(null);
   const nameRef = useRef(null);
@@ -39,98 +49,265 @@ const HeroSection = () => {
   const originRef = useRef(null);
   const sakuraRef = useRef(null);
   const homeTextRefs = useRef([]);
-
-  const theme = useTheme();
-
   const leaf1Ref = useRef(null);
   const leaf2Ref = useRef(null);
   const leaf3Ref = useRef(null);
   const leaf4Ref = useRef(null);
   const soupBowlRef = useRef(null);
   const whiskRef = useRef(null);
+
+  // Context and state
   const { setNavbarTheme } = useNavbarTheme();
   const { getFilteredProducts } = useProducts();
   const [products, setProducts] = useState([]);
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef(null);
-  const isMobile = useResponsive(768);
-  const isHydrated = useHydration();
 
+  // Initialize refs array
   homeTextRefs.current = [];
 
-  useEffect(() => {
-    if (!isHydrated) return;
-
-    const filteredProducts = getFilteredProducts("matcha");
-    const mapped = filteredProducts.map((product) => ({
-      id: product.id.split("/").pop(),
-      title: product.title,
-      image: product.images.edges[0]?.node.url,
-      price: "Coming Soon",
-    }));
-    setProducts(mapped);
-  }, [getFilteredProducts, isHydrated]);
-
-  // Refresh ScrollTrigger after hydration and ensure DOM is ready
-  useEffect(() => {
-    if (!isHydrated) return;
-
-    const timer = setTimeout(
-      () => {
-        ScrollTrigger.refresh();
+  // Styles using MUI's sx prop and styled components approach
+  const styles = {
+    heroSection: {
+      width: "100%",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      overflow: "hidden",
+      backgroundColor: theme.colors.pink,
+    },
+    checkeredGrid: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      position: "absolute",
+      bottom: 0,
+      zIndex: 20,
+    },
+    checkeredRow: {
+      display: "flex",
+    },
+    checkeredSquare: {
+      width: isSmallMobile ? "8vw" : "2.6vw",
+      height: isSmallMobile ? "8vw" : "2.6vw",
+    },
+    // Floating elements
+    leaf1: {
+      position: "absolute",
+      top: isSmallMobile ? "8%" : "16%",
+      left: 0,
+      width: isSmallMobile ? "120px" : "13vw",
+      zIndex: 5,
+    },
+    leaf2: {
+      position: "absolute",
+      bottom: "30%",
+      left: 0,
+      width: "200px",
+      display: "none",
+    },
+    leaf3: {
+      position: "absolute",
+      top: "40%",
+      left: "35%",
+      width: "15vw",
+      display: isSmallMobile ? "none" : "block",
+      zIndex: 3,
+      // Ensure no CSS transforms interfere with GSAP
+      transform: "none",
+    },
+    leaf4: {
+      position: "absolute",
+      bottom: isSmallMobile ? "auto" : "25%",
+      top: isSmallMobile ? "20%" : "auto",
+      left: isSmallMobile ? "auto" : 0,
+      right: isSmallMobile ? 0 : "auto",
+      width: isSmallMobile ? "120px" : "13vw",
+      transform: isSmallMobile
+        ? "rotate(0deg) rotateY(180deg)"
+        : "rotate(180deg) rotateY(180deg)",
+    },
+    soupBowl: {
+      position: "absolute",
+      bottom: "-5%",
+      right: "61%",
+      width: isSmallMobile ? "200px" : "18vw",
+    },
+    whisk: {
+      position: "absolute",
+      bottom: isSmallMobile ? "40%" : "65%",
+      right: isSmallMobile ? "-4%" : "35%",
+      width: isSmallMobile ? "150px" : "17vw",
+      zIndex: 4,
+      // Remove CSS transforms to prevent GSAP conflicts
+      // Transform will be handled by GSAP
+    },
+    // Main content
+    heroContent: {
+      display: "flex",
+      justifyContent: "space-around",
+      alignItems: "center",
+      maxWidth: "1800px",
+      width: "100%",
+      flexDirection: isSmallMobile ? "column" : "row",
+      marginTop: isSmallMobile ? "-10px" : 0,
+    },
+    homeText: {
+      zIndex: 10,
+      width: "100%",
+    },
+    titleWrapper: {
+      overflow: "hidden",
+    },
+    title: {
+      fontSize: isSmallMobile ? "3rem" : isTablet ? "6rem" : "6vw",
+      fontFamily: "Gliker",
+      textShadow: isSmallMobile ? "2px 2px 0px #b5d782" : "5px 5px 0px #b5d782",
+      fontWeight: 900,
+      lineHeight: 1,
+      marginLeft: isSmallMobile ? 0 : "140px",
+      textAlign: isSmallMobile ? "center" : "left",
+      textWrap: isTablet && !isSmallMobile ? "nowrap" : "wrap",
+      color: theme.colors.beige,
+    },
+    // Product window
+    productWindow: {
+      width: isSmallMobile ? "100%" : "46%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      marginTop: isSmallMobile ? "20px" : 0,
+      maxWidth: isSmallMobile ? "300px" : "none",
+      transform: isSmallMobile ? "scale(0.7)" : "scale(1)",
+      zIndex: 10,
+    },
+    productFrame: {
+      width: isSmallMobile ? "100%" : "75%",
+      height: isSmallMobile ? "450px" : "65vh",
+      borderRadius: "185.5px 185.5px 0px 0px",
+      border: isSmallMobile ? "1px solid #b5d782" : "4px solid #b5d782",
+      background: "#fdf8ce",
+      boxShadow: isSmallMobile
+        ? "3px 4px 0px 0px #b5d782"
+        : "8px 8px 0px 0px #b5d782",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+    },
+    productTitle: {
+      color: "#b5d782",
+      fontSize: isSmallMobile ? "14px" : "20px",
+      fontWeight: 500,
+      width: "20ch",
+      textAlign: "center",
+      textTransform: "capitalize",
+      paddingTop: isSmallMobile ? "30px" : "40px",
+      flexShrink: 0,
+      height: isSmallMobile ? "60px" : "100px",
+    },
+    productContent: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      overflow: "hidden",
+    },
+    sliderContainer: {
+      flex: 1,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "relative",
+      overflow: "hidden",
+    },
+    arrow: {
+      fontSize: "30px",
+      cursor: "pointer",
+      zIndex: 10,
+      transition: "all 0.3s ease",
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      "&:hover": {
+        transform: "translateY(-50%) scale(1.2)",
       },
-      isSafari ? 500 : 300
-    ); // Longer delay for Safari
+      "&:active": {
+        transform: "translateY(-50%) scale(0.9)",
+      },
+    },
+    leftArrow: {
+      left: "10px",
+    },
+    rightArrow: {
+      right: "10px",
+    },
+    imageContainer: {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+    },
+    productImage: {
+      maxWidth: "90%",
+      maxHeight: "90%",
+      objectFit: "contain",
+      cursor: "pointer",
+    },
+    productInfo: {
+      width: "100%",
+      borderTop: "3px solid #b5d782",
+      flexShrink: 0,
+    },
+    textGrid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+    },
+    gridItem: {
+      padding: "12px",
+      borderRight: "2px solid #b5d782",
+      borderBottom: "2px solid #b5d782",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      color: "#b5d782",
+      fontSize: "14px",
+      fontWeight: 200,
+      "&:last-child": {
+        borderRight: "none",
+      },
+    },
+    sakuraIcon: {
+      width: isSmallMobile ? "50px" : "60px",
+      height: "auto",
+      cursor: "pointer",
+    },
+  };
 
-    return () => clearTimeout(timer);
-  }, [isHydrated]);
-
-  // Add resize handler to refresh ScrollTrigger when window dimensions change
-  useEffect(() => {
-    if (!isHydrated) return;
-
-    let resizeTimeout;
-
-    const handleResize = () => {
-      // Debounce resize events - longer delay for Safari
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(
-        () => {
-          // Only refresh if container is still mounted
-          if (containerRef.current) {
-            ScrollTrigger.refresh();
-          }
-        },
-        isSafari ? 400 : 250
-      );
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      clearTimeout(resizeTimeout);
-    };
-  }, [isHydrated]);
-
+  // Animation positions calculation
   const getAnimationPositions = () => {
-    // Ensure we're in the browser and have proper dimensions
     if (typeof window === "undefined" || !containerRef.current || !isHydrated)
       return {};
 
-    // Wait for container to be properly mounted
     const container = containerRef.current;
     const containerRect = container.getBoundingClientRect();
     if (containerRect.width === 0 || containerRect.height === 0) return {};
 
-    // Use container dimensions if available, fallback to window
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
     const vw = (percent) => (viewportWidth * percent) / 100;
     const vh = (percent) => (viewportHeight * percent) / 100;
 
-    // Adjust positions based on screen size - more conservative for Safari
     const isMobileCalc = viewportWidth <= 768;
     const scale = isMobileCalc ? 0.6 : isSafari ? 0.8 : 1;
 
@@ -144,11 +321,14 @@ const HeroSection = () => {
         to: { x: 0, y: 0 },
       },
       leaf3: {
-        from: { x: -vw(0) * scale, y: vh(15) * scale },
+        from: { x: vw(30) * scale, y: -vh(30) * scale },
         to: { x: 0, y: 0 },
       },
       leaf4: {
-        from: { x: -vw(30) * scale, y: vh(15) * scale },
+        from: {
+          x: isMobile ? vw(50) * scale : -vw(50) * scale,
+          y: vh(15) * scale,
+        },
         to: { x: 0, y: 0 },
       },
       soupBowl: {
@@ -156,25 +336,13 @@ const HeroSection = () => {
         to: { y: 0 },
       },
       whisk: {
-        from: { x: vw(50) * scale, y: vh(25) * scale },
-        to: { x: 0, y: 0 },
+        from: { y: vh(50) * scale },
+        to: { y: 0 },
       },
     };
   };
 
-  const resetAutoSlide = () => {
-    // Clear any existing interval
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-
-    // Set up new interval
-    intervalRef.current = setInterval(() => {
-      handleSlide(1).catch(console.error);
-    }, 5000);
-  };
-
+  // Auto-slide functions
   const stopAutoSlide = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -182,297 +350,17 @@ const HeroSection = () => {
     }
   };
 
-  useEffect(() => {
-    setNavbarTheme("beige");
+  const resetAutoSlide = () => {
+    // Always clear existing interval first
+    stopAutoSlide();
 
-    // Wait for hydration and products
-    if (!products.length || !isHydrated) return;
+    // Set new interval for 3 seconds (3000ms)
+    intervalRef.current = setInterval(() => {
+      handleSlide(1).catch(console.error);
+    }, 3000);
+  };
 
-    // Ensure all refs are available
-    if (!containerRef.current || !homeTextRefs.current.length) return;
-
-    // Wait for a frame to ensure DOM is fully rendered
-    const setupAnimation = () => {
-      const positions = getAnimationPositions();
-
-      // Early return if positions couldn't be calculated
-      if (!positions.leaf1) {
-        // Retry after a short delay if positions aren't ready
-        setTimeout(setupAnimation, isSafari ? 200 : 100);
-        return;
-      }
-
-      // Kill existing ScrollTriggers to avoid duplicates
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.trigger === containerRef.current) {
-          t.kill();
-        }
-      });
-
-      // Refresh ScrollTrigger to ensure accurate calculations
-      ScrollTrigger.refresh();
-
-      // Check if we're at the top of the page (hero section likely visible)
-      const isAtTop = window.scrollY < 100;
-
-      // Safari-specific GSAP settings
-      const safariConfig = isSafari
-        ? {
-            force3D: true,
-            transformPerspective: 1000,
-            backfaceVisibility: "hidden",
-          }
-        : {};
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: isAtTop ? "top 95%" : "top 85%",
-          end: "bottom 20%",
-          toggleActions: "play none none none",
-          // markers: true,
-          refreshPriority: -1,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-          fastScrollEnd: true,
-          // Safari-specific optimizations
-          ...(isSafari && {
-            scroller: window,
-            pin: false,
-            scrub: false,
-          }),
-
-          onEnter: () => {
-            // Continuous animations that start after scroll trigger
-            const leafRefs = [
-              leaf1Ref.current,
-              leaf2Ref.current,
-              leaf3Ref.current,
-              leaf4Ref.current,
-            ].filter((ref) => ref !== null); // Filter out null refs
-
-            if (leafRefs.length > 0) {
-              gsap.to(leafRefs, {
-                y: "+=10",
-                duration: isSafari ? 2.5 : 2,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-                ...safariConfig,
-              });
-            }
-
-            if (whiskRef.current) {
-              gsap.to(whiskRef.current, {
-                y: "-=6",
-                duration: isSafari ? 2 : 1.5,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-                ...safariConfig,
-              });
-            }
-
-            if (soupBowlRef.current) {
-              gsap.to(soupBowlRef.current, {
-                rotation: -360,
-                duration: isSafari ? 35 : 30,
-                repeat: -1,
-                ease: "none",
-                transformOrigin: "center center",
-                ...safariConfig,
-              });
-            }
-
-            if (imageRef.current) {
-              gsap.to(imageRef.current, {
-                y: -10,
-                duration: isSafari ? 2.5 : 2,
-                repeat: -1,
-                yoyo: true,
-                ease: "power1.inOut",
-                ...safariConfig,
-              });
-            }
-
-            // Auto slide
-            intervalRef.current = setInterval(() => {
-              handleSlide(1).catch(console.error);
-            }, 5000);
-          },
-          onLeaveBack: () => {
-            stopAutoSlide();
-          },
-        },
-      });
-
-      // Main entrance animations with opacity
-      tl.fromTo(
-        homeTextRefs.current,
-        {
-          yPercent: -110,
-          opacity: 0,
-          ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-        },
-        {
-          yPercent: 0,
-          delay: isSafari ? 0.3 : 0.2,
-          opacity: 1,
-          duration: isSafari ? 0.7 : 0.5,
-          stagger: isSafari ? 0.3 : 0.2,
-          ease: "power2.out",
-          ...safariConfig,
-        }
-      )
-        .fromTo(
-          leaf1Ref.current,
-          {
-            ...positions.leaf1.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-          },
-          {
-            ...positions.leaf1.to,
-            duration: isSafari ? 1.3 : 1,
-            ease: "power3.out",
-            ...safariConfig,
-          },
-          "+=0.2"
-        )
-        .fromTo(
-          leaf2Ref.current,
-          {
-            ...positions.leaf2.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-          },
-          {
-            ...positions.leaf2.to,
-            duration: isSafari ? 1.3 : 1,
-            ease: "power3.out",
-            ...safariConfig,
-          },
-          "-=0.9"
-        )
-        .fromTo(
-          leaf3Ref.current,
-          {
-            ...positions.leaf3.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-          },
-          {
-            ...positions.leaf3.to,
-            duration: isSafari ? 1.3 : 1,
-            ease: "power3.out",
-            ...safariConfig,
-          },
-          "-=0.9"
-        )
-        .fromTo(
-          leaf4Ref.current,
-          {
-            ...positions.leaf4.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-          },
-          {
-            ...positions.leaf4.to,
-            duration: isSafari ? 1.3 : 1,
-            ease: "power3.out",
-            ...safariConfig,
-          },
-          "-=0.9"
-        )
-        .fromTo(
-          soupBowlRef.current,
-          {
-            ...positions.soupBowl.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-          },
-          {
-            ...positions.soupBowl.to,
-            duration: isSafari ? 1.3 : 1,
-            ease: "power3.out",
-            ...safariConfig,
-          },
-          "-=0.9"
-        )
-        .fromTo(
-          whiskRef.current,
-          {
-            ...positions.whisk.from,
-            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
-          },
-          {
-            ...positions.whisk.to,
-            duration: isSafari ? 1.3 : 1,
-            ease: "power3.out",
-            ...safariConfig,
-          },
-          "-=0.9"
-        );
-    };
-
-    // Use multiple frames and longer delay to ensure DOM is ready - extra time for Safari
-    const timeoutId = setTimeout(
-      () => {
-        if (isSafari) {
-          // Safari needs more time to stabilize
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  setupAnimation();
-                  // Safari mobile fallback - ensure elements are visible
-                  if (window.innerWidth <= 500) {
-                    setTimeout(() => {
-                      if (
-                        leaf4Ref.current &&
-                        parseFloat(
-                          window.getComputedStyle(leaf4Ref.current).opacity
-                        ) < 1
-                      ) {
-                        leaf4Ref.current.style.opacity = "1";
-                        leaf4Ref.current.style.visibility = "visible";
-                      }
-                      if (
-                        whiskRef.current &&
-                        parseFloat(
-                          window.getComputedStyle(whiskRef.current).opacity
-                        ) < 1
-                      ) {
-                        whiskRef.current.style.opacity = "1";
-                        whiskRef.current.style.visibility = "visible";
-                      }
-                    }, 1000);
-                  }
-                });
-              });
-            });
-          });
-        } else {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              requestAnimationFrame(setupAnimation);
-            });
-          });
-        }
-      },
-      isSafari ? 200 : 100
-    );
-
-    return () => {
-      clearTimeout(timeoutId);
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.trigger === containerRef.current) {
-          t.kill();
-        }
-      });
-      stopAutoSlide();
-    };
-  }, [products, isHydrated]); // Add isHydrated dependency
-
-  useEffect(() => {
-    // Scroll restoration is now handled globally in App.jsx
-  }, []);
-
+  // Animation functions
   const animateOut = (direction = 1) => {
     return new Promise((resolve) => {
       const tl = gsap.timeline({
@@ -487,7 +375,6 @@ const HeroSection = () => {
           }
         : {};
 
-      // Check if refs exist before animating
       if (nameRef.current && descRef.current && originRef.current) {
         tl.to([nameRef.current, descRef.current, originRef.current], {
           opacity: 0,
@@ -585,15 +472,12 @@ const HeroSection = () => {
   };
 
   const handleSlide = async (dir) => {
-    // Prevent multiple slides from running simultaneously
     if (window.isSliding) return;
     window.isSliding = true;
 
     try {
-      // Wait for the out animation to complete
       await animateOut(dir);
 
-      // Update the current product
       setCurrent((prev) => {
         const nextIndex =
           dir === 1
@@ -602,13 +486,9 @@ const HeroSection = () => {
         return nextIndex;
       });
 
-      // Small delay to ensure state update
       await new Promise((resolve) => setTimeout(resolve, 50));
-
-      // Wait for the in animation to complete
       await animateIn(dir);
     } finally {
-      // Always reset sliding flag
       window.isSliding = false;
     }
   };
@@ -617,8 +497,10 @@ const HeroSection = () => {
     stopAutoSlide();
     handleSlide(1)
       .then(() => {
-        // Restart autoplay after slide completes
-        resetAutoSlide();
+        // Small delay before restarting timer to ensure animation completes
+        setTimeout(() => {
+          resetAutoSlide();
+        }, 100);
       })
       .catch(console.error);
   };
@@ -627,135 +509,541 @@ const HeroSection = () => {
     stopAutoSlide();
     handleSlide(-1)
       .then(() => {
-        // Restart autoplay after slide completes
-        resetAutoSlide();
+        // Small delay before restarting timer to ensure animation completes
+        setTimeout(() => {
+          resetAutoSlide();
+        }, 100);
       })
       .catch(console.error);
   };
 
-  // Prevent rendering until hydrated to avoid mismatches
+  // Effects
+  useEffect(() => {
+    if (!isHydrated) return;
+    const filteredProducts = getFilteredProducts("matcha");
+    const mapped = filteredProducts.map((product) => ({
+      id: product.id.split("/").pop(),
+      title: product.title,
+      image: product.images.edges[0]?.node.url,
+      price: "Coming Soon",
+    }));
+    setProducts(mapped);
+  }, [getFilteredProducts, isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const timer = setTimeout(
+      () => {
+        ScrollTrigger.refresh();
+      },
+      isSafari ? 500 : 300
+    );
+
+    return () => clearTimeout(timer);
+  }, [isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    let resizeTimeout;
+
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(
+        () => {
+          if (containerRef.current) {
+            ScrollTrigger.refresh();
+          }
+        },
+        isSafari ? 400 : 250
+      );
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [isHydrated]);
+
+  // Main animation setup
+  useEffect(() => {
+    setNavbarTheme("beige");
+
+    if (!products.length || !isHydrated) return;
+    if (!containerRef.current || !homeTextRefs.current.length) return;
+
+    const setupAnimation = () => {
+      const positions = getAnimationPositions();
+
+      if (!positions.leaf1) {
+        // Retry if positions aren't calculated yet
+        requestAnimationFrame(setupAnimation);
+        return;
+      }
+
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === containerRef.current) {
+          t.kill();
+        }
+      });
+
+      ScrollTrigger.refresh();
+
+      const isAtTop = window.scrollY < 100;
+
+      const safariConfig = isSafari
+        ? {
+            force3D: true,
+            transformPerspective: 1000,
+            backfaceVisibility: "hidden",
+          }
+        : {};
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: isAtTop ? "top 65%" : "top 85%",
+          end: "bottom 20%",
+          toggleActions: "play none none none",
+          // markers: true,
+          refreshPriority: -1,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+          fastScrollEnd: true,
+          ...(isSafari && {
+            scroller: window,
+            pin: false,
+            scrub: false,
+          }),
+
+          onEnter: () => {
+            // Start auto-slide timer when animations begin
+            intervalRef.current = setInterval(() => {
+              handleSlide(1).catch(console.error);
+            }, 3000);
+
+            // Continuous animations - separate leaf3 to avoid conflicts
+            const leafRefs = [
+              leaf1Ref.current,
+              leaf2Ref.current,
+              leaf4Ref.current,
+            ].filter((ref) => ref !== null);
+
+            if (leafRefs.length > 0) {
+              gsap.to(leafRefs, {
+                y: "+=10",
+                duration: isSafari ? 2.5 : 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                delay: 1.2, // Start after entrance animations
+                ...safariConfig,
+              });
+            }
+
+            // Separate animation for leaf3 with different timing
+            if (leaf3Ref.current) {
+              gsap.to(leaf3Ref.current, {
+                y: "+=8",
+                duration: isSafari ? 3 : 2.5,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut",
+                delay: 1.7, // Start after entrance + offset
+                ...safariConfig,
+              });
+            }
+
+            if (whiskRef.current) {
+              // Set initial transforms for mobile
+              if (isSmallMobile) {
+                gsap.set(whiskRef.current, {
+                  rotation: -20,
+                  rotationY: 180,
+                });
+              }
+
+              gsap.to(whiskRef.current, {
+                y: "-=6",
+                duration: isSafari ? 2.2 : 1.8,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut",
+                delay: 1.5, // Start after entrance + offset
+                ...safariConfig,
+              });
+            }
+
+            if (soupBowlRef.current) {
+              gsap.to(soupBowlRef.current, {
+                rotation: -360,
+                duration: isSafari ? 35 : 30,
+                repeat: -1,
+                ease: "none",
+                transformOrigin: "center center",
+                delay: 1.0, // Start after entrance animations
+                ...safariConfig,
+              });
+            }
+
+            if (imageRef.current) {
+              gsap.to(imageRef.current, {
+                y: -10,
+                duration: isSafari ? 2.5 : 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut",
+                delay: 1.2, // Start after entrance animations
+                ...safariConfig,
+              });
+            }
+          },
+          onLeaveBack: () => {
+            stopAutoSlide();
+          },
+        },
+      });
+
+      // Main entrance animations
+      tl.fromTo(
+        homeTextRefs.current,
+        {
+          yPercent: -110,
+          opacity: 0,
+          ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+        },
+        {
+          yPercent: 0,
+          delay: isSafari ? 0.3 : 0.2,
+          opacity: 1,
+          duration: isSafari ? 0.7 : 0.5,
+          stagger: isSafari ? 0.3 : 0.2,
+          ease: "power2.out",
+          ...safariConfig,
+        }
+      )
+        .fromTo(
+          leaf1Ref.current,
+          {
+            ...positions.leaf1.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+          },
+          {
+            ...positions.leaf1.to,
+            duration: isSafari ? 1.3 : 1,
+            ease: "power3.out",
+            ...safariConfig,
+          },
+          "+=0.2"
+        )
+        .fromTo(
+          leaf2Ref.current,
+          {
+            ...positions.leaf2.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+          },
+          {
+            ...positions.leaf2.to,
+            duration: isSafari ? 1.3 : 1,
+            ease: "power3.out",
+            ...safariConfig,
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          leaf3Ref.current,
+          {
+            ...positions.leaf3.from,
+            opacity: 0, // Start invisible
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+          },
+          {
+            ...positions.leaf3.to,
+            opacity: 1, // Fade in
+            duration: isSafari ? 1.5 : 1.2,
+            ease: "power2.out", // Different easing
+            ...safariConfig,
+          },
+          "-=0.7" // Different timing
+        )
+        .fromTo(
+          leaf4Ref.current,
+          {
+            ...positions.leaf4.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+          },
+          {
+            ...positions.leaf4.to,
+            duration: isSafari ? 1.3 : 1,
+            ease: "power3.out",
+            ...safariConfig,
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          soupBowlRef.current,
+          {
+            ...positions.soupBowl.from,
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+          },
+          {
+            ...positions.soupBowl.to,
+            duration: isSafari ? 1.3 : 1,
+            ease: "power3.out",
+            ...safariConfig,
+          },
+          "-=0.9"
+        )
+        .fromTo(
+          whiskRef.current,
+          {
+            ...positions.whisk.from,
+            opacity: 0, // Start invisible
+            ...(isSafari && { force3D: true, backfaceVisibility: "hidden" }),
+          },
+          {
+            ...positions.whisk.to,
+            opacity: 1, // Fade in
+            duration: isSafari ? 1.4 : 1.1,
+            ease: "back.out(1.7)", // Different easing for smoothness
+            ...safariConfig,
+          },
+          "-=0.5" // Different timing from leaf3
+        );
+    };
+
+    // Start animations immediately without timeout delay
+    if (isSafari) {
+      // For Safari, use minimal frame delays for stability
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setupAnimation();
+        });
+      });
+    } else {
+      // For other browsers, start immediately
+      setupAnimation();
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === containerRef.current) {
+          t.kill();
+        }
+      });
+      stopAutoSlide();
+    };
+  }, [products, isHydrated]);
+
+  // Render loading state
   if (!isHydrated || !products.length) {
     return (
-      <section
-        ref={containerRef}
-        className="hero-section"
-        style={{
-          backgroundColor: theme.colors.pink,
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {/* Placeholder content to maintain layout during hydration */}
-        <div style={{ opacity: 0 }}>Loading...</div>
-      </section>
+      <Box sx={styles.heroSection}>
+        <Box sx={{ opacity: 0 }}>Loading...</Box>
+      </Box>
     );
   }
 
   const currentProduct = products[current];
-  // console.log("Current product:", currentProduct);
 
   return (
-    <section
-      ref={containerRef}
-      className="hero-section"
-      style={{ backgroundColor: theme.colors.pink }}
-    >
-      <div className="hero-content">
-        <div className="home-text" style={{ color: theme.colors.beige }}>
-          <div className="title-wrapper">
-            <h2 ref={(el) => (homeTextRefs.current[0] = el)}>UMI IS</h2>
-          </div>
-          <div className="title-wrapper">
-            <h2 ref={(el) => (homeTextRefs.current[1] = el)}>SO MATCHA</h2>
-          </div>
-          <div className="title-wrapper">
-            <h2 ref={(el) => (homeTextRefs.current[2] = el)}>BETTER</h2>
-          </div>
-        </div>
+    <Box ref={containerRef} sx={styles.heroSection}>
+      <Box sx={styles.heroContent}>
+        {/* Home Text */}
+        <Box sx={styles.homeText}>
+          <Box sx={styles.titleWrapper}>
+            <Typography
+              variant="h2"
+              ref={(el) => (homeTextRefs.current[0] = el)}
+              sx={styles.title}
+            >
+              UMI IS
+            </Typography>
+          </Box>
+          <Box sx={styles.titleWrapper}>
+            <Typography
+              variant="h2"
+              ref={(el) => (homeTextRefs.current[1] = el)}
+              sx={styles.title}
+            >
+              SO MATCHA
+            </Typography>
+          </Box>
+          <Box sx={styles.titleWrapper}>
+            <Typography
+              variant="h2"
+              ref={(el) => (homeTextRefs.current[2] = el)}
+              sx={styles.title}
+            >
+              BETTER
+            </Typography>
+          </Box>
+        </Box>
 
-        <div
-          className="product-window"
-          style={{ fontFamily: theme.fonts.text }}
-        >
-          <div className="product-frame">
-            <div className="slider">
-              <h2 ref={nameRef}>{currentProduct.title}</h2>
+        {/* Product Window */}
+        <Stack sx={styles.productWindow} spacing={0}>
+          <Stack sx={styles.productFrame} spacing={0}>
+            {/* Product Title */}
+            <Typography
+              variant="h2"
+              fontFamily={theme.fonts.text}
+              ref={nameRef}
+              sx={styles.productTitle}
+            >
+              {currentProduct.title}
+            </Typography>
 
-              <div className="arrow left" onClick={prevSlide}>
-                <IoIosArrowBack color={theme.colors.pink} size={45} />
-              </div>
-
-              <div className="arrow right" onClick={nextSlide}>
-                <IoIosArrowForward color={theme.colors.pink} size={45} />
-              </div>
-
-              <div className="image-container">
-                <div
-                  onClick={() => {
-                    window.scrollTo(0, 0);
-                    navigate(`/product/${currentProduct.id}`);
-                  }}
-                  onMouseEnter={() => clearInterval(intervalRef.current)}
-                  onMouseLeave={resetAutoSlide}
-                  style={{ cursor: "pointer", pointerEvents: "auto" }}
+            {/* Main Product Content */}
+            <Box sx={styles.productContent}>
+              {/* Slider Container */}
+              <Box sx={styles.sliderContainer}>
+                {/* Navigation Arrows */}
+                <IconButton
+                  onClick={prevSlide}
+                  sx={{ ...styles.arrow, ...styles.leftArrow }}
                 >
-                  <img
-                    src={currentProduct.image}
-                    ref={imageRef}
-                    alt={currentProduct.title}
+                  <IoIosArrowBack color={theme.colors.pink} size={45} />
+                </IconButton>
+
+                <IconButton
+                  onClick={nextSlide}
+                  sx={{ ...styles.arrow, ...styles.rightArrow }}
+                >
+                  <IoIosArrowForward color={theme.colors.pink} size={45} />
+                </IconButton>
+
+                {/* Product Image */}
+                <Box sx={styles.imageContainer}>
+                  <Box
+                    onClick={() => {
+                      window.scrollTo(0, 0);
+                      navigate(`/product/${currentProduct.id}`);
+                    }}
+                    onMouseEnter={() => {
+                      stopAutoSlide();
+                    }}
+                    onMouseLeave={() => {
+                      // Small delay before restarting to prevent rapid start/stop
+                      setTimeout(() => {
+                        resetAutoSlide();
+                      }, 200);
+                    }}
+                    sx={{ cursor: "pointer", pointerEvents: "auto" }}
+                  >
+                    <Box
+                      component="img"
+                      src={currentProduct.image}
+                      ref={imageRef}
+                      alt={currentProduct.title}
+                      sx={styles.productImage}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Product Info */}
+            <Box sx={styles.productInfo}>
+              <Box sx={styles.textGrid}>
+                <Box sx={styles.gridItem}>
+                  <Typography
+                    ref={descRef}
+                    variant="body2"
+                    fontFamily={theme.fonts.text}
+                  >
+                    Made in Japan
+                  </Typography>
+                </Box>
+
+                <Box sx={styles.gridItem} fontFamily={theme.fonts.text}>
+                  <Typography ref={originRef} variant="body2">
+                    <strong>Price:</strong> {currentProduct.price}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ ...styles.gridItem, cursor: "pointer" }}>
+                  <Box
+                    component="img"
+                    src={sakura}
+                    alt="flower"
+                    ref={sakuraRef}
+                    sx={styles.sakuraIcon}
                   />
-                </div>
-              </div>
-            </div>
-            <div className="product-info">
-              <div className="text-grid">
-                <div className="grid-item">
-                  <p ref={descRef}>Made in Japan</p>
-                </div>
+                </Box>
+              </Box>
+            </Box>
+          </Stack>
+        </Stack>
 
-                <div className="grid-item">
-                  <p ref={originRef}>
-                    <strong>Price:</strong> ₹{currentProduct.price}
-                  </p>
-                </div>
+        {/* Floating Elements */}
+        <Box
+          component="img"
+          src={leaf1}
+          alt=""
+          ref={leaf1Ref}
+          sx={styles.leaf1}
+        />
+        <Box
+          component="img"
+          src={leaf2}
+          alt=""
+          ref={leaf2Ref}
+          sx={styles.leaf2}
+        />
+        <Box
+          component="img"
+          src={leaf3}
+          alt=""
+          ref={leaf3Ref}
+          sx={styles.leaf3}
+        />
+        <Box
+          component="img"
+          src={leaf1}
+          alt=""
+          ref={leaf4Ref}
+          sx={styles.leaf4}
+        />
+        <Box
+          component="img"
+          src={soupBowl}
+          alt=""
+          ref={soupBowlRef}
+          sx={styles.soupBowl}
+        />
+        <Box
+          component="img"
+          src={whisk}
+          alt=""
+          ref={whiskRef}
+          sx={styles.whisk}
+        />
+      </Box>
 
-                <div className="grid-item flower" style={{ cursor: "pointer" }}>
-                  <img src={sakura} alt="flower" ref={sakuraRef} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <img src={leaf1} alt="" className="leaf1" ref={leaf1Ref} />
-        <img src={leaf2} alt="" className="leaf2" ref={leaf2Ref} />
-        <img src={leaf3} alt="" className="leaf3" ref={leaf3Ref} />
-        <img src={leaf1} alt="" className="leaf4" ref={leaf4Ref} />
-        <img src={soupBowl} alt="" className="soup-bowl" ref={soupBowlRef} />
-        <img src={whisk} alt="" className="whisk" ref={whiskRef} />
-      </div>
-      <div className="checkered-grid">
+      {/* Checkered Grid */}
+      <Box sx={styles.checkeredGrid}>
         {[...Array(2)].map((_, rowIdx) => (
-          <div className="row" key={rowIdx}>
-            {[...Array(isMobile ? 13 : 40)].map((_, colIdx) => (
-              <div
+          <Box key={rowIdx} sx={styles.checkeredRow}>
+            {[...Array(isSmallMobile ? 13 : 40)].map((_, colIdx) => (
+              <Box
                 key={colIdx}
-                className="square"
-                style={{
+                sx={{
+                  ...styles.checkeredSquare,
                   backgroundColor:
                     (rowIdx + colIdx) % 2 === 0
                       ? theme.colors.green
                       : theme.colors.beige,
                 }}
-              ></div>
+              />
             ))}
-          </div>
+          </Box>
         ))}
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 };
 
-export default HeroSection;
+export default HeroSectionNew;
