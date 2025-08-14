@@ -147,7 +147,7 @@ const Home = () => {
     };
 
     let scrollTriggerInstance;
-    
+
     if (introCompleted) {
       // Setup immediately if intro already completed
       scrollTriggerInstance = setupVideoScrollTrigger();
@@ -255,25 +255,25 @@ const Home = () => {
       };
 
       // Prevent scroll restoration
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
       }
 
-      window.addEventListener('scroll', handleScroll, { passive: false });
-      window.addEventListener('beforeunload', handleScrollRestore);
+      window.addEventListener("scroll", handleScroll, { passive: false });
+      window.addEventListener("beforeunload", handleScrollRestore);
 
       // Monitor for intro completion
       const checkCompletion = () => {
         if (sessionStorage.getItem("hasPlayed") === "true") {
           setIntroCompleted(true);
-          window.removeEventListener('scroll', handleScroll);
-          window.removeEventListener('beforeunload', handleScrollRestore);
-          
+          window.removeEventListener("scroll", handleScroll);
+          window.removeEventListener("beforeunload", handleScrollRestore);
+
           // Re-enable scroll restoration after intro
-          if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'auto';
+          if ("scrollRestoration" in history) {
+            history.scrollRestoration = "auto";
           }
-          
+
           // Refresh ScrollTrigger after intro completes
           setTimeout(() => {
             ScrollTrigger.refresh();
@@ -286,8 +286,8 @@ const Home = () => {
       checkCompletion();
 
       return () => {
-        window.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('beforeunload', handleScrollRestore);
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("beforeunload", handleScrollRestore);
       };
     }
   }, [introCompleted]);
@@ -387,7 +387,7 @@ const Home = () => {
 
       <div ref={heroRef}>
         {/* <HeroSection theme={theme} /> */}
-        <HeroSection />
+        <HeroSectionNew />
       </div>
       <div
         ref={productsRef}
