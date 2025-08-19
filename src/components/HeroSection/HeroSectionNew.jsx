@@ -74,16 +74,18 @@ const HeroSectionNew = () => {
       height: "100%",
       display: "flex",
       alignItems: "center",
+      justifyContent: "center",
     },
     productTitle: {
       color: theme.colors.green,
       fontFamily: theme.fonts.text,
       fontSize: { xs: "12px", sm: "20px" },
       fontWeight: 500,
-      width: { xs: "15ch", sm: "20ch" },
+      width: { xs: "15ch", sm: "80%" },
       textAlign: "center",
       textTransform: "capitalize",
-      marginTop: { xs: "10%", sm: "15%" },
+      marginTop: { xs: "15%", sm: "15%" },
+      marginInline: "auto",
       height: { xs: 40, sm: 60 },
     },
     swiperContainer: {
@@ -733,7 +735,7 @@ const HeroSectionNew = () => {
             mt={{ xs: 0, sm: "20%" }}
             height={{ xs: 350, sm: "65vh" }}
             // width={{ xs: "55%", sm: "70%" }}
-            maxWidth={{ xs: 250, sm: 400 }}
+            maxWidth={{ xs: 250, sm: 400, md: 300, lg: 300, xl: 400 }}
             width="100%"
             bgcolor={theme.colors.beige}
             borderRadius="185.5px 185.5px 0px 0px"
