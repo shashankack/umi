@@ -573,6 +573,7 @@ const HeroSectionNew = () => {
       position="relative"
       overflow="hidden"
       height={{ xs: "auto", sm: "100vh" }}
+      minHeight="100vh"
       pb={{ xs: 10, sm: 0 }}
     >
       {/* Vectors */}
