@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   useTheme,
   Box,
-  Container,
   Typography,
   Button,
   Chip,
   Avatar,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
 import { useHydration } from "../hooks/useHydration";
 import blogsData from "../data/blogsData.json";
-import "./Blogs.scss";
+import { FiArrowLeft, FiClock, FiCalendar, FiShare2 } from "react-icons/fi";
 
-// Import icons
-import {
-  FiArrowLeft,
-  FiClock,
-  FiUser,
-  FiCalendar,
-  FiShare2,
-} from "react-icons/fi";
+const CONTENT_MAX = 1160;
 
 const BlogPost = () => {
   const theme = useTheme();
@@ -29,24 +23,50 @@ const BlogPost = () => {
   const { blogId } = useParams();
   const { setNavbarTheme } = useNavbarTheme();
   const isHydrated = useHydration();
+
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [copiedOpen, setCopiedOpen] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     setNavbarTheme("pink");
+  }, [setNavbarTheme]);
+
+  useEffect(() => {
     if (isHydrated && blogId) {
-      const foundBlog = blogsData.find((b) => b.id === blogId);
-      setBlog(foundBlog);
+      const foundBlog = blogsData.find((b) => String(b.id) === String(blogId));
+      setBlog(foundBlog || null);
       setLoading(false);
     }
-  }, [setNavbarTheme, isHydrated, blogId]);
+  }, [isHydrated, blogId]);
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString("en-US", options);
-  };
+  // Use WINDOW scroll for progress — keeps layout in normal flow
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const total = Math.max(1, doc.scrollHeight - window.innerHeight);
+      const pct = (window.scrollY / total) * 100;
+      setProgress(Math.min(100, Math.max(0, pct)));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
   const handleShare = async () => {
+    if (!blog) return;
     if (navigator.share) {
       try {
         await navigator.share({
@@ -54,29 +74,35 @@ const BlogPost = () => {
           text: blog.excerpt,
           url: window.location.href,
         });
-      } catch (error) {
-        console.log("Error sharing:", error);
-      }
+      } catch {}
     } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      // You could add a toast notification here
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+      } finally {
+        setCopiedOpen(true);
+      }
     }
   };
+
+  const chips = useMemo(
+    () => (Array.isArray(blog?.tags) ? blog.tags.slice(0, 12) : []),
+    [blog?.tags]
+  );
 
   if (!isHydrated || loading) {
     return (
       <Box
         sx={{
           minHeight: "100vh",
-          backgroundColor: theme.colors.green,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          width: "100%",
+          bgcolor: theme.colors.green,
+          color: theme.colors.beige,
+          display: "grid",
+          placeItems: "center",
         }}
       >
-        <Typography variant="h6" sx={{ color: theme.colors.beige }}>
-          Loading blog...
+        <Typography variant="h6" sx={{ fontFamily: theme.fonts.text }}>
+          Loading blog…
         </Typography>
       </Box>
     );
@@ -87,219 +113,248 @@ const BlogPost = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          backgroundColor: theme.colors.green,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
+          width: "100%",
+          bgcolor: theme.colors.green,
+          color: theme.colors.beige,
+          display: "grid",
+          placeItems: "center",
+          p: 4,
+          textAlign: "center",
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{
-            fontFamily: theme.fonts.heading,
-            color: theme.colors.beige,
-            mb: 3,
-          }}
-        >
-          Blog not found
-        </Typography>
-        <Button
-          onClick={() => navigate("/blogs")}
-          startIcon={<FiArrowLeft />}
-          sx={{
-            color: theme.colors.pink,
-            fontFamily: theme.fonts.text,
-            "&:hover": {
-              backgroundColor: theme.colors.pink,
-              color: theme.colors.beige,
-            },
-          }}
-        >
-          Back to Blogs
-        </Button>
-      </Box>
-    );
-  }
-
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: theme.colors.green,
-        pt: 14,
-        pb: 8,
-      }}
-    >
-      <Container maxWidth="xl">
-        {/* Back Button */}
-        <Box mb={4}>
+        <Box>
+          <Typography
+            variant="h4"
+            sx={{ fontFamily: theme.fonts.heading, mb: 3 }}
+          >
+            Blog not found
+          </Typography>
           <Button
             onClick={() => navigate("/blogs")}
             startIcon={<FiArrowLeft />}
             sx={{
-              color: theme.colors.beige,
-              fontFamily: theme.fonts.text,
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: theme.colors.pink,
-                color: theme.colors.beige,
-              },
-              borderRadius: "20px",
+              color: theme.colors.pink,
+              border: `1px solid ${theme.colors.pink}`,
+              borderRadius: "24px",
               px: 3,
               py: 1,
+              "&:hover": {
+                bgcolor: theme.colors.pink,
+                color: theme.colors.beige,
+              },
             }}
           >
             Back to Blogs
           </Button>
         </Box>
+      </Box>
+    );
+  }
 
-        {/* Blog Content */}
+  return (
+    <Box sx={{ bgcolor: theme.colors.green }}>
+      {/* Progress bar (sticky, not fixed) */}
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          left: 0,
+          height: 4,
+          width: "100%",
+          zIndex: 10,
+          "&::after": {
+            content: '""',
+            display: "block",
+            height: "100%",
+            width: `${progress}%`,
+            bgcolor: theme.colors.pink,
+            transition: "width .1s linear",
+          },
+        }}
+      />
+
+      {/* HERO — full width (use 100%, not 100vw) */}
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: { xs: "48vh", md: "64vh" },
+          backgroundImage: `url(${blog.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+        }}
+      >
+        {/* gradient overlay */}
         <Box
           sx={{
-            backgroundColor: theme.colors.beige,
-            borderRadius: "24px",
-            overflow: "hidden",
-            boxShadow: "0 16px 48px rgba(0,0,0,0.1)",
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.6) 100%)",
+          }}
+        />
+
+        {/* category chip + title */}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 24,
+            left: 24,
+            right: 24,
+            zIndex: 2,
           }}
         >
-          {/* Hero Image */}
-          <Box
+          <Button
+            onClick={() => navigate("/blogs")}
+            startIcon={<FiArrowLeft />}
             sx={{
-              width: "100%",
-              height: { xs: "250px", md: "400px" },
-              backgroundImage: `url(${blog.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              position: "relative",
+              backdropFilter: "blur(4px)",
+              bgcolor: "rgba(255,255,255,0.4)",
+              color: theme.colors.beige,
+              borderRadius: "24px",
+              mt: 2,
+              px: 2.2,
+              py: 0.8,
+              fontFamily: theme.fonts.text,
+              textTransform: "none",
+              "&:hover": {
+                bgcolor: theme.colors.pink,
+                color: theme.colors.beige,
+              },
             }}
           >
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: 20,
-                left: 20,
-              }}
-            >
-              <Chip
-                label={blog.category}
-                sx={{
-                  backgroundColor: theme.colors.pink,
-                  color: theme.colors.beige,
-                  fontFamily: theme.fonts.text,
-                  fontSize: "1rem",
-                  height: 36,
-                  "& .MuiChip-label": {
-                    px: 3,
-                  },
-                }}
-              />
-            </Box>
-          </Box>
-
-          {/* Content */}
-          <Box p={{ xs: 3, md: 6 }}>
-            {/* Title */}
+            Back to Blogs
+          </Button>
+          <Box sx={{ color: theme.colors.beige, maxWidth: CONTENT_MAX }}>
             <Typography
-              variant="h2"
+              variant="h1"
               sx={{
                 fontFamily: theme.fonts.heading,
-                color: theme.colors.green,
-                fontSize: { xs: "2rem", md: "3rem" },
-                lineHeight: 1.2,
-                mb: 3,
+                fontSize: { xs: "2rem", md: "3rem", lg: "3.5rem" },
+                lineHeight: 1.15,
+                textShadow: "0 2px 24px rgba(0,0,0,.4)",
+                pr: { xs: 0, md: 8 },
+                mt: 1,
               }}
             >
               {blog.title}
             </Typography>
+          </Box>
+        </Box>
+      </Box>
 
-            {/* Meta Info */}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                alignItems: { xs: "flex-start", sm: "center" },
-                justifyContent: "space-between",
-                mb: 4,
-                gap: 2,
-              }}
-            >
-              <Box display="flex" alignItems="center" gap={3}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Avatar
-                    sx={{
-                      backgroundColor: theme.colors.pink,
-                      color: theme.colors.beige,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    {blog.author.charAt(0)}
-                  </Avatar>
-                  <Typography
-                    sx={{
-                      fontFamily: theme.fonts.text,
-                      color: theme.colors.green,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {blog.author}
-                  </Typography>
-                </Box>
-
-                <Box display="flex" alignItems="center" gap={1}>
-                  <FiCalendar size={16} color={theme.colors.pink} />
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontFamily: theme.fonts.text,
-                      color: theme.colors.pink,
-                    }}
-                  >
-                    {formatDate(blog.date)}
-                  </Typography>
-                </Box>
-
-                <Box display="flex" alignItems="center" gap={1}>
-                  <FiClock size={16} color={theme.colors.pink} />
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontFamily: theme.fonts.text,
-                      color: theme.colors.pink,
-                    }}
-                  >
-                    {blog.readTime}
-                  </Typography>
-                </Box>
+      {/* CONTENT */}
+      <Box
+        sx={{
+          width: "100%",
+          bgcolor: theme.colors.beige,
+          borderTopLeftRadius: { xs: "16px", md: "24px" },
+          borderTopRightRadius: { xs: "16px", md: "24px" },
+          mt: { xs: -2, md: -4 },
+          // If your site has a fixed/sticky footer, keep some padding
+          pb: { xs: 12, md: 14 },
+        }}
+      >
+        <Box
+          sx={{
+            maxWidth: CONTENT_MAX,
+            mx: "auto",
+            px: { xs: 2, sm: 3, md: 4 },
+            pt: { xs: 4, md: 6 },
+          }}
+        >
+          {/* Meta + Share */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "flex-start", sm: "center" },
+              justifyContent: "space-between",
+              gap: 2,
+              mb: 4,
+            }}
+          >
+            <Box display="flex" alignItems="center" gap={3}>
+              <Box display="flex" alignItems="center" gap={1.25}>
+                <Avatar
+                  sx={{
+                    bgcolor: theme.colors.pink,
+                    color: theme.colors.beige,
+                    width: 36,
+                    height: 36,
+                    fontWeight: 700,
+                  }}
+                >
+                  {blog.author?.[0] ?? "A"}
+                </Avatar>
+                <Typography
+                  sx={{
+                    fontFamily: theme.fonts.text,
+                    color: theme.colors.green,
+                    fontWeight: 600,
+                  }}
+                >
+                  {blog.author}
+                </Typography>
               </Box>
 
-              <Button
-                onClick={handleShare}
-                startIcon={<FiShare2 />}
-                sx={{
-                  color: theme.colors.pink,
-                  border: `1px solid ${theme.colors.pink}`,
-                  borderRadius: "20px",
-                  fontFamily: theme.fonts.text,
-                  "&:hover": {
-                    backgroundColor: theme.colors.pink,
-                    color: theme.colors.beige,
-                  },
-                }}
-              >
-                Share
-              </Button>
+              <Box display="flex" alignItems="center" gap={1}>
+                <FiCalendar size={18} color={theme.colors.pink} />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: theme.fonts.text,
+                    color: theme.colors.pink,
+                  }}
+                >
+                  {formatDate(blog.date)}
+                </Typography>
+              </Box>
+
+              <Box display="flex" alignItems="center" gap={1}>
+                <FiClock size={18} color={theme.colors.pink} />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: theme.fonts.text,
+                    color: theme.colors.pink,
+                  }}
+                >
+                  {blog.readTime}
+                </Typography>
+              </Box>
             </Box>
 
-            {/* Excerpt */}
+            <Button
+              onClick={handleShare}
+              startIcon={<FiShare2 />}
+              sx={{
+                color: theme.colors.pink,
+                border: `1px solid ${theme.colors.pink}`,
+                borderRadius: "24px",
+                px: 2.5,
+                py: 1,
+                fontFamily: theme.fonts.text,
+                textTransform: "none",
+                "&:hover": {
+                  bgcolor: theme.colors.pink,
+                  color: theme.colors.beige,
+                },
+              }}
+            >
+              Share
+            </Button>
+          </Box>
+
+          {/* Excerpt */}
+          {blog.excerpt && (
             <Typography
               variant="h6"
               sx={{
                 fontFamily: theme.fonts.text,
                 color: theme.colors.green,
-                fontSize: "1.3rem",
-                lineHeight: 1.6,
+                fontSize: "1.25rem",
+                lineHeight: 1.65,
                 mb: 4,
                 fontWeight: 400,
                 fontStyle: "italic",
@@ -307,22 +362,24 @@ const BlogPost = () => {
             >
               {blog.excerpt}
             </Typography>
+          )}
 
-            {/* Main Content */}
+          {/* Main Content */}
+          {blog.content ? (
             <Typography
               variant="body1"
               sx={{
                 fontFamily: theme.fonts.text,
                 color: theme.colors.green,
-                fontSize: "1.1rem",
-                lineHeight: 1.8,
+                fontSize: "1.125rem",
+                lineHeight: 1.9,
                 mb: 6,
+                whiteSpace: "pre-line",
               }}
             >
               {blog.content}
             </Typography>
-
-            {/* Content placeholder - In a real app, you'd have the full blog content */}
+          ) : (
             <Box
               sx={{
                 border: `2px dashed ${theme.colors.pink}`,
@@ -330,96 +387,105 @@ const BlogPost = () => {
                 p: 4,
                 textAlign: "center",
                 mb: 6,
+                color: theme.colors.pink,
+                fontFamily: theme.fonts.text,
               }}
             >
-              <Typography
-                sx={{
-                  fontFamily: theme.fonts.text,
-                  color: theme.colors.pink,
-                  fontSize: "1.1rem",
-                }}
-              >
-                📝 Full blog content would appear here...
-                <br />
-                <br />
-                This is just a demo showing the blog post layout!
-              </Typography>
+              📝 Full blog content would appear here… <br />
+              This is a demo showing the blog post layout!
             </Box>
+          )}
 
-            {/* Tags */}
+          {/* Tags */}
+          {chips.length > 0 && (
             <Box mb={4}>
               <Typography
                 variant="h6"
                 sx={{
                   fontFamily: theme.fonts.heading,
                   color: theme.colors.green,
-                  mb: 2,
+                  mb: 1.5,
                 }}
               >
                 Tags
               </Typography>
               <Box display="flex" flexWrap="wrap" gap={1}>
-                {blog.tags.map((tag, index) => (
+                {chips.map((tag, i) => (
                   <Chip
-                    key={index}
+                    key={i}
                     label={`#${tag}`}
                     sx={{
-                      backgroundColor: theme.colors.green,
+                      bgcolor: theme.colors.green,
                       color: theme.colors.beige,
                       fontFamily: theme.fonts.text,
-                      "&:hover": {
-                        backgroundColor: theme.colors.pink,
-                      },
+                      "&:hover": { bgcolor: theme.colors.pink },
                     }}
                   />
                 ))}
               </Box>
             </Box>
+          )}
 
-            {/* Navigation to other blogs */}
-            <Box
+          {/* CTA */}
+          <Box
+            sx={{
+              mt: 6,
+              pt: 4,
+              borderTop: `2px solid ${theme.colors.pink}`,
+              textAlign: "center",
+            }}
+          >
+            <Typography
+              variant="h5"
               sx={{
-                mt: 6,
-                pt: 4,
-                borderTop: `2px solid ${theme.colors.pink}`,
-                textAlign: "center",
+                fontFamily: theme.fonts.heading,
+                color: theme.colors.green,
+                mb: 2.5,
               }}
             >
-              <Typography
-                variant="h5"
-                sx={{
-                  fontFamily: theme.fonts.heading,
-                  color: theme.colors.green,
-                  mb: 3,
-                }}
-              >
-                Explore More Stories
-              </Typography>
-              <Button
-                onClick={() => navigate("/blogs")}
-                sx={{
-                  backgroundColor: theme.colors.pink,
+              Explore More Stories
+            </Typography>
+            <Button
+              onClick={() => navigate("/blogs")}
+              sx={{
+                bgcolor: theme.colors.pink,
+                color: theme.colors.beige,
+                fontFamily: theme.fonts.text,
+                fontSize: "1.05rem",
+                py: 1.3,
+                px: 3.6,
+                borderRadius: "26px",
+                textTransform: "none",
+                transition: "all .25s ease",
+                "&:hover": {
+                  bgcolor: theme.colors.green,
                   color: theme.colors.beige,
-                  fontFamily: theme.fonts.text,
-                  fontSize: "1.1rem",
-                  py: 1.5,
-                  px: 4,
-                  borderRadius: "25px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: theme.colors.green,
-                    color: theme.colors.beige,
-                    transform: "translateY(-2px)",
-                  },
-                  transition: "all 0.3s ease",
-                }}
-              >
-                View All Blogs
-              </Button>
-            </Box>
+                  transform: "translateY(-2px)",
+                },
+              }}
+            >
+              View All Blogs
+            </Button>
           </Box>
         </Box>
-      </Container>
+      </Box>
+
+      {/* Share fallback toast */}
+      <Snackbar
+        open={copiedOpen}
+        autoHideDuration={2000}
+        onClose={() => setCopiedOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setCopiedOpen(false)}
+          severity="success"
+          variant="filled"
+          sx={{ bgcolor: theme.colors.pink, color: theme.colors.beige }}
+        >
+          Link copied!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
