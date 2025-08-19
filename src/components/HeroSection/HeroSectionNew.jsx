@@ -1,22 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Stack, Typography, Box, useTheme } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  Box,
+  useTheme,
+  IconButton,
+  Grid,
+} from "@mui/material";
 import { useProducts } from "../../context/ProductContext";
 import { useHydration } from "../../hooks/useHydration";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import slugify from "../../utils/slugify";
+
+// Safari detection
+const isSafari =
+  typeof navigator !== "undefined" &&
+  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 const HeroSectionNew = () => {
   const theme = useTheme();
   const { getFilteredProducts } = useProducts();
   const isHydrated = useHydration();
+  const navigate = useNavigate();
 
   //   States
   const [products, setProducts] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   //   Refs
   const titleRefs = useRef([]);
   const vectorRefs = useRef([]);
   const containerRef = useRef(null);
+  const imageRef = useRef(null);
+  const nameRef = useRef(null);
+  const descRef = useRef(null);
+  const priceRef = useRef(null);
+  const intervalRef = useRef(null);
+  const sakuraRef = useRef(null);
 
   //   Styles
   const styles = {
@@ -45,9 +68,72 @@ const HeroSectionNew = () => {
       width: { xs: "8vw", sm: "2.6vw" },
       height: { xs: "8vw", sm: "2.6vw" },
     },
+    productSlider: {
+      position: "relative",
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+    },
+    productTitle: {
+      color: theme.colors.green,
+      fontFamily: theme.fonts.text,
+      fontSize: { xs: "12px", sm: "20px" },
+      fontWeight: 500,
+      width: { xs: "15ch", sm: "20ch" },
+      textAlign: "center",
+      textTransform: "capitalize",
+      marginTop: { xs: "10%", sm: "15%" },
+      height: { xs: 40, sm: 60 },
+    },
+    swiperContainer: {
+      flex: 1,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+    },
+    navigationButton: {
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      zIndex: 10,
+      backgroundColor: "rgba(255, 255, 255, 0)",
+      color: theme.colors.pink,
+      width: { xs: "35px", sm: "50px" },
+      height: { xs: "35px", sm: "50px" },
+      "&:hover": {
+        backgroundColor: "transparent",
+        color: theme.colors.green,
+      },
+      transition: "all 0.3s ease",
+    },
+    prevButton: {
+      left: { xs: 0, sm: "5px" },
+    },
+    nextButton: {
+      right: { xs: 0, sm: "5px" },
+    },
+    productInfoItem: {
+      height: "100%",
+      borderRight: "2px solid #b5d782",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      color: "#b5d782",
+      fontWeight: 200,
+      px: 2,
+    },
   };
 
   //   Helper Functions
+
+  const handleRedirect = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
+
   const addToTitleRef = (ref) => {
     if (ref && !titleRefs.current.includes(ref)) {
       titleRefs.current.push(ref);
@@ -106,17 +192,198 @@ const HeroSectionNew = () => {
     },
   ];
 
+  // Auto-slide functions
+  const stopAutoSlide = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  const resetAutoSlide = () => {
+    // Always clear existing interval first
+    stopAutoSlide();
+    if (products.length < 2) return; // <-- only start when we can actually slide
+    intervalRef.current = setInterval(() => {
+      handleSlide(1).catch(console.error);
+    }, 5000);
+  };
+
+  // Animation functions - EXACT copy from your HeroSection
+  const animateOut = (direction = 1) => {
+    return new Promise((resolve) => {
+      const tl = gsap.timeline({ onComplete: resolve });
+
+      const safariConfig = isSafari
+        ? {
+            force3D: true,
+            transformPerspective: 1000,
+            backfaceVisibility: "hidden",
+          }
+        : {};
+
+      // Start all OUT tweens together
+      tl.add("out");
+
+      // Info fade out
+      if (nameRef.current || descRef.current || priceRef.current) {
+        tl.to(
+          [nameRef.current, descRef.current, priceRef.current].filter(Boolean),
+          {
+            opacity: 0,
+            y: 10,
+            duration: 0.3,
+            ease: "power1.in",
+          },
+          "out"
+        );
+      }
+
+      // Product image out
+      if (imageRef.current) {
+        tl.to(
+          imageRef.current,
+          {
+            x: direction * 100,
+            rotation: direction * 20,
+            opacity: 0,
+            duration: isSafari ? 0.5 : 0.4,
+            ease: "power2.in",
+            ...safariConfig,
+          },
+          "out"
+        );
+      }
+
+      // Sakura spin (now perfectly in sync with image/info)
+      if (sakuraRef.current) {
+        tl.to(
+          sakuraRef.current,
+          {
+            rotation: "+=180",
+            duration: 0.5,
+            ease: "power2.inOut",
+            transformOrigin: "center center",
+          },
+          "out"
+        );
+      }
+    });
+  };
+
+  const animateIn = (direction = 1) => {
+    return new Promise((resolve) => {
+      const tl = gsap.timeline({ onComplete: resolve });
+
+      const safariConfig = isSafari
+        ? {
+            force3D: true,
+            transformPerspective: 1000,
+            backfaceVisibility: "hidden",
+          }
+        : {};
+
+      tl.add("in"); // <-- start both tweens together
+
+      if (imageRef.current) {
+        tl.fromTo(
+          imageRef.current,
+          {
+            x: -direction * 100,
+            rotation: -direction * 20,
+            opacity: 0,
+            ...safariConfig,
+          },
+          {
+            x: 0,
+            rotation: 0,
+            opacity: 1,
+            duration: isSafari ? 0.6 : 0.5,
+            ease: "power2.out",
+            ...safariConfig,
+          },
+          "in"
+        );
+      }
+
+      if (nameRef.current || descRef.current || priceRef.current) {
+        tl.fromTo(
+          [nameRef.current, descRef.current, priceRef.current].filter(Boolean),
+          { opacity: 0, y: 10 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5, // match image duration so they feel locked
+            ease: "power2.out",
+            stagger: 0.08,
+          },
+          "in"
+        );
+      }
+    });
+  };
+
+  const handleSlide = async (dir) => {
+    if (window.isSliding) return;
+    window.isSliding = true;
+
+    try {
+      await animateOut(dir);
+
+      setCurrentSlide((prev) => {
+        const nextIndex =
+          dir === 1
+            ? (prev + 1) % products.length
+            : (prev - 1 + products.length) % products.length;
+        return nextIndex;
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      await animateIn(dir);
+    } finally {
+      window.isSliding = false;
+    }
+  };
+
+  // Navigation functions
+  const nextSlide = () => {
+    stopAutoSlide();
+    handleSlide(1)
+      .then(() => {
+        // Small delay before restarting timer to ensure animation completes
+        setTimeout(() => {
+          resetAutoSlide();
+        }, 100);
+      })
+      .catch(console.error);
+  };
+
+  const prevSlide = () => {
+    stopAutoSlide();
+    handleSlide(-1)
+      .then(() => {
+        // Small delay before restarting timer to ensure animation completes
+        setTimeout(() => {
+          resetAutoSlide();
+        }, 100);
+      })
+      .catch(console.error);
+  };
+
   useEffect(() => {
     if (!isHydrated) return;
     gsap.registerPlugin(ScrollTrigger);
 
     const filteredProducts = getFilteredProducts("matcha");
+    console.log("Filtered products from context:", filteredProducts);
+
     const mapped = filteredProducts.map((product) => ({
       id: product.id.split("/").pop(),
       title: product.title,
       image: product.images.edges[0]?.node.url,
       price: "Coming Soon",
     }));
+
     setProducts(mapped);
 
     // Wait for intro completion and DOM to be ready
@@ -135,11 +402,14 @@ const HeroSectionNew = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%",
-          markers: false,
+          start: "top top", // <-- fire even when hero is at the top
+          // markers: true,
           invalidateOnRefresh: true,
           refreshPriority: -1,
           onEnter: () => {
+            // Start auto-slide timer when animations begin
+            resetAutoSlide();
+
             // Continuous animations start after a 1-second delay
             gsap.delayedCall(1, () => {
               // Leaves - yoyo animations (Y-axis only)
@@ -210,10 +480,30 @@ const HeroSectionNew = () => {
                   delay: 0.3,
                 });
               }
+
+              // Add floating animation to product image
+              if (imageRef.current) {
+                gsap.to(imageRef.current, {
+                  y: -10,
+                  duration: isSafari ? 2.5 : 2,
+                  repeat: -1,
+                  yoyo: true,
+                  ease: "power1.inOut",
+                  delay: 1.2, // Start after entrance animations
+                });
+              }
             });
           },
+          onEnterBack: resetAutoSlide, // <-- resume when coming back
+          onLeave: stopAutoSlide, // <-- pause when leaving
+          onLeaveBack: stopAutoSlide, // <-- pause when scrolling above
         },
       });
+
+      // Fallback: if already in view at setup-time, start now
+      if (ScrollTrigger.isInViewport(containerRef.current, 0.01)) {
+        resetAutoSlide();
+      }
 
       // Title animations
       titleRefs.current.forEach((ref, index) => {
@@ -261,9 +551,18 @@ const HeroSectionNew = () => {
     return () => {
       titleRefs.current = [];
       vectorRefs.current = [];
+      stopAutoSlide();
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
   }, [getFilteredProducts, isHydrated]);
+
+  // Start autoplay as soon as products are ready (immediately, no viewport check)
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (products.length >= 2) {
+      resetAutoSlide();
+    }
+  }, [products.length, isHydrated]);
 
   return (
     <Stack
@@ -440,9 +739,127 @@ const HeroSectionNew = () => {
             borderRadius="185.5px 185.5px 0px 0px"
             border={{
               xs: `4px solid ${theme.colors.green}`,
-              sm: `6px solid ${theme.colors.green}`,
+              sm: `4px solid ${theme.colors.green}`,
             }}
-          ></Stack>
+            sx={{
+              boxShadow: {
+                xs: "none",
+                sm: `6px 6px 0px ${theme.colors.green}`,
+              },
+            }}
+          >
+            {/* Product Slider */}
+            {products.length > 0 && (
+              <Stack sx={styles.productSlider}>
+                {/* Product Title */}
+                <Box overflow="hidden">
+                  <Typography ref={nameRef} sx={styles.productTitle}>
+                    {products[currentSlide]?.title || "Loading..."}
+                  </Typography>
+                </Box>
+
+                {/* Slider Container */}
+                <Box sx={styles.swiperContainer}>
+                  <IconButton
+                    sx={{ ...styles.navigationButton, ...styles.prevButton }}
+                    onClick={prevSlide}
+                  >
+                    <IoIosArrowBack size={40} />
+                  </IconButton>
+
+                  <IconButton
+                    sx={{ ...styles.navigationButton, ...styles.nextButton }}
+                    onClick={nextSlide}
+                  >
+                    <IoIosArrowForward size={40} />
+                  </IconButton>
+
+                  {/* Product Image - Single image approach like original HeroSection */}
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      overflow: "hidden",
+                      position: "relative",
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      ref={imageRef}
+                      src={products[currentSlide]?.image}
+                      alt={products[currentSlide]?.title}
+                      onClick={() =>
+                        handleRedirect(
+                          `/shop/${slugify(products[currentSlide]?.title)}`
+                        )
+                      }
+                      sx={{
+                        maxWidth: "90%",
+                        maxHeight: "90%",
+                        objectFit: "contain",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={() => {
+                        stopAutoSlide();
+                      }}
+                      onMouseLeave={() => {
+                        // Small delay before restarting to prevent rapid start/stop
+                        setTimeout(() => {
+                          resetAutoSlide();
+                        }, 200);
+                      }}
+                    />
+                  </Box>
+                </Box>
+                {/* Product Info */}
+                <Grid
+                  direction="row"
+                  height={{ xs: 50, sm: 80 }}
+                  width="100%"
+                  borderTop={`4px solid ${theme.colors.green}`}
+                  container
+                >
+                  <Grid sx={styles.productInfoItem} flex={1}>
+                    <Typography
+                      ref={descRef}
+                      sx={{
+                        fontSize: { xs: "10px", sm: "14px" },
+                        fontFamily: theme.fonts.text,
+                        fontWeight: 500,
+                      }}
+                    >
+                      Made in Japan
+                    </Typography>
+                  </Grid>
+                  <Grid sx={styles.productInfoItem} flex={1}>
+                    <Typography
+                      ref={priceRef}
+                      sx={{
+                        fontSize: { xs: "10px", sm: "14px" },
+                        fontFamily: theme.fonts.text,
+                        fontWeight: 200,
+                      }}
+                    >
+                      Price: {products[currentSlide]?.price}
+                    </Typography>
+                  </Grid>
+                  <Grid sx={styles.productInfoItem} flex={1}>
+                    <Box
+                      component="img"
+                      src="/images/vectors/sakura.png"
+                      ref={sakuraRef}
+                      sx={{
+                        width: { xs: 40, sm: 60 },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Stack>
+            )}
+          </Stack>
         </Stack>
       </Stack>
     </Stack>

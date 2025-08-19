@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchShopifyProducts } from "../../utils/shopify";
+import { useNavbarTheme } from "../../context/NavbarThemeContext";
 
 import { useCart } from "../../context/CartContext";
 
@@ -21,6 +22,7 @@ import { FaShoppingCart } from "react-icons/fa";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Mousewheel, Scrollbar } from "swiper/modules";
+import slugify from "../../utils/slugify";
 
 import "swiper/css";
 import "swiper/css/scrollbar";
@@ -30,8 +32,10 @@ const ProductsInternal = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { productId } = useParams();
+  const { productName } = useParams();
   const { addItem } = useCart();
+
+  const { setNavbarTheme } = useNavbarTheme();
 
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -241,11 +245,11 @@ const ProductsInternal = () => {
   }, [product?.descriptionHtml]);
 
   useEffect(() => {
+    setNavbarTheme("beige")
     const loadProduct = async () => {
       try {
         const data = await fetchShopifyProducts();
-        const fullProductId = `gid://shopify/Product/${productId}`;
-        const foundProduct = data.find((p) => p.id === fullProductId);
+        const foundProduct = data.find((p) => slugify(p.title) === productName);
         setProduct(foundProduct);
 
         const variants = foundProduct.variants.edges;
@@ -264,7 +268,7 @@ const ProductsInternal = () => {
     };
 
     loadProduct();
-  }, [productId]);
+  }, [productName]);
 
   const handleVariantChange = (e) => {
     const variantId = e.target.value;

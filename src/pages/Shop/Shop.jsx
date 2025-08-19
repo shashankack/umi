@@ -33,6 +33,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import limitedTag from "../../assets/images/vectors/tags/limited.png";
 import bestSellerTag from "../../assets/images/vectors/tags/best_seller.png";
 import mostLovedTag from "../../assets/images/vectors/tags/most_loved.png";
+import slugify from "../../utils/slugify";
 
 const Shop = () => {
   const theme = useTheme();
@@ -72,6 +73,11 @@ const Shop = () => {
       return mostLovedTag;
     }
     return null;
+  };
+
+  const handleRedirect = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
   };
 
   const leftButtonStyles = {
@@ -379,7 +385,9 @@ const Shop = () => {
                         component="img"
                         src={product.images.edges[0]?.node.url}
                         onClick={() => {
-                          window.location.href = `/product/${productId}`;
+                          window.location.href = `/shop/${slugify(
+                            product.title
+                          )}`;
                         }}
                         sx={{
                           width: "100%",
@@ -397,7 +405,9 @@ const Shop = () => {
                       <Button
                         sx={leftButtonStyles}
                         onClick={() => {
-                          window.location.href = `/product/${productId}`;
+                          window.location.href = `/shop/${slugify(
+                            product.title
+                          )}`;
                         }}
                       >
                         {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
@@ -576,7 +586,9 @@ const Shop = () => {
                           component="img"
                           src={product.images.edges[0]?.node.url}
                           onClick={() => {
-                            window.location.href = `/product/${productId}`;
+                            window.location.href = `/shop/${slugify(
+                              product.title
+                            )}`;
                           }}
                           sx={{
                             width: "100%",
@@ -594,7 +606,9 @@ const Shop = () => {
                         <Button
                           sx={leftButtonStyles}
                           onClick={() => {
-                            window.location.href = `/product/${productId}`;
+                            window.location.href = `/shop/${slugify(
+                              product.title
+                            )}`;
                           }}
                         >
                           {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
