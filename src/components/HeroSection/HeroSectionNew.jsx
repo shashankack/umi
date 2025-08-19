@@ -404,7 +404,7 @@ const HeroSectionNew = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top top", // <-- fire even when hero is at the top
+          start: "top center", // <-- fire even when hero is at the top
           // markers: true,
           invalidateOnRefresh: true,
           refreshPriority: -1,
@@ -511,7 +511,7 @@ const HeroSectionNew = () => {
       titleRefs.current.forEach((ref, index) => {
         tl.fromTo(
           ref,
-          { y: 100 },
+          { y: 150 },
           { y: 0, duration: 0.8, ease: "back.out(1.2)" },
           index * 0.1
         );
