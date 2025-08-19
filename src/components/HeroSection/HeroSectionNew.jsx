@@ -807,7 +807,10 @@ const HeroSectionNew = () => {
                   direction="row"
                   height={{ xs: 50, sm: 80 }}
                   width="100%"
-                  borderTop={`4px solid ${theme.colors.green}`}
+                  borderTop={{
+                    xs: `2px solid ${theme.colors.green}`,
+                    sm: `4px solid ${theme.colors.green}`,
+                  }}
                   container
                 >
                   <Grid sx={styles.productInfoItem} flex={1}>
