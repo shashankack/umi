@@ -322,7 +322,7 @@ const Home = () => {
       <Box
         bgcolor={theme.colors.pink}
         height="100vh"
-        ref={videoContainerRef}
+        // ref={videoContainerRef}
         position="relative"
       >
         {(!videoLoaded || !isHydrated) && (

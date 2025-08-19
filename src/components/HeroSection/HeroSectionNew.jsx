@@ -203,9 +203,8 @@ const HeroSectionNew = () => {
   };
 
   const resetAutoSlide = () => {
-    // Always clear existing interval first
-    stopAutoSlide();
-    if (products.length < 2) return; // <-- only start when we can actually slide
+    stopAutoSlide(); // clear any old timer
+    if (products.length === 0) return; // only guard against empty list
     intervalRef.current = setInterval(() => {
       handleSlide(1).catch(console.error);
     }, 5000);
@@ -352,7 +351,6 @@ const HeroSectionNew = () => {
     stopAutoSlide();
     handleSlide(1)
       .then(() => {
-        // Small delay before restarting timer to ensure animation completes
         setTimeout(() => {
           resetAutoSlide();
         }, 100);
@@ -364,7 +362,6 @@ const HeroSectionNew = () => {
     stopAutoSlide();
     handleSlide(-1)
       .then(() => {
-        // Small delay before restarting timer to ensure animation completes
         setTimeout(() => {
           resetAutoSlide();
         }, 100);
@@ -388,6 +385,11 @@ const HeroSectionNew = () => {
 
     setProducts(mapped);
 
+    // 🔸 start autoplay immediately once we have items (independent of ScrollTrigger)
+    if (mapped.length >= 1) {
+      resetAutoSlide();
+    }
+
     // Wait for intro completion and DOM to be ready
     const hasIntroPlayed = sessionStorage.getItem("hasPlayed") === "true";
     const setupDelay = hasIntroPlayed ? 100 : 2000;
@@ -404,19 +406,14 @@ const HeroSectionNew = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top center", // <-- fire even when hero is at the top
-          // markers: true,
+          start: "top center", // start when top of container hits center of viewport
           invalidateOnRefresh: true,
+          // markers: true,
           refreshPriority: -1,
           onEnter: () => {
-            // Start auto-slide timer when animations begin
-            resetAutoSlide();
-
-            // Continuous animations start after a 1-second delay
+            // 🔸 keep only continuous vector/image animations here
             gsap.delayedCall(1, () => {
-              // Leaves - yoyo animations (Y-axis only)
               if (vectorRefs.current[0]) {
-                // Leaf1 (top-left) - index 0
                 gsap.to(vectorRefs.current[0], {
                   y: "+=15",
                   duration: 2,
@@ -427,7 +424,6 @@ const HeroSectionNew = () => {
               }
 
               if (vectorRefs.current[1]) {
-                // Flipped leaf (desktop only) - index 1
                 gsap.to(vectorRefs.current[1], {
                   y: "+=20",
                   duration: 2.5,
@@ -438,7 +434,6 @@ const HeroSectionNew = () => {
               }
 
               if (vectorRefs.current[2]) {
-                // Flipped leaf (mobile only) - index 2
                 gsap.to(vectorRefs.current[2], {
                   y: "+=20",
                   duration: 2.5,
@@ -449,19 +444,17 @@ const HeroSectionNew = () => {
               }
 
               if (vectorRefs.current[3]) {
-                // Leaf3 (center-top, desktop only) - index 3
                 gsap.to(vectorRefs.current[3], {
                   y: "+=25",
                   duration: 1.8,
                   repeat: -1,
                   yoyo: true,
                   ease: "power1.inOut",
-                  delay: 0.5, // Offset to prevent conflicts
+                  delay: 0.5,
                 });
               }
 
               if (vectorRefs.current[4]) {
-                // Soup bowl - index 4 (anti-clockwise rotation)
                 gsap.to(vectorRefs.current[4], {
                   rotation: -360,
                   duration: 30,
@@ -472,7 +465,6 @@ const HeroSectionNew = () => {
               }
 
               if (vectorRefs.current[5]) {
-                // Whisk - index 5 (yoyo animation with preserved transforms)
                 gsap.to(vectorRefs.current[5], {
                   y: "-=18",
                   duration: 2.2,
@@ -483,7 +475,6 @@ const HeroSectionNew = () => {
                 });
               }
 
-              // Add floating animation to product image
               if (imageRef.current) {
                 gsap.to(imageRef.current, {
                   y: -10,
@@ -491,21 +482,14 @@ const HeroSectionNew = () => {
                   repeat: -1,
                   yoyo: true,
                   ease: "power1.inOut",
-                  delay: 1.2, // Start after entrance animations
+                  delay: 1.2,
                 });
               }
             });
           },
-          onEnterBack: resetAutoSlide, // <-- resume when coming back
-          onLeave: stopAutoSlide, // <-- pause when leaving
-          onLeaveBack: stopAutoSlide, // <-- pause when scrolling above
+          // ❌ removed onEnterBack / onLeave / onLeaveBack that paused autoplay
         },
       });
-
-      // Fallback: if already in view at setup-time, start now
-      if (ScrollTrigger.isInViewport(containerRef.current, 0.01)) {
-        resetAutoSlide();
-      }
 
       // Title animations
       titleRefs.current.forEach((ref, index) => {
@@ -517,7 +501,7 @@ const HeroSectionNew = () => {
         );
       });
 
-      // Vector animations - determine screen size for animation values
+      // Vector entrance animations
       const isSmallScreen = window.innerWidth < 600;
 
       vectorRefs.current.forEach((ref, index) => {
@@ -549,7 +533,7 @@ const HeroSectionNew = () => {
 
     setTimeout(setupAnimations, setupDelay);
 
-    // Cleanup refs array on component mount
+    // Cleanup
     return () => {
       titleRefs.current = [];
       vectorRefs.current = [];
@@ -558,12 +542,13 @@ const HeroSectionNew = () => {
     };
   }, [getFilteredProducts, isHydrated]);
 
-  // Start autoplay as soon as products are ready (immediately, no viewport check)
+  // Start autoplay as soon as products are ready (also handles cases when mapping happens later)
   useEffect(() => {
     if (!isHydrated) return;
-    if (products.length >= 2) {
+    if (products.length >= 1) {
       resetAutoSlide();
     }
+    return stopAutoSlide;
   }, [products.length, isHydrated]);
 
   return (
@@ -583,7 +568,7 @@ const HeroSectionNew = () => {
         src="/images/vectors/leaf1.png"
         sx={{
           position: "absolute",
-          top: { xs: "5%", sm: "10%" },
+          top: { xs: "0%", sm: "10%" },
           left: -10,
           width: { xs: 100, sm: "12vw" },
           zIndex: 1,
@@ -777,7 +762,7 @@ const HeroSectionNew = () => {
                     <IoIosArrowForward size={40} />
                   </IconButton>
 
-                  {/* Product Image - Single image approach like original HeroSection */}
+                  {/* Product Image */}
                   <Box
                     sx={{
                       width: "100%",
@@ -809,7 +794,6 @@ const HeroSectionNew = () => {
                         stopAutoSlide();
                       }}
                       onMouseLeave={() => {
-                        // Small delay before restarting to prevent rapid start/stop
                         setTimeout(() => {
                           resetAutoSlide();
                         }, 200);
@@ -817,6 +801,7 @@ const HeroSectionNew = () => {
                     />
                   </Box>
                 </Box>
+
                 {/* Product Info */}
                 <Grid
                   direction="row"
