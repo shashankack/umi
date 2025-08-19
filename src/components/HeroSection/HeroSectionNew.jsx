@@ -44,7 +44,7 @@ const HeroSectionNew = () => {
   //   Styles
   const styles = {
     titleStyles: {
-      fontSize: { xs: "3rem", sm: "6rem", md: "6vw" },
+      fontSize: { xs: "3rem", sm: "6rem", md: "7vw" },
       fontFamily: "Gliker",
       textShadow: { xs: "2px 2px 0px #b5d782", sm: "5px 5px 0px #b5d782" },
       fontWeight: 900,
