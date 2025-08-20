@@ -81,7 +81,7 @@ const ProductsSectionNew = () => {
   useEffect(() => {
     if (titleInView) {
       waveControls.start({
-        y: isMobile ? [0, "-45vh", "-40vh"] : [0, -440, -410],
+        y: isMobile ? [0, "-60vh", "-55vh"] : [0, -440, -410],
         transition: {
           duration: 1,
           times: [0, 0.7, 1],
