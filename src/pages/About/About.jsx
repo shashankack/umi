@@ -1,6 +1,8 @@
 import founder from "../../assets/images/vectors/about/founder.png";
 import badge from "../../assets/images/vectors/about/badge.png";
 
+import { Helmet } from "react-helmet-async";
+
 import { useTheme } from "@mui/material/styles";
 
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
@@ -37,6 +39,17 @@ const About = () => {
 
   return (
     <Stack bgcolor={theme.colors.green} minHeight="100vh" pb={5}>
+      <Helmet prioritizeSeoTags>
+        <title>Japanese Matcha | Umi – Authentic Matcha Powder in India</title>
+        <meta
+          name="description"
+          content=" Discover Umi’s story of bringing authentic Japanese matcha to India. Premium, single-origin matcha powder for purity, taste & wellness."
+        />
+        <meta
+          name="keywords"
+          content="Japanese Matcha, Umi, Authentic Matcha Powder, Best Matcha Powder in India, Umi Matcha"
+        />
+      </Helmet>
       <Typography
         mt={isMobile ? 14 : 18}
         fontFamily={"Genty"}

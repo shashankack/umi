@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
+import { Helmet } from "react-helmet-async";
 
 import { useCart } from "../../context/CartContext";
 
@@ -56,6 +57,36 @@ const ProductsInternal = () => {
       addItem(variantId, quantity);
     }
   };
+
+  const parsedPageTitle = useMemo(() => {
+    if (!product?.descriptionHtml) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(product.descriptionHtml, "text/html");
+    const titleElement = doc.querySelector("p.page-title");
+
+    return titleElement.textContent;
+  });
+
+  const parsedPageDescription = useMemo(() => {
+    if (!product?.descriptionHtml) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(product.descriptionHtml, "text/html");
+    const descriptionElement = doc.querySelector("p.page-description");
+
+    return descriptionElement.textContent;
+  });
+
+  const parsedPageKeywords = useMemo(() => {
+    if (!product?.descriptionHtml) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(product.descriptionHtml, "text/html");
+    const keywordsElement = doc.querySelector("p.page-keywords");
+
+    return keywordsElement.textContent;
+  });
 
   const parsedTagline = useMemo(() => {
     if (!product?.descriptionHtml) return null;
@@ -245,7 +276,7 @@ const ProductsInternal = () => {
   }, [product?.descriptionHtml]);
 
   useEffect(() => {
-    setNavbarTheme("beige")
+    setNavbarTheme("beige");
     const loadProduct = async () => {
       try {
         const data = await fetchShopifyProducts();
@@ -254,14 +285,12 @@ const ProductsInternal = () => {
 
         const variants = foundProduct.variants.edges;
         if (variants.length === 1) {
-          setSelectedVariant(variants[0].node); // Auto-select for single-variant
+          setSelectedVariant(variants[0].node);
         } else {
           setSelectedVariant(null); // Let user pick
         }
 
         setSelectedImage(foundProduct.images.edges[0]?.node.url);
-
-        // console.log("Incoming product data:", foundProduct);
       } catch (error) {
         console.error("Failed to fetch product", error);
       }
@@ -294,6 +323,11 @@ const ProductsInternal = () => {
       height="100%"
       pt={isMobile ? 4 : 16}
     >
+      <Helmet prioritizeSeoTags>
+        <title>{parsedPageTitle}</title>
+        <meta name="description" content={parsedPageDescription} />
+        <meta name="keywords" content={parsedPageKeywords} />
+      </Helmet>
       {/* Top */}
       <Stack
         width="100%"

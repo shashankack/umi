@@ -11,6 +11,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
 import gsap from "gsap";
@@ -247,6 +248,17 @@ const Shop = () => {
 
   return (
     <Box sx={{ backgroundColor: theme.colors.beige }} overflow="hidden">
+      <Helmet prioritizeSeoTags>
+        <title>Matcha Online Shop: Buy Organic Matcha Powder</title>
+        <meta
+          name="description"
+          content="Shop premium matcha online at Umi. Buy organic matcha powder, whisks, bowls, and more. Fresh, authentic, and delivered to your door."
+        />
+        <meta
+          name="keywords"
+          content="matcha online shop,  buy matcha powder online, buy organic matcha powder, buy matcha green tea, organic matcha tea online"
+        />
+      </Helmet>
       <Box position="relative">
         {isMobile ? (
           <Box

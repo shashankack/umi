@@ -1,11 +1,13 @@
 import { useTheme, Box, useMediaQuery } from "@mui/material";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useHydration } from "../../hooks/useHydration";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
+
+import { Helmet } from "react-helmet-async";
+import { useLocation } from "react-router-dom";
 
 // import HeroSection from "../../components/HeroSection/HeroSection";
 import HeroSection from "../../components/HeroSection/HeroSection";
@@ -183,19 +185,6 @@ const Home = () => {
     setVideoError(null);
   };
 
-  const handleVideoError = (e) => {
-    console.error("❌ Video error:", e.target.error);
-    setVideoError(e.target.error);
-  };
-
-  const handleVideoPlay = () => {
-    // console.log("▶️ Video playing");
-  };
-
-  const handleVideoPause = () => {
-    // console.log("⏸️ Video paused");
-  };
-
   // Handle video lifecycle and ensure proper playback
   useEffect(() => {
     if (!isHydrated) return;
@@ -320,6 +309,17 @@ const Home = () => {
 
   return (
     <>
+      <Helmet prioritizeSeoTags>
+        <title>Umi Matcha - Best Organic Matcha from Japan in India</title>
+        <meta
+          name="description"
+          content="Experience Umi Matcha, the best organic matcha in India. Premium, ceremonial-grade green tea crafted for wellness, focus, and mindful living."
+        />
+        <meta
+          name="keywords"
+          content="Umi Matcha, best organic matcha, organic matcha powder, best matcha brand india"
+        />
+      </Helmet>
       <Box
         bgcolor={theme.colors.pink}
         height="100vh"
@@ -372,9 +372,6 @@ const Home = () => {
             playsInline
             src={isMobile ? mobileIntroVideo : introVideo}
             onLoadedData={handleVideoLoadedData}
-            onError={handleVideoError}
-            onPlay={handleVideoPlay}
-            onPause={handleVideoPause}
             sx={{
               height: "100%",
               width: "100%",
