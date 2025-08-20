@@ -41,6 +41,7 @@ import desktopThumbnail from "./assets/images/desktop_thumbnail.png";
 import mobileThumbnail from "./assets/images/mobile_thumbnail.png";
 import Blogs from "./pages/Blogs.jsx";
 import HeroSectionNew from "./components/HeroSection/HeroSectionNew.jsx";
+import ProductsSectionNew from "./components/Products/ProductsSectionNew.jsx";
 
 const theme = createTheme({
   colors: {
@@ -127,14 +128,6 @@ const App = () => {
                       }
                     />
                     <Route
-                      path="/shop/:productName"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <ProductsInternal />
-                        </Suspense>
-                      }
-                    />
-                    <Route
                       path="/contact"
                       element={
                         <Suspense fallback={<Loader />}>
@@ -186,7 +179,7 @@ const App = () => {
                         </Suspense>
                       }
                     />
-                    <Route path="/test" element={<HeroSectionNew />} />
+                    <Route path="/test" element={<ProductsSectionNew />} />
                     <Route path="*" element={<div>Not Found</div>} />
                   </Routes>
                   {location.pathname !== "/test" && <Footer />}

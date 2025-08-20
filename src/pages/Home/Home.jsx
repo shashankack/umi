@@ -19,6 +19,7 @@ import introVideo from "../../assets/videos/intro.mp4";
 import mobileIntroVideo from "../../assets/videos/mobile_intro.mp4";
 import VideoSection from "../../components/VideoSection";
 import HeroSectionNew from "../../components/HeroSection/HeroSectionNew";
+import ProductsSectionNew from "../../components/Products/ProductsSectionNew";
 
 const Home = () => {
   const theme = useTheme();
@@ -394,7 +395,7 @@ const Home = () => {
         className="products-sec"
         style={{ position: "relative" }}
       >
-        <ProductsSection />
+        <ProductsSectionNew />
       </div>
       <div className="about-sec" ref={ourMatchaRef}>
         <AboutSection />

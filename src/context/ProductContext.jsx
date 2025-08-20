@@ -1,14 +1,20 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { fetchShopifyProducts } from '../utils/shopify';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import { fetchShopifyProducts } from "../utils/shopify";
 
-const ProductContext = createContext();
+const ProductContext = createContext(null);
 
 export const useProducts = () => {
-  const context = useContext(ProductContext);
-  if (!context) {
-    throw new Error('useProducts must be used within a ProductProvider');
-  }
-  return context;
+  const ctx = useContext(ProductContext);
+  if (!ctx)
+    throw new Error("useProducts must be used within a ProductProvider");
+  return ctx;
 };
 
 export const ProductProvider = ({ children }) => {
@@ -16,71 +22,82 @@ export const ProductProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    let isMounted = true;
+  // Single source of truth for loading products; reused by useEffect and refetch
+  const loadProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-    const loadProducts = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchShopifyProducts();
-        
-        if (isMounted) {
-          setProducts(data);
-          setError(null);
-        //   console.log('✅ Products loaded:', data.length);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error('❌ Failed to fetch products:', err);
-          setError(err);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadProducts();
-
-    return () => {
-      isMounted = false;
-    };
+    try {
+      const data = await fetchShopifyProducts();
+      // Defensive: ensure we always set an array
+      setProducts(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err?.message || "Failed to load products");
+      setProducts([]); // keep state consistent on error
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Memoized filtered products for different sections
-  const getFilteredProducts = (filter) => {
-    if (!products.length) return [];
-    
-    switch (filter) {
-      case 'matcha':
-        return products.filter(p => 
-          p.productType.toLowerCase() === 'matcha' || 
-          p.productType.toLowerCase() === 'matchaware'
-        );
-      case 'accessories':
-        return products.filter(p => 
-          p.productType.toLowerCase() === 'matchaware'
-        );
-      default:
-        return products;
-    }
-  };
+  // Initial load on mount
+  useEffect(() => {
+    let active = true;
 
-  const value = {
-    products,
-    loading,
-    error,
-    getFilteredProducts,
-    refetch: () => {
-      setLoading(true);
-      loadProducts();
+    (async () => {
+      await loadProducts();
+    })();
+
+    // In case you later add abortable fetch inside fetchShopifyProducts,
+    // keep this pattern ready to gate state updates.
+    return () => {
+      active = false;
+    };
+  }, [loadProducts]);
+
+  // Stable filter helper
+  const getFilteredProducts = useCallback(
+    (filter) => {
+      if (!products?.length) return [];
+
+      const norm = (s) => (s || "").toString().trim().toLowerCase();
+
+      switch ((filter || "").toLowerCase()) {
+        case "matcha":
+          return products.filter((p) => {
+            const t = norm(p.productType);
+            return t === "matcha" || t === "matchaware";
+          });
+        case "accessories":
+          return products.filter((p) => norm(p.productType) === "matchaware");
+        default:
+          return products;
+      }
+    },
+    [products]
+  );
+
+  // Useful derived maps (optional, but handy)
+  const byId = useMemo(() => {
+    const map = new Map();
+    for (const p of products) {
+      if (p?.id != null) map.set(p.id, p);
     }
-  };
+    return map;
+  }, [products]);
+
+  const value = useMemo(
+    () => ({
+      products,
+      loading,
+      error,
+      getFilteredProducts,
+      byId,
+      refetch: loadProducts,
+    }),
+    [products, loading, error, getFilteredProducts, byId, loadProducts]
+  );
 
   return (
-    <ProductContext.Provider value={value}>
-      {children}
-    </ProductContext.Provider>
+    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
   );
 };
