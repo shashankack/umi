@@ -16,11 +16,17 @@ import whisk from "../assets/images/vectors/footer/whisk.png";
 import copyright from "../assets/images/vectors/footer/copyright.png";
 
 import pinkMonogram from "../assets/images/icons/pink_monogram.png";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
 
+  const handleRedirect = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
   const navLinkStyles = {
     textDecoration: "none",
     color: theme.colors.pink,
@@ -65,7 +71,7 @@ const Footer = () => {
       { name: "Shop", path: "/shop" },
       { name: "About", path: "/about" },
       { name: "Contact", path: "/contact" },
-      { name: "Our matcha", path: "/?scrollTo=ourmatcha" },
+      { name: "Our matcha", path: "/our-matcha" },
       { name: "Blogs", path: "/blogs" },
     ],
     [
@@ -108,7 +114,7 @@ const Footer = () => {
                   transform: "scale(1.05)",
                 },
               }}
-              onClick={() => (window.location.href = "/")}
+              onClick={() => handleRedirect("/")}
             />
           </Box>
           <Box width={isMobile ? "15vw" : "8vw"}>
@@ -140,15 +146,7 @@ const Footer = () => {
               <Link
                 key={index}
                 sx={navLinkStyles}
-                onClick={() => {
-                  setTimeout(() => {
-                    if (linkGroup.name === "Our Matcha") {
-                      navigate("/?scrollTo=ourmatcha");
-                    } else {
-                      window.location.href = linkGroup.path;
-                    }
-                  }, 300);
-                }}
+                onClick={() => handleRedirect(linkGroup.path)}
               >
                 {linkGroup.name}
               </Link>

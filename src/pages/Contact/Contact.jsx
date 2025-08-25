@@ -10,6 +10,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
+import { Helmet } from "react-helmet-async";
+
 const Contact = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -22,13 +24,24 @@ const Contact = () => {
       width="100%"
       height="100vh"
       py={isMobile ? 10 : 0}
-      pb={isMobile? 0 : "4%"}
+      pb={isMobile ? 0 : "4%"}
       sx={{ background: theme.colors.green }}
       display="flex"
       alignItems="center"
       justifyContent={isMobile ? "end" : "end"}
       flexDirection="column"
     >
+      <Helmet>
+        <title>Contact Us</title>
+        <meta
+          name="description"
+          content="Get in touch with us for premium organic matcha online. Ask questions, share feedback, or place your order today."
+        />
+        <meta
+          name="keywords"
+          content="contact Umi, organic matcha support, matcha inquiries"
+        />
+      </Helmet>
       <Typography
         color={theme.colors.beige}
         fontFamily={"Genty"}

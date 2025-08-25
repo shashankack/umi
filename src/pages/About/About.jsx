@@ -107,7 +107,7 @@ const About = () => {
           >
             The concept of Umi is inspired by the famous Japanese painting, "The
             Great Wave of Kanagawa". Matcha has been a constant in my life
-            through its highest highs and lowest lows and just like that, the
+            through its highest highs and lowest lows, and just like that, the
             great wave depicts life's journey. It is a never-ending process
             where once we conquer our fear and meet our goal, we'll be met again
             with other vicious waves, other bigger problems & difficulties.
@@ -148,16 +148,17 @@ const About = () => {
                   mb={3}
                 >
                   However, our tiredness towards the journey will also have its
-                  sweetness when we reach a calm sea, where its wave is gentle,
-                  and we can feel the summer breeze warm our mind, body, and
-                  soul. But, with the knowledge that another wave is waiting to
-                  be conquered. Umi Matcha represents a symbolic shift within
-                  the matcha community.
+                  sweetness when we reach a calm sea, where its waves are
+                  gentle, and we can feel the summer breeze warm our mind, body,
+                  and soul. But, with the knowledge that another wave is waiting
+                  to be conquered. Umi Matcha represents a symbolic shift within
+                  the matcha community, offering authentic matcha powder in
+                  India.
                   <br />
                   <br />
-                  Life is always better with a matcha in hand. I'm thrilled to
-                  have Umi become a part of your daily routine because it's
-                  truly the most magical part of mine.
+                  Life is always better with Umi Matcha in hand. I'm thrilled to
+                  have it become a part of your daily routine because it's truly
+                  the most magical part of mine.
                 </Typography>
               </Box>
             </>

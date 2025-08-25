@@ -42,6 +42,8 @@ import mobileThumbnail from "./assets/images/mobile_thumbnail.png";
 import Blogs from "./pages/Blogs.jsx";
 import HeroSectionNew from "./components/HeroSection/HeroSectionNew.jsx";
 import ProductsSectionNew from "./components/Products/ProductsSectionNew.jsx";
+import BrewingPage from "./pages/BrewingPage.jsx";
+import OurMatcha from "./pages/OurMatcha.jsx";
 
 const theme = createTheme({
   colors: {
@@ -151,6 +153,13 @@ const App = () => {
                         </Suspense>
                       }
                     />
+                    <Route
+                      path="/how-to-make-matcha-at-home"
+                      element={<BrewingPage />}
+                    />
+
+                    <Route path="/our-matcha" element={<OurMatcha />} />
+
                     <Route
                       path="/blogs"
                       element={

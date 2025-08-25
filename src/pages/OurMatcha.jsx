@@ -1,23 +1,23 @@
 import { Box, Typography, useMediaQuery, useTheme, Stack } from "@mui/material";
 
-import banner from "../../assets/images/about_matcha_banner.png";
-import bannerMobile from "../../assets/images/about_matcha_banner_mobile.png";
+import banner from "../assets/images/about_matcha_banner.png";
+import bannerMobile from "../assets/images/about_matcha_banner_mobile.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCreative, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-creative";
 
-import gallery1 from "../../assets/images/matcha-gallery/image_1.png";
-import gallery2 from "../../assets/images/matcha-gallery/image_2.png";
-import gallery3 from "../../assets/images/matcha-gallery/image_3.png";
-import gallery4 from "../../assets/images/matcha-gallery/image_4.png";
-import gallery5 from "../../assets/images/matcha-gallery/image_5.png";
-import gallery6 from "../../assets/images/matcha-gallery/image_6.png";
-import gallery7 from "../../assets/images/matcha-gallery/image_7.png";
-import gallery8 from "../../assets/images/matcha-gallery/image_8.png";
+import gallery1 from "../assets/images/matcha-gallery/image_1.png";
+import gallery2 from "../assets/images/matcha-gallery/image_2.png";
+import gallery3 from "../assets/images/matcha-gallery/image_3.png";
+import gallery4 from "../assets/images/matcha-gallery/image_4.png";
+import gallery5 from "../assets/images/matcha-gallery/image_5.png";
+import gallery6 from "../assets/images/matcha-gallery/image_6.png";
+import gallery7 from "../assets/images/matcha-gallery/image_7.png";
+import gallery8 from "../assets/images/matcha-gallery/image_8.png";
 
-const AboutSection = () => {
+const OurMatcha = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -190,4 +190,4 @@ const AboutSection = () => {
   );
 };
 
-export default AboutSection;
+export default OurMatcha;
