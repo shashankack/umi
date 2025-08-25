@@ -155,10 +155,21 @@ const App = () => {
                     />
                     <Route
                       path="/how-to-make-matcha-at-home"
-                      element={<BrewingPage />}
+                      element={
+                        <Suspense fallback={<Loader />}>
+                          <BrewingPage />
+                        </Suspense>
+                      }
                     />
 
-                    <Route path="/our-matcha" element={<OurMatcha />} />
+                    <Route
+                      path="/our-matcha"
+                      element={
+                        <Suspense fallback={<Loader />}>
+                          <OurMatcha />
+                        </Suspense>
+                      }
+                    />
 
                     <Route
                       path="/blogs"
