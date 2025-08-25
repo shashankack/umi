@@ -57,7 +57,7 @@ const MobileNavbar = () => {
     { label: "Shop", to: "/shop", hasDropdown: true },
     { label: "About", to: "/about" },
     { label: "Brewing", to: "/how-to-make-matcha-at-home" },
-    { label: "Our Matcha", to: "/?scrollTo=ourmatcha" },
+    { label: "Our Matcha", to: "/our-matcha" },
     { label: "Contact", to: "/contact" },
     { label: "Blogs", to: "/blogs" },
   ];
