@@ -9,6 +9,12 @@ gsap.registerPlugin(ScrollTrigger);
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
+// import HeroSection from "../../components/HeroSection/HeroSection";
+import HeroSection from "../../components/HeroSection/HeroSection";
+import ProductsSection from "../../components/Products/ProductsSection";
+import AboutSection from "../../components/AboutSection/AboutSection";
+import TutorialSection from "../../components/TutorialSection/TutorialSection";
+
 import desktopThumbnail from "../../assets/images/desktop_thumbnail.png";
 import mobileThumbnail from "../../assets/images/mobile_thumbnail.png";
 import introVideo from "../../assets/videos/intro.mp4";
@@ -16,8 +22,6 @@ import mobileIntroVideo from "../../assets/videos/mobile_intro.mp4";
 import VideoSection from "../../components/VideoSection";
 import HeroSectionNew from "../../components/HeroSection/HeroSectionNew";
 import ProductsSectionNew from "../../components/Products/ProductsSectionNew";
-import BrewingPage from "../BrewingPage";
-import OurMatcha from "../OurMatcha";
 
 const Home = () => {
   const theme = useTheme();
@@ -42,7 +46,6 @@ const Home = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const target = params.get("scrollTo");
-    setNavbarTheme("beige");
 
     const refsMap = {
       brewing: brewingRef,
@@ -392,13 +395,13 @@ const Home = () => {
         <ProductsSectionNew />
       </div>
       <div className="about-sec" ref={ourMatchaRef}>
-        <OurMatcha />
+        <AboutSection />
       </div>
       <div ref={videosRef}>
         <VideoSection />
       </div>
       <div ref={brewingRef}>
-        <BrewingPage />
+        <TutorialSection />
       </div>
     </>
   );

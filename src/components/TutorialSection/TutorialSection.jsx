@@ -7,22 +7,16 @@ import {
   Divider,
 } from "@mui/material";
 
-import { useNavbarTheme } from "../context/NavbarThemeContext";
+import step1 from "../../assets/images/vectors/about/step1.png";
+import step2 from "../../assets/images/vectors/about/step2.png";
+import step3 from "../../assets/images/vectors/about/step3.png";
+import step4 from "../../assets/images/vectors/about/step4.png";
 
-import step1 from "../assets/images/vectors/about/step1.png";
-import step2 from "../assets/images/vectors/about/step2.png";
-import step3 from "../assets/images/vectors/about/step3.png";
-import step4 from "../assets/images/vectors/about/step4.png";
-import neko from "../assets/images/vectors/neko/cup.png";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import neko from "../../assets/images/vectors/neko/cup.png";
 
-const BrewingPage = () => {
+const TutorialSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const location = useLocation();
-  const { setNavbarTheme } = useNavbarTheme();
 
   const stepsData = [
     {
@@ -43,10 +37,6 @@ const BrewingPage = () => {
     },
   ];
 
-  useEffect(() => {
-    setNavbarTheme("beige");
-  }, [setNavbarTheme]);
-
   return (
     <Stack
       overflow="hidden"
@@ -56,19 +46,7 @@ const BrewingPage = () => {
       justifyContent="center"
       bgcolor={theme.colors.pink}
       gap={isMobile ? 4 : 6}
-      pt={location.pathname === "/how-to-make-matcha-at-home" ? "5%" : 0}
     >
-      <Helmet>
-        <title>How to Make Matcha at Home</title>
-        <meta
-          name="description"
-          content=" Learn how to make matcha at home with Umi’s step-by-step brewing guide. Create the perfect, smooth cup using the best organic matcha powder in India."
-        />
-        <meta
-          name="keywords"
-          content="how to make matcha at home, best organic matcha powder in india"
-        />
-      </Helmet>
       <Typography
         fontFamily={theme.fonts.title}
         variant="h2"
@@ -183,4 +161,4 @@ const BrewingPage = () => {
   );
 };
 
-export default BrewingPage;
+export default TutorialSection;

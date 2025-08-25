@@ -56,8 +56,8 @@ const MobileNavbar = () => {
     { label: "Home", to: "/" },
     { label: "Shop", to: "/shop", hasDropdown: true },
     { label: "About", to: "/about" },
-    { label: "Brewing", to: "/how-to-make-matcha-at-home" },
-    { label: "Our Matcha", to: "/our-matcha" },
+    { label: "Brewing", to: "/?scrollTo=brewing" },
+    { label: "Our Matcha", to: "/?scrollTo=ourmatcha" },
     { label: "Contact", to: "/contact" },
     { label: "Blogs", to: "/blogs" },
   ];
@@ -407,7 +407,17 @@ const MobileNavbar = () => {
                       color={theme.colors.beige}
                       onClick={() => {
                         setIsMenuOpen(false);
-                        window.location.href = to;
+                        setTimeout(() => {
+                          if (label === "Brewing" || label === "Our Matcha") {
+                            navigate(
+                              `/?scrollTo=${label
+                                .toLowerCase()
+                                .replace(/\s/g, "")}`
+                            );
+                          } else {
+                            window.location.href = to;
+                          }
+                        }, 300);
                       }}
                       sx={{ cursor: "pointer" }}
                     >
