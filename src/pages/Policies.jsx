@@ -7,6 +7,8 @@ import {
   shippingPolicy,
 } from "../assets/policies";
 
+import Footer from "../components/Footer";
+
 // Centralized policy map – scalable and clean
 const policyMap = {
   "privacy-policy": privacyPolicy,
@@ -24,96 +26,99 @@ const LegalPolicy = () => {
   const policyData = policyMap[path] || privacyPolicy;
 
   return (
-    <Stack
-      bgcolor={theme.colors.beige}
-      pt={isMobile ? 14 : 20}
-      pb={isMobile ? 0 : 4}
-      spacing={2}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Typography
-        sx={{
-          fontFamily: theme.fonts.text,
-          color: theme.colors.pink,
-          fontWeight: 700,
-          marginBottom: "1rem",
-          textAlign: "center",
-          fontSize: isMobile ? "6vw" : "3vw",
-        }}
+    <>
+      <Stack
+        bgcolor={theme.colors.beige}
+        pt={isMobile ? 14 : 20}
+        pb={isMobile ? 0 : 4}
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
       >
-        {policyData.title}
-      </Typography>
+        <Typography
+          sx={{
+            fontFamily: theme.fonts.text,
+            color: theme.colors.pink,
+            fontWeight: 700,
+            marginBottom: "1rem",
+            textAlign: "center",
+            fontSize: isMobile ? "6vw" : "3vw",
+          }}
+        >
+          {policyData.title}
+        </Typography>
 
-      <Stack>
-        {policyData.sections.map((section, index) => (
-          <Stack key={index} mb={4} maxWidth="1600px" px={2}>
-            <Typography
-              sx={{
-                fontFamily: theme.fonts.text,
-                fontWeight: 700,
-                fontSize: isMobile ? "4vw" : "1.4vw",
-                color: theme.colors.pink,
-                marginBottom: "0.5rem",
-              }}
-            >
-              {section.heading}
-            </Typography>
-            <Typography
-              sx={{
-                textAlign: "justify",
-                lineHeight: "1.3",
-                fontFamily: theme.fonts.text,
-                fontSize: isMobile ? "3vw" : "1vw",
-                color: theme.colors.green,
-
-                "& table": {
-                  width: "100%",
-                  border: `4px solid ${theme.colors.pink}`,
-                  borderRadius: "8px",
-                  borderCollapse: "collapse",
-                  tableLayout: "fixed",
-
-                  "& th, & td": {
-                    width: "50%",
-                    border: `1px solid ${theme.colors.pink}`,
-                    padding: "0.5rem",
-                  },
-
-                  "& th": {
-                    color: theme.colors.beige,
-                    backgroundColor: theme.colors.green,
-                    textAlign: "center",
-                  },
-                },
-
-                "& strong": {
+        <Stack>
+          {policyData.sections.map((section, index) => (
+            <Stack key={index} mb={4} maxWidth="1600px" px={2}>
+              <Typography
+                sx={{
+                  fontFamily: theme.fonts.text,
+                  fontWeight: 700,
+                  fontSize: isMobile ? "4vw" : "1.4vw",
                   color: theme.colors.pink,
-                  fontWeight: 600,
-                },
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {section.heading}
+              </Typography>
+              <Typography
+                sx={{
+                  textAlign: "justify",
+                  lineHeight: "1.3",
+                  fontFamily: theme.fonts.text,
+                  fontSize: isMobile ? "3vw" : "1vw",
+                  color: theme.colors.green,
 
-                "& ul": {
-                  listStyleType: "disc",
-                  paddingLeft: "3rem",
-                  marginBottom: "1rem",
-                },
+                  "& table": {
+                    width: "100%",
+                    border: `4px solid ${theme.colors.pink}`,
+                    borderRadius: "8px",
+                    borderCollapse: "collapse",
+                    tableLayout: "fixed",
 
-                "& a": {
-                  color: theme.colors.pink,
-                  textDecoration: "underline",
-                  transition: "color 0.3s ease",
+                    "& th, & td": {
+                      width: "50%",
+                      border: `1px solid ${theme.colors.pink}`,
+                      padding: "0.5rem",
+                    },
 
-                  "&:hover": {
-                    color: theme.colors.green,
+                    "& th": {
+                      color: theme.colors.beige,
+                      backgroundColor: theme.colors.green,
+                      textAlign: "center",
+                    },
                   },
-                },
-              }}
-              dangerouslySetInnerHTML={{ __html: section.content }}
-            />
-          </Stack>
-        ))}
+
+                  "& strong": {
+                    color: theme.colors.pink,
+                    fontWeight: 600,
+                  },
+
+                  "& ul": {
+                    listStyleType: "disc",
+                    paddingLeft: "3rem",
+                    marginBottom: "1rem",
+                  },
+
+                  "& a": {
+                    color: theme.colors.pink,
+                    textDecoration: "underline",
+                    transition: "color 0.3s ease",
+
+                    "&:hover": {
+                      color: theme.colors.green,
+                    },
+                  },
+                }}
+                dangerouslySetInnerHTML={{ __html: section.content }}
+              />
+            </Stack>
+          ))}
+        </Stack>
       </Stack>
-    </Stack>
+      <Footer />
+    </>
   );
 };
 

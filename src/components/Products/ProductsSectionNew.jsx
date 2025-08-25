@@ -111,7 +111,7 @@ const ProductsSectionNew = () => {
           fontWeight: 500,
           fontFamily: theme.fonts.title,
           color: theme.colors.pink,
-          textShadow: `3px 3px 0 ${theme.colors.green}`,
+          textShadow: `2px 2px 0 ${theme.colors.green}`,
           lineHeight: 1.1,
         }}
       >

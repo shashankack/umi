@@ -15,7 +15,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useEffect, useRef, useState } from "react";
-import { fetchShopifyProducts } from "../../utils/shopify";
 import { useProducts } from "../../context/ProductContext";
 import { useResponsive, useHydration } from "../../hooks/useHydration";
 
@@ -34,20 +33,12 @@ const ProductsSection = () => {
   const { products, loading } = useProducts();
   const { addItem } = useCart();
 
-  // Debug: Log products count
   useEffect(() => {
-    // console.log("📦 ProductsSection - Products count:", products.length);
-  }, [products]);
-
-  useEffect(() => {
-    // Wait for hydration before setting up animations
     if (!isHydrated) return;
 
     const setupAnimations = () => {
-      // Ensure refs are available
       if (!titleRef.current) return;
 
-      // Kill existing ScrollTriggers to avoid duplicates
       ScrollTrigger.getAll().forEach((t) => {
         if (t.trigger === titleRef.current || t.trigger === svgRef.current) {
           t.kill();

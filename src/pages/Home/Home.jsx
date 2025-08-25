@@ -9,9 +9,6 @@ gsap.registerPlugin(ScrollTrigger);
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
-// import HeroSection from "../../components/HeroSection/HeroSection";
-import HeroSection from "../../components/HeroSection/HeroSection";
-import ProductsSection from "../../components/Products/ProductsSection";
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
 
@@ -22,6 +19,8 @@ import mobileIntroVideo from "../../assets/videos/mobile_intro.mp4";
 import VideoSection from "../../components/VideoSection";
 import HeroSectionNew from "../../components/HeroSection/HeroSectionNew";
 import ProductsSectionNew from "../../components/Products/ProductsSectionNew";
+
+import Footer from "../../components/Footer";
 
 const Home = () => {
   const theme = useTheme();
@@ -46,6 +45,7 @@ const Home = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const target = params.get("scrollTo");
+    setNavbarTheme("beige");
 
     const refsMap = {
       brewing: brewingRef,
@@ -403,6 +403,7 @@ const Home = () => {
       <div ref={brewingRef}>
         <TutorialSection />
       </div>
+      <Footer />
     </>
   );
 };

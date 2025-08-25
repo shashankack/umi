@@ -10,6 +10,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
+import Footer from "../../components/Footer";
+import { Helmet } from "react-helmet-async";
+
 const Contact = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -18,177 +21,193 @@ const Contact = () => {
   const isMac = window.innerHeight <= 850;
 
   return (
-    <Box
-      width="100%"
-      height="100vh"
-      py={isMobile ? 10 : 0}
-      pb={isMobile? 0 : "4%"}
-      sx={{ background: theme.colors.green }}
-      display="flex"
-      alignItems="center"
-      justifyContent={isMobile ? "end" : "end"}
-      flexDirection="column"
-    >
-      <Typography
-        color={theme.colors.beige}
-        fontFamily={"Genty"}
-        fontSize={isMobile ? "12vw" : "4.6vw"}
-        fontWeight={400}
-        mt={isMobile ? 4 : isMac ? 10 : 0}
-        sx={{
-          textShadow: `4px 4px 0  ${theme.colors.pink}`,
-        }}
+    <>
+      <Helmet>
+        <title>
+          Reach Out to UMI Matcha Club - Your Matcha Moments Matter to Us
+        </title>
+        <meta
+          name="description"
+          content="Get in touch with us for premium organic matcha online. Ask questions, share feedback, or place your order today"
+        />
+        <meta
+          name="keywords"
+          content="Contact, UMI Matcha, Organic Matcha, Customer Support, organic matcha online"
+        />
+      </Helmet>
+      <Box
+        width="100%"
+        height="100vh"
+        py={isMobile ? 10 : 0}
+        pb={isMobile ? 0 : "4%"}
+        sx={{ background: theme.colors.green }}
+        display="flex"
+        alignItems="center"
+        justifyContent={isMobile ? "end" : "end"}
+        flexDirection="column"
       >
-        Contact us
-      </Typography>
+        <Typography
+          color={theme.colors.beige}
+          fontFamily={"Genty"}
+          fontSize={isMobile ? "12vw" : "4.6vw"}
+          fontWeight={400}
+          mt={isMobile ? 4 : isMac ? 10 : 0}
+          sx={{
+            textShadow: `4px 4px 0  ${theme.colors.pink}`,
+          }}
+        >
+          Contact us
+        </Typography>
 
-      <Grid
-        backgroundColor={theme.colors.beige}
-        boxShadow={`4px 4px 0  ${theme.colors.pink}`}
-        borderRadius={12}
-        container
-        maxWidth={isMobile ? "90%" : isTablet ? "90%" : "60%"}
-        maxHeight={isMobile ? "100%" : "60vh"}
-        height="100%"
-        mb={isMobile ? 5 : isSmallDesktop ? 20 : 0}
-      >
         <Grid
-          size={12}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height={70}
+          backgroundColor={theme.colors.beige}
+          boxShadow={`4px 4px 0  ${theme.colors.pink}`}
+          borderRadius={12}
+          container
+          maxWidth={isMobile ? "90%" : isTablet ? "90%" : "60%"}
+          maxHeight={isMobile ? "100%" : "60vh"}
+          height="100%"
+          mb={isMobile ? 5 : isSmallDesktop ? 20 : 0}
         >
-          <Typography
-            fontFamily={theme.fonts.text}
-            color={theme.colors.pink}
-            fontWeight={400}
-            fontSize={isMobile ? 20 : 30}
-            mt={isMobile ? 10 : 6}
-            width={"80%"}
-            textAlign="center"
-          >
-            Your Matcha Moments Matter to us
-          </Typography>
-        </Grid>
-        <Box
-          display="flex"
-          width="100%"
-          height="80%"
-          flexDirection={isMobile ? "column-reverse" : "row"}
-          justifyContent="space-around"
-          alignItems={isMobile ? "start" : ""}
-        >
-          <Grid size={isMobile ? 12 : 6}>
-            <Stack
-              mt={isMobile ? -2 : 0}
-              gap={isMobile ? 2 : 4}
-              padding={isMobile ? 1 : 5}
-              alignItems={isMobile ? "center" : "start"}
-              justifyContent="center"
-              height="100%"
-            >
-              <Button
-                sx={{
-                  padding: "5px 30px",
-                  backgroundColor: theme.colors.pink,
-                  color: theme.colors.beige,
-                  borderRadius: 3,
-                  fontFamily: theme.fonts.text,
-                  fontWeight: 400,
-                  textTransform: "none",
-                  boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 14 : "1.2vw",
-                  transition: "all .3s ease",
-
-                  "&:hover": {
-                    backgroundColor: theme.colors.pink,
-                    color: theme.colors.beige,
-                    transform: "scale(1.05)",
-                  },
-                }}
-                onClick={() => {
-                  window.location.href = "https://wa.me/9568480048";
-                }}
-              >
-                +91 9568480048
-              </Button>
-              <Button
-                sx={{
-                  padding: "5px 30px",
-                  backgroundColor: theme.colors.pink,
-                  color: theme.colors.beige,
-                  borderRadius: 3,
-                  fontFamily: theme.fonts.text,
-                  fontWeight: 400,
-                  textTransform: "none",
-                  boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 14 : "1.2vw",
-                  transition: "all .3s ease",
-
-                  "&:hover": {
-                    backgroundColor: theme.colors.pink,
-                    color: theme.colors.beige,
-                    transform: "scale(1.05)",
-                  },
-                }}
-                onClick={() => {
-                  window.open(
-                    "https://www.instagram.com/umimatchaclub/",
-                    "_blank"
-                  );
-                }}
-              >
-                @umimatchaclub
-              </Button>
-              <Button
-                sx={{
-                  padding: "5px 30px",
-                  backgroundColor: theme.colors.pink,
-                  color: theme.colors.beige,
-                  borderRadius: 3,
-                  fontFamily: theme.fonts.text,
-                  fontWeight: 400,
-                  textTransform: "none",
-                  boxShadow: `4px 6px 0  ${theme.colors.green}`,
-                  fontSize: isMobile ? 14 : "1.2vw",
-                  transition: "all .3s ease",
-
-                  "&:hover": {
-                    backgroundColor: theme.colors.pink,
-                    color: theme.colors.beige,
-                    transform: "scale(1.05)",
-                  },
-                }}
-                onClick={() => {
-                  window.location.href = "mailto:hello@umimatchashop.com";
-                }}
-              >
-                hello@umimatchashop.com
-              </Button>
-            </Stack>
-          </Grid>
           <Grid
-            size={isMobile ? 12 : 6}
+            size={12}
             display="flex"
-            alignItems="center"
             justifyContent="center"
+            alignItems="center"
+            height={70}
           >
-            <Box width={isMobile ? "40%" : "100%"} height={"70%"}>
-              <Box
-                component="img"
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                }}
-                src={callingNeko}
-              />
-            </Box>
+            <Typography
+              fontFamily={theme.fonts.text}
+              color={theme.colors.pink}
+              fontWeight={400}
+              fontSize={isMobile ? 20 : 30}
+              mt={isMobile ? 10 : 6}
+              width={"80%"}
+              textAlign="center"
+            >
+              Your Matcha Moments Matter to us
+            </Typography>
           </Grid>
-        </Box>
-      </Grid>
-    </Box>
+          <Box
+            display="flex"
+            width="100%"
+            height="80%"
+            flexDirection={isMobile ? "column-reverse" : "row"}
+            justifyContent="space-around"
+            alignItems={isMobile ? "start" : ""}
+          >
+            <Grid size={isMobile ? 12 : 6}>
+              <Stack
+                mt={isMobile ? -2 : 0}
+                gap={isMobile ? 2 : 4}
+                padding={isMobile ? 1 : 5}
+                alignItems={isMobile ? "center" : "start"}
+                justifyContent="center"
+                height="100%"
+              >
+                <Button
+                  sx={{
+                    padding: "5px 30px",
+                    backgroundColor: theme.colors.pink,
+                    color: theme.colors.beige,
+                    borderRadius: 3,
+                    fontFamily: theme.fonts.text,
+                    fontWeight: 400,
+                    textTransform: "none",
+                    boxShadow: `4px 6px 0  ${theme.colors.green}`,
+                    fontSize: isMobile ? 14 : "1.2vw",
+                    transition: "all .3s ease",
+
+                    "&:hover": {
+                      backgroundColor: theme.colors.pink,
+                      color: theme.colors.beige,
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                  onClick={() => {
+                    window.location.href = "https://wa.me/9568480048";
+                  }}
+                >
+                  +91 9568480048
+                </Button>
+                <Button
+                  sx={{
+                    padding: "5px 30px",
+                    backgroundColor: theme.colors.pink,
+                    color: theme.colors.beige,
+                    borderRadius: 3,
+                    fontFamily: theme.fonts.text,
+                    fontWeight: 400,
+                    textTransform: "none",
+                    boxShadow: `4px 6px 0  ${theme.colors.green}`,
+                    fontSize: isMobile ? 14 : "1.2vw",
+                    transition: "all .3s ease",
+
+                    "&:hover": {
+                      backgroundColor: theme.colors.pink,
+                      color: theme.colors.beige,
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                  onClick={() => {
+                    window.open(
+                      "https://www.instagram.com/umimatchaclub/",
+                      "_blank"
+                    );
+                  }}
+                >
+                  @umimatchaclub
+                </Button>
+                <Button
+                  sx={{
+                    padding: "5px 30px",
+                    backgroundColor: theme.colors.pink,
+                    color: theme.colors.beige,
+                    borderRadius: 3,
+                    fontFamily: theme.fonts.text,
+                    fontWeight: 400,
+                    textTransform: "none",
+                    boxShadow: `4px 6px 0  ${theme.colors.green}`,
+                    fontSize: isMobile ? 14 : "1.2vw",
+                    transition: "all .3s ease",
+
+                    "&:hover": {
+                      backgroundColor: theme.colors.pink,
+                      color: theme.colors.beige,
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                  onClick={() => {
+                    window.location.href = "mailto:hello@umimatchashop.com";
+                  }}
+                >
+                  hello@umimatchashop.com
+                </Button>
+              </Stack>
+            </Grid>
+            <Grid
+              size={isMobile ? 12 : 6}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Box width={isMobile ? "40%" : "100%"} height={"70%"}>
+                <Box
+                  component="img"
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                  src={callingNeko}
+                />
+              </Box>
+            </Grid>
+          </Box>
+        </Grid>
+      </Box>
+      <Footer />
+    </>
   );
 };
 

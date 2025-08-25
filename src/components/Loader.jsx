@@ -16,7 +16,8 @@ const Loader = () => {
 
   return (
     <Box
-      height="100vh"
+      minHeight="100vh"
+      width="100%"
       display="flex"
       justifyContent="center"
       alignItems="center"

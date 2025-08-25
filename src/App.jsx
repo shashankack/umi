@@ -1,16 +1,7 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
-import { useState, useEffect } from "react";
-
-// Lazy-loaded components for code splitting
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-import Home from "./pages/Home/Home";
-// const Home = lazy(() => import("./pages/Home/Home"));
+const Home = lazy(() => import("./pages/Home/Home"));
 const About = lazy(() => import("./pages/About/About"));
 const ProductsInternal = lazy(() =>
   import("./components/Products/ProductsInternal")
@@ -20,12 +11,13 @@ const Shop = lazy(() => import("./pages/Shop/Shop"));
 const FAQ = lazy(() => import("./pages/FAQ.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 
+import AboutMatcha from "./pages/AboutMatcha.jsx";
 import MobileNavbar from "./components/Navbar/MobileNavbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 import { CartProvider } from "./context/CartContext";
 import { ProductProvider } from "./context/ProductContext";
 import CartUI from "./components/CartUi";
-import Footer from "./components/Footer";
+
 import Loader from "./components/Loader.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
@@ -33,15 +25,15 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { faqData } from "./assets/faqData.jsx";
 import Policies from "./pages/Policies";
 import Intro from "./components/Intro.jsx";
-import Test from "./components/Test.jsx";
+import Blogs from "./pages/Blogs.jsx";
+import ProductsSectionNew from "./components/Products/ProductsSectionNew.jsx";
+import Brewing from "./pages/Brewing.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
 import founder from "./assets/images/vectors/about/founder.png";
 import desktopThumbnail from "./assets/images/desktop_thumbnail.png";
 import mobileThumbnail from "./assets/images/mobile_thumbnail.png";
-import Blogs from "./pages/Blogs.jsx";
-import HeroSectionNew from "./components/HeroSection/HeroSectionNew.jsx";
-import ProductsSectionNew from "./components/Products/ProductsSectionNew.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 const theme = createTheme({
   colors: {
@@ -57,133 +49,53 @@ const theme = createTheme({
   },
 });
 
-const LoadingHandler = ({ children }) => {
-  const location = useLocation();
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [location]);
-
-  // Set scroll restoration once globally
-  useEffect(() => {
-    if ("scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
-    }
-  }, []);
+const AppContent = () => {
+  const isMobile = window.innerWidth <= 500;
 
   return (
     <>
-      {loading && <Loader />}
-      {children}
+      {/* Preload assets */}
+      <img
+        src={isMobile ? mobileThumbnail : desktopThumbnail}
+        style={{ display: "none" }}
+      />
+      <img src={navbarBg} style={{ display: "none" }} />
+      <img src={founder} style={{ display: "none" }} />
+
+      <MobileNavbar />
+      <CartUI />
+      <Routes>
+        <Route path="/" element={<Intro NextComponent={Home} />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/shop/:productName" element={<ProductsInternal />} />
+        <Route path="/our-matcha" element={<AboutMatcha />} />
+        <Route path="/how-to-make-matcha-at-home" element={<Brewing />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/:blogId" element={<BlogPost />} />
+        <Route path="/terms-of-service" element={<Policies />} />
+        <Route path="/privacy-policy" element={<Policies />} />
+        <Route path="/refund-policy" element={<Policies />} />
+        <Route path="/shipping-policy" element={<Policies />} />
+        <Route path="/faq" element={<FAQ data={faqData} />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 };
 
 const App = () => {
-  const isMobile = window.innerWidth <= 500;
-
   return (
     <NavbarThemeProvider>
       <ErrorBoundary>
-        <img
-          src={isMobile ? mobileThumbnail : desktopThumbnail}
-          style={{
-            display: "none",
-          }}
-        />
-        <img
-          src={navbarBg}
-          style={{
-            display: "none",
-          }}
-        />
-        <img
-          src={founder}
-          style={{
-            display: "none",
-          }}
-        />
         <ThemeProvider theme={theme}>
           <ProductProvider>
             <CartProvider>
-              <Router basename="/" window={window}>
-                <LoadingHandler>
-                  <MobileNavbar />
-                  <CartUI />
-                  <Routes>
-                    <Route path="/" element={<Intro NextComponent={Home} />} />
-                    <Route
-                      path="/about"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <About />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/contact"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <Contact />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/shop"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <Shop />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/shop/:productName"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <ProductsInternal />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/blogs"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <Blogs />
-                        </Suspense>
-                      }
-                    />
-                    <Route
-                      path="/blogs/:blogId"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <BlogPost />
-                        </Suspense>
-                      }
-                    />
-                    <Route path="/terms-of-service" element={<Policies />} />
-                    <Route path="/privacy-policy" element={<Policies />} />
-                    <Route path="/refund-policy" element={<Policies />} />
-                    <Route path="/shipping-policy" element={<Policies />} />
-                    <Route
-                      path="/faq"
-                      element={
-                        <Suspense fallback={<Loader />}>
-                          <FAQ data={faqData} />
-                        </Suspense>
-                      }
-                    />
-                    <Route path="/test" element={<ProductsSectionNew />} />
-                    <Route path="*" element={<div>Not Found</div>} />
-                  </Routes>
-                  {location.pathname !== "/test" && <Footer />}
-                </LoadingHandler>
+              <Router basename="/">
+                <Suspense fallback={<Loader />}>
+                  <AppContent />
+                </Suspense>
               </Router>
             </CartProvider>
           </ProductProvider>

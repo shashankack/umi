@@ -17,6 +17,10 @@
   -ms-overflow-style: none;
 }
 
+body {
+  background-color: #b5d782;
+}
+
 .swiper-scrollbar {
   display: none;
 }

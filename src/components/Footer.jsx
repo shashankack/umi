@@ -65,7 +65,7 @@ const Footer = () => {
       { name: "Shop", path: "/shop" },
       { name: "About", path: "/about" },
       { name: "Contact", path: "/contact" },
-      { name: "Our matcha", path: "/?scrollTo=ourmatcha" },
+      { name: "Our matcha", path: "/our-matcha" },
       { name: "Blogs", path: "/blogs" },
     ],
     [
@@ -141,13 +141,7 @@ const Footer = () => {
                 key={index}
                 sx={navLinkStyles}
                 onClick={() => {
-                  setTimeout(() => {
-                    if (linkGroup.name === "Our Matcha") {
-                      navigate("/?scrollTo=ourmatcha");
-                    } else {
-                      window.location.href = linkGroup.path;
-                    }
-                  }, 300);
+                  window.location.href = linkGroup.path;
                 }}
               >
                 {linkGroup.name}
