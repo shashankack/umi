@@ -180,7 +180,6 @@ const Home = () => {
 
   // Simplified video event handlers - only essential ones
   const handleVideoLoadedData = () => {
-    // console.log("✅ Video loaded successfully");
     setVideoLoaded(true);
     setVideoError(null);
   };

@@ -6,6 +6,7 @@ import {
   Typography,
   Link,
 } from "@mui/material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 import { FaPinterestP } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
@@ -20,6 +21,12 @@ import pinkMonogram from "../assets/images/icons/pink_monogram.png";
 const Footer = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
+  const handleRedirect = (path) => {
+    navigate(path);
+    window.scrollTo(0, 0);
+  };
 
   const navLinkStyles = {
     textDecoration: "none",
@@ -108,7 +115,7 @@ const Footer = () => {
                   transform: "scale(1.05)",
                 },
               }}
-              onClick={() => (window.location.href = "/")}
+              onClick={() => handleRedirect("/")}
             />
           </Box>
           <Box width={isMobile ? "15vw" : "8vw"}>
@@ -140,9 +147,9 @@ const Footer = () => {
               <Link
                 key={index}
                 sx={navLinkStyles}
-                onClick={() => {
-                  window.location.href = linkGroup.path;
-                }}
+                component={RouterLink}
+                to={linkGroup.path}
+                onClick={() => window.scrollTo(0, 0)}
               >
                 {linkGroup.name}
               </Link>

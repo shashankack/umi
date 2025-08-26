@@ -12,7 +12,7 @@ const FAQ = lazy(() => import("./pages/FAQ.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 
 import AboutMatcha from "./pages/AboutMatcha.jsx";
-import MobileNavbar from "./components/Navbar/MobileNavbar";
+import Navbar from "./components/Navbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 import { CartProvider } from "./context/CartContext";
 import { ProductProvider } from "./context/ProductContext";
@@ -26,7 +26,6 @@ import { faqData } from "./assets/faqData.jsx";
 import Policies from "./pages/Policies";
 import Intro from "./components/Intro.jsx";
 import Blogs from "./pages/Blogs.jsx";
-import ProductsSectionNew from "./components/Products/ProductsSectionNew.jsx";
 import Brewing from "./pages/Brewing.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
@@ -62,7 +61,7 @@ const AppContent = () => {
       <img src={navbarBg} style={{ display: "none" }} />
       <img src={founder} style={{ display: "none" }} />
 
-      <MobileNavbar />
+      <Navbar />
       <CartUI />
       <Routes>
         <Route path="/" element={<Intro NextComponent={Home} />} />

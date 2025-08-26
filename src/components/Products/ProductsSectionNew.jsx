@@ -93,6 +93,7 @@ const ProductsSectionNew = () => {
 
   return (
     <Stack
+    overflow="hidden"
       ref={sectionContainerRef}
       position="relative"
       alignItems="center"
@@ -337,15 +338,6 @@ const ProductsSectionNew = () => {
           })}
         </Swiper>
       )}
-
-      <Box
-        width="100%"
-        position="absolute"
-        bottom={{ xs: -100, sm: -150 }}
-        zIndex={5}
-      >
-        <CurvedMarquee />
-      </Box>
 
       {/* Wave background — rises once when title enters (no scrub) */}
       <Box

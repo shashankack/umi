@@ -123,6 +123,7 @@ const Shop = () => {
   };
 
   useEffect(() => {
+    setNavbarTheme("pink");
     let attempts = 0;
     const maxAttempts = 20;
     let interval;

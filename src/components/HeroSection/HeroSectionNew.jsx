@@ -374,7 +374,6 @@ const HeroSectionNew = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     const filteredProducts = getFilteredProducts("matcha");
-    console.log("Filtered products from context:", filteredProducts);
 
     const mapped = filteredProducts.map((product) => ({
       id: product.id.split("/").pop(),

@@ -38,13 +38,13 @@ const AboutMatcha = () => {
   ];
 
   useEffect(() => {
-    setNavbarTheme("beige");
+    setNavbarTheme("pink");
   }, [setNavbarTheme]);
 
   return (
     <>
-      <Box bgcolor={theme.colors.beige}>
-        <Box height={isMobile ? "35%" : "80%"}>
+      <Box bgcolor={theme.colors.beige} pt={16}>
+        <Box height={isMobile ? "35%" : 800}>
           <Box
             component="img"
             src={isMobile ? bannerMobile : banner}

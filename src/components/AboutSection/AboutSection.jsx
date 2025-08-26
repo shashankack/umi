@@ -3,6 +3,8 @@ import { Box, Typography, useMediaQuery, useTheme, Stack } from "@mui/material";
 import banner from "../../assets/images/about_matcha_banner.png";
 import bannerMobile from "../../assets/images/about_matcha_banner_mobile.png";
 
+import CurvedMarquee from "../CurvedMarquee/CurvedMarquee";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCreative, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -33,7 +35,15 @@ const AboutSection = () => {
   ];
 
   return (
-    <Box bgcolor={theme.colors.beige}>
+    <Box bgcolor={theme.colors.beige} position="relative" border={1}>
+      <Box
+        width="100%"
+        position="absolute"
+        top={{ xs: "-17.3%", sm: "-3%", md: "-6%", lg: -100, xl: -160 }}
+        zIndex={5}
+      >
+        <CurvedMarquee />
+      </Box>
       <Box height={isMobile ? "35%" : "80%"}>
         <Box
           component="img"

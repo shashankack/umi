@@ -6,8 +6,6 @@ export const registerServiceWorker = async () => {
         scope: "/",
       });
 
-      // console.log('Service Worker registered successfully:', registration);
-
       // Handle updates
       registration.addEventListener("updatefound", () => {
         const newWorker = registration.installing;
@@ -58,7 +56,6 @@ export const handleInstallPrompt = () => {
         if (deferredPrompt) {
           deferredPrompt.prompt();
           const { outcome } = await deferredPrompt.userChoice;
-          // console.log(`User ${outcome} the install prompt`);
           deferredPrompt = null;
           installButton.style.display = "none";
         }
