@@ -10,7 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
@@ -44,6 +44,7 @@ const Shop = () => {
   const [products, setProducts] = useState([]);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { addItem, updateQuantity, lineItems, removeItem } = useCart();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -400,11 +401,9 @@ const Shop = () => {
                         <Box
                           component="img"
                           src={product.images.edges[0]?.node.url}
-                          onClick={() => {
-                            window.location.href = `/shop/${slugify(
-                              product.title
-                            )}`;
-                          }}
+                          onClick={() =>
+                            handleRedirect(`/shop/${slugify(product.title)}`)
+                          }
                           sx={{
                             width: "100%",
                             height: "100%",
@@ -420,11 +419,9 @@ const Shop = () => {
                       <ButtonGroup sx={{ width: isMobile ? "100%" : "auto" }}>
                         <Button
                           sx={leftButtonStyles}
-                          onClick={() => {
-                            window.location.href = `/shop/${slugify(
-                              product.title
-                            )}`;
-                          }}
+                          onClick={() =>
+                            handleRedirect(`/shop/${slugify(product.title)}`)
+                          }
                         >
                           {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
                           ₹ Coming soon
@@ -604,11 +601,9 @@ const Shop = () => {
                           <Box
                             component="img"
                             src={product.images.edges[0]?.node.url}
-                            onClick={() => {
-                              window.location.href = `/shop/${slugify(
-                                product.title
-                              )}`;
-                            }}
+                            onClick={() =>
+                              handleRedirect(`/shop/${slugify(product.title)}`)
+                            }
                             sx={{
                               width: "100%",
                               height: "100%",
@@ -624,11 +619,9 @@ const Shop = () => {
                         <ButtonGroup sx={{ width: isMobile ? "100%" : "auto" }}>
                           <Button
                             sx={leftButtonStyles}
-                            onClick={() => {
-                              window.location.href = `/shop/${slugify(
-                                product.title
-                              )}`;
-                            }}
+                            onClick={() =>
+                              handleRedirect(`/shop/${slugify(product.title)}`)
+                            }
                           >
                             {/* ₹ {product.variants.edges[0]?.node.price.amount} */}
                             ₹ Coming Soon

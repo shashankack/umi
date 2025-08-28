@@ -66,6 +66,7 @@ const ProductsInternal = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(product.descriptionHtml, "text/html");
     const titleElement = doc.querySelector("p.page-title");
+    if (!titleElement) return product.title;
 
     return titleElement.textContent;
   });
@@ -76,6 +77,7 @@ const ProductsInternal = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(product.descriptionHtml, "text/html");
     const descriptionElement = doc.querySelector("p.page-description");
+    if (!descriptionElement) return null;
 
     return descriptionElement.textContent;
   });
@@ -86,6 +88,7 @@ const ProductsInternal = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(product.descriptionHtml, "text/html");
     const keywordsElement = doc.querySelector("p.page-keywords");
+    if (!keywordsElement) return null;  
 
     return keywordsElement.textContent;
   });
