@@ -1,10 +1,10 @@
-// scripts/build-sitemap.mjs
+// src/scripts/build-sitemap.mjs
 import { SitemapStream, streamToPromise } from "sitemap";
 import fs from "node:fs";
 import path from "node:path";
 import "dotenv/config";
 
-/** Required: absolute site origin, no trailing slash */
+// 1) Required site origin (no trailing slash)
 const BASE_URL = (process.env.VITE_BASE_URL || "").replace(/\/$/, "");
 if (!BASE_URL) {
   console.error(
@@ -13,7 +13,7 @@ if (!BASE_URL) {
   process.exit(1);
 }
 
-/** Static routes mirrored from <Routes> (exclude 404/wildcard). */
+// 2) Static routes from your <Routes> (exclude 404 wildcard)
 const STATIC_ROUTES = [
   "/", // Intro (wraps Home)
   "/about",
@@ -29,7 +29,7 @@ const STATIC_ROUTES = [
   "/faq",
 ];
 
-/** Same slug rule you use in the app */
+// 3) Same slug logic as your app's util
 function slugify(text) {
   return String(text)
     .toLowerCase()
@@ -41,17 +41,11 @@ function slugify(text) {
     .replace(/-+$/, "");
 }
 
-/**
- * C) Shopify Storefront API (server-side, token from .env)
- * NOTE: We fetch product *titles* (not only handles) to build URLs
- * that match your PDP route which expects slugified titles.
- *   SHOPIFY_DOMAIN=myshop.myshopify.com
- *   STOREFRONT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- */
+// 4) Pull product TITLES from Shopify (match PDP route /shop/:productName)
 async function getProductTitleSlugs() {
-  const domain = process.env.SHOPIFY_DOMAIN;
-  const token = process.env.STOREFRONT_TOKEN;
-  if (!domain || !token) return [];
+  const domain = process.env.VITE_SHOPIFY_DOMAIN;
+  const token = process.env.VITE_STOREFRONT_TOKEN;
+  if (!domain || !token) return []; // silently skip if not configured
 
   const endpoint = `https://${domain}/api/2024-07/graphql.json`;
   const query = /* GraphQL */ `
@@ -71,8 +65,8 @@ async function getProductTitleSlugs() {
     }
   `;
 
-  let cursor = null;
   const titles = [];
+  let cursor = null;
   for (let i = 0; i < 40; i++) {
     const res = await fetch(endpoint, {
       method: "POST",
@@ -82,7 +76,6 @@ async function getProductTitleSlugs() {
       },
       body: JSON.stringify({ query, variables: { cursor } }),
     });
-
     if (!res.ok) {
       console.warn("Shopify fetch failed:", res.status, await res.text());
       break;
@@ -95,28 +88,28 @@ async function getProductTitleSlugs() {
     cursor = edges[edges.length - 1].cursor;
   }
 
-  // Unique, then map to route paths
-  const uniqueSlugs = Array.from(new Set(titles.map((t) => slugify(t))));
-  return uniqueSlugs.map((s) => `/shop/${s}`);
+  // Unique slugs → `/shop/:productName`
+  return Array.from(new Set(titles.map((t) => `/shop/${slugify(t)}`)));
 }
 
+// (Optional) blog slugs if/when you have them
 async function getBlogSlugs() {
-  // If your blogs come from a CMS/Shopify, mirror the pattern above.
-  return [];
+  return []; // implement when blogs are dynamic
 }
 
-/** Helpers */
-function toUrlEntry(pathname) {
+// helpers
+function toUrlEntry(pathname, lastmodISO) {
   const isHome = pathname === "/";
   return {
     url: pathname,
     changefreq: isHome ? "daily" : "weekly",
     priority: isHome ? 1.0 : 0.7,
+    ...(lastmodISO ? { lastmodISO } : {}),
   };
 }
 
 async function main() {
-  const productPaths = await getProductTitleSlugs(); // matches your PDP URL shape
+  const productPaths = await getProductTitleSlugs();
   const blogPaths = (await getBlogSlugs()).map((s) => `/blogs/${s}`);
 
   const allPaths = [...STATIC_ROUTES, ...productPaths, ...blogPaths];
@@ -131,13 +124,9 @@ async function main() {
   fs.writeFileSync(path.join(outDir, "sitemap.xml"), xml);
 
   console.log(`✅ Wrote ${allPaths.length} URLs to dist/sitemap.xml`);
-  if (productPaths.length)
-    console.log(`   + ${productPaths.length} product URLs`);
-  if (blogPaths.length) console.log(`   + ${blogPaths.length} blog URLs`);
+  console.log(`   + ${productPaths.length} product URLs`);
 }
-
 main().catch((err) => {
   console.error("Sitemap build failed:", err);
   process.exit(1);
 });
-
