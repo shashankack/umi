@@ -140,3 +140,4 @@ main().catch((err) => {
   console.error("Sitemap build failed:", err);
   process.exit(1);
 });
+
