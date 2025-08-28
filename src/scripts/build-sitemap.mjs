@@ -4,35 +4,18 @@ import fs from "node:fs";
 import path from "node:path";
 import "dotenv/config";
 
-// 1) Load env vars (support both SHOPIFY_* and VITE_SHOPIFY_*)
+// 1) Required site origin (no trailing slash)
 const BASE_URL = (process.env.VITE_BASE_URL || "").replace(/\/$/, "");
-const SHOPIFY_DOMAIN =
-  process.env.SHOPIFY_DOMAIN || process.env.VITE_SHOPIFY_DOMAIN;
-const STOREFRONT_TOKEN =
-  process.env.STOREFRONT_TOKEN || process.env.VITE_STOREFRONT_TOKEN;
-
-// 2) Validate envs
 if (!BASE_URL) {
-  console.error("❌ Missing VITE_BASE_URL in .env (e.g. VITE_BASE_URL=https://umimatchashop.com)");
-  process.exit(1);
-}
-if (!SHOPIFY_DOMAIN) {
-  console.error("❌ Missing SHOPIFY_DOMAIN (or VITE_SHOPIFY_DOMAIN) in env");
-  process.exit(1);
-}
-if (!STOREFRONT_TOKEN) {
-  console.error("❌ Missing STOREFRONT_TOKEN (or VITE_STOREFRONT_TOKEN) in env");
+  console.error(
+    "❌ Missing VITE_BASE_URL in .env (e.g., VITE_BASE_URL=https://yourdomain.com)"
+  );
   process.exit(1);
 }
 
-console.log("✅ Env loaded:");
-console.log("   VITE_BASE_URL:", BASE_URL);
-console.log("   SHOPIFY_DOMAIN:", SHOPIFY_DOMAIN);
-console.log("   STOREFRONT_TOKEN:", STOREFRONT_TOKEN ? "[set]" : "[missing]");
-
-// 3) Static routes from your <Routes>
+// 2) Static routes from your <Routes> (exclude 404 wildcard)
 const STATIC_ROUTES = [
-  "/",
+  "/", // Intro (wraps Home)
   "/about",
   "/contact",
   "/shop",
@@ -46,7 +29,7 @@ const STATIC_ROUTES = [
   "/faq",
 ];
 
-// 4) Slugify function (matches your app's util)
+// 3) Same slug logic as your app's util
 function slugify(text) {
   return String(text)
     .toLowerCase()
@@ -58,9 +41,13 @@ function slugify(text) {
     .replace(/-+$/, "");
 }
 
-// 5) Fetch product titles for PDP URLs
+// 4) Pull product TITLES from Shopify (match PDP route /shop/:productName)
 async function getProductTitleSlugs() {
-  const endpoint = `https://${SHOPIFY_DOMAIN}/api/2024-07/graphql.json`;
+  const domain = process.env.VITE_SHOPIFY_DOMAIN;
+  const token = process.env.VITE_STOREFRONT_TOKEN;
+  if (!domain || !token) return []; // silently skip if not configured
+
+  const endpoint = `https://${domain}/api/2024-07/graphql.json`;
   const query = /* GraphQL */ `
     query ProductTitles($cursor: String) {
       products(first: 250, after: $cursor) {
@@ -71,7 +58,9 @@ async function getProductTitleSlugs() {
             updatedAt
           }
         }
-        pageInfo { hasNextPage }
+        pageInfo {
+          hasNextPage
+        }
       }
     }
   `;
@@ -82,13 +71,13 @@ async function getProductTitleSlugs() {
     const res = await fetch(endpoint, {
       method: "POST",
       headers: {
-        "X-Shopify-Storefront-Access-Token": STOREFRONT_TOKEN,
+        "X-Shopify-Storefront-Access-Token": token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ query, variables: { cursor } }),
     });
     if (!res.ok) {
-      console.error("❌ Shopify fetch failed:", res.status, await res.text());
+      console.warn("Shopify fetch failed:", res.status, await res.text());
       break;
     }
     const json = await res.json();
@@ -99,13 +88,16 @@ async function getProductTitleSlugs() {
     cursor = edges[edges.length - 1].cursor;
   }
 
+  // Unique slugs → `/shop/:productName`
   return Array.from(new Set(titles.map((t) => `/shop/${slugify(t)}`)));
 }
 
+// (Optional) blog slugs if/when you have them
 async function getBlogSlugs() {
-  return [];
+  return []; // implement when blogs are dynamic
 }
 
+// helpers
 function toUrlEntry(pathname, lastmodISO) {
   const isHome = pathname === "/";
   return {
@@ -116,7 +108,6 @@ function toUrlEntry(pathname, lastmodISO) {
   };
 }
 
-// 6) Main
 async function main() {
   const productPaths = await getProductTitleSlugs();
   const blogPaths = (await getBlogSlugs()).map((s) => `/blogs/${s}`);
@@ -134,9 +125,7 @@ async function main() {
 
   console.log(`✅ Wrote ${allPaths.length} URLs to dist/sitemap.xml`);
   console.log(`   + ${productPaths.length} product URLs`);
-  console.log(`   + ${blogPaths.length} blog URLs`);
 }
-
 main().catch((err) => {
   console.error("Sitemap build failed:", err);
   process.exit(1);
