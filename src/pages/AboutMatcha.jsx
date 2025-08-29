@@ -20,6 +20,7 @@ import gallery6 from "../assets/images/matcha-gallery/image_6.png";
 import gallery7 from "../assets/images/matcha-gallery/image_7.png";
 import gallery8 from "../assets/images/matcha-gallery/image_8.png";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 
 const AboutMatcha = () => {
   const theme = useTheme();
@@ -43,6 +44,17 @@ const AboutMatcha = () => {
 
   return (
     <>
+      <Helmet prioritizeSeoTags>
+        <title>Organic Matcha Powder | Umi's Premium Japanese Blend</title>
+        <meta
+          name="description"
+          content="Umi's organic matcha powder is 100% organic, single origin, single cultivar, made in Japan, and spring 1st flush for unmatched taste and quality."
+        />
+        <meta
+          name="keywords"
+          content="organic matcha powder, premium matcha, Japanese matcha, ceremonial grade matcha"
+        />
+      </Helmet>
       <Box bgcolor={theme.colors.beige} pt={16}>
         <Box height={isMobile ? "35%" : 800}>
           <Box
