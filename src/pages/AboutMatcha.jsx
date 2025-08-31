@@ -55,7 +55,7 @@ const AboutMatcha = () => {
           content="organic matcha powder, premium matcha, Japanese matcha, ceremonial grade matcha"
         />
       </Helmet>
-      <Box bgcolor={theme.colors.beige} pt={16}>
+      <Box bgcolor={theme.colors.beige}>
         <Box height={isMobile ? "35%" : 800}>
           <Box
             component="img"
