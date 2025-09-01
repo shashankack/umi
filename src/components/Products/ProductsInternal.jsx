@@ -361,6 +361,7 @@ const ProductsInternal = () => {
             direction={isMobile ? "column" : "row"}
             width="100%"
             gap={isMobile ? 2 : 5}
+            px={isMobile ? 1 : 0}
           >
             <Stack
               width={isMobile ? "100%" : "30vw"}
@@ -460,7 +461,7 @@ const ProductsInternal = () => {
               }
             >
               <Typography
-                mt={isMobile ? 2 : 0}
+                mt={isMobile ? 0 : 0}
                 mb={isMobile ? -4 : -2}
                 fontSize={isMobile ? "8vw" : "2.6vw"}
                 fontFamily={theme.fonts.title}

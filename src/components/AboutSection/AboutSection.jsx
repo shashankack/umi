@@ -74,7 +74,7 @@ const AboutSection = () => {
         Life comes in waves, matcha your flow
         <br />
         <br />
-        <span>Umi</span> means wave.
+        Umi<span> 海</span> means wave.
         <br />
         <br />
         Umi is a premium matcha brand made from the finest, single-origin,
