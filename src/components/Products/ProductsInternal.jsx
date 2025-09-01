@@ -88,7 +88,7 @@ const ProductsInternal = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(product.descriptionHtml, "text/html");
     const keywordsElement = doc.querySelector("p.page-keywords");
-    if (!keywordsElement) return null;  
+    if (!keywordsElement) return null;
 
     return keywordsElement.textContent;
   });
@@ -361,12 +361,17 @@ const ProductsInternal = () => {
             direction={isMobile ? "column" : "row"}
             width="100%"
             gap={isMobile ? 2 : 5}
+            // border={1}
           >
             <Stack
               width={isMobile ? "100%" : "30vw"}
               height="100%"
               justifyContent="center"
               alignItems="center"
+              sx={{
+                opacity: 0,
+              }}
+              border={1}
             >
               <Box
                 p={2}
