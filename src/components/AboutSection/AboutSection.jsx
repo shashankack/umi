@@ -35,7 +35,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <Box bgcolor={theme.colors.beige} position="relative" border={1}>
+    <Box bgcolor={theme.colors.beige} position="relative" >
       <Box
         width="100%"
         position="absolute"

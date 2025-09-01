@@ -32,26 +32,30 @@ const VideoSection = () => {
 
     const handleVideoPlayback = async () => {
       // Small delay to ensure DOM is ready
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       videoRefs.current.forEach(async (video, index) => {
         if (video) {
           try {
             // Reset video to beginning
             video.currentTime = 0;
-            
+
             // Ensure video is ready to play
             if (video.readyState >= 2) {
               await video.play();
             } else {
               // Wait for video to be ready
-              video.addEventListener('canplay', async () => {
-                try {
-                  await video.play();
-                } catch (error) {
-                  console.warn(`Video ${index} autoplay failed:`, error);
-                }
-              }, { once: true });
+              video.addEventListener(
+                "canplay",
+                async () => {
+                  try {
+                    await video.play();
+                  } catch (error) {
+                    console.warn(`Video ${index} autoplay failed:`, error);
+                  }
+                },
+                { once: true }
+              );
             }
           } catch (error) {
             console.warn(`Video ${index} play failed:`, error);
@@ -104,7 +108,7 @@ const VideoSection = () => {
                 video.currentTime = 0;
                 await video.play();
               } catch (error) {
-                console.warn('Video restart failed:', error);
+                console.warn("Video restart failed:", error);
               }
             }
           });
@@ -112,10 +116,10 @@ const VideoSection = () => {
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isHydrated]);
 
@@ -127,10 +131,16 @@ const VideoSection = () => {
         p={1}
         spacing={1}
         overflow="hidden"
-        style={{ minHeight: '400px' }}
+        style={{ minHeight: "400px" }}
       >
         {/* Placeholder during hydration */}
-        <div style={{ width: '100%', height: '400px', backgroundColor: theme.colors.beige }} />
+        <div
+          style={{
+            width: "100%",
+            height: "400px",
+            backgroundColor: theme.colors.beige,
+          }}
+        />
       </Grid>
     );
   }

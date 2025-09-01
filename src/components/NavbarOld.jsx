@@ -1,7 +1,6 @@
-// src/components/Navbar.jsx
 import gsap from "gsap";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
-import { fetchShopifyProducts } from "../utils/shopify";
+import { searchProducts, fetchShopifyProducts } from "../utils/shopify";
 import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import { useEffect, useState, useRef, useCallback } from "react";
 import {
@@ -15,16 +14,15 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  Input,
   Divider,
   useMediaQuery,
-  Link as MUILink,
-  Tooltip,
+  Link as MUILink, // MUI Link, rendered as RouterLink for SPA anchors
 } from "@mui/material";
 
 import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
-// BRAND ASSETS (unchanged – keep your paths)
 import navbarBg from "../assets/images/navbar_bg.png";
 import beigeMenu from "../assets/images/icons/beige_menu.png";
 import pinkMenu from "../assets/images/icons/pink_menu.png";
@@ -33,9 +31,6 @@ import neko from "../assets/images/vectors/neko/neko.gif";
 import beigeLogo from "../assets/images/icons/beige_logo.png";
 import pinkLogo from "../assets/images/icons/pink_logo.png";
 import dropDown from "../assets/images/vectors/dropdown_icon.png";
-
-// NEW: the dialog search
-import SearchUI from "./SearchUi";
 
 const Navbar = () => {
   const theme = useTheme();
@@ -48,12 +43,14 @@ const Navbar = () => {
   const [showShopSubmenu, setShowShopSubmenu] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-
-  // NEW: dialog search control
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categoriesMap, setCategoriesMap] = useState({});
 
   const lastScrollTopRef = useRef(0);
   const tickingRef = useRef(false);
+  const searchRef = useRef(null);
   const pendingRouteRef = useRef(null); // route to navigate after Drawer closes
 
   const logo = navbarTheme === "pink" ? pinkLogo : beigeLogo;
@@ -70,15 +67,39 @@ const Navbar = () => {
 
   const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
 
-  // Animate logo a touch when search/dialog toggles so it feels alive
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    gsap.to(".navbar-logo", {
-      scale: isSearchOpen ? 0.98 : 1,
-      duration: 0.25,
+  // Animate search field open/close, keep it mounted to preserve focus
+  const handleSearchToggle = () => {
+    setIsSearchOpen((prev) => !prev);
+    if (!searchRef.current || typeof window === "undefined") return;
+    gsap.to(searchRef.current, {
+      width: isSearchOpen ? 0 : 300,
+      opacity: isSearchOpen ? 0 : 1,
+      duration: 0.5,
       ease: "power2.out",
     });
-  }, [isSearchOpen]);
+  };
+
+  // Debounced search (ignore late results)
+  useEffect(() => {
+    let alive = true;
+    if (searchValue.trim().length <= 1) {
+      setFilteredProducts([]);
+      return;
+    }
+    const t = setTimeout(async () => {
+      try {
+        const list = await searchProducts(searchValue.trim());
+        if (!alive) return;
+        setFilteredProducts(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (alive) console.error(e);
+      }
+    }, 300);
+    return () => {
+      alive = false;
+      clearTimeout(t);
+    };
+  }, [searchValue]);
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -125,8 +146,6 @@ const Navbar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // once
 
-  const [categoriesMap, setCategoriesMap] = useState({});
-
   // Helpers for Drawer link behavior:
   // - Keep standard link features (open in new tab) if user uses modifier keys/middle click
   // - Otherwise, prevent default, close Drawer, then navigate on onExited
@@ -141,11 +160,11 @@ const Navbar = () => {
     setIsMenuOpen(false);
   }, []);
 
+  const goToProductHref = (product) =>
+    `/product/${product?.handle || product?.id || ""}`;
+
   return (
     <>
-      {/* SEARCH DIALOG */}
-      <SearchUI open={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-
       <AppBar
         position="fixed"
         elevation={0}
@@ -185,7 +204,6 @@ const Navbar = () => {
             component={RouterLink}
             to="/"
             onClick={() => window.scrollTo(0, 0)}
-            className="navbar-logo"
             sx={{
               height: isMobile ? 70 : 100,
               display: "inline-flex",
@@ -204,7 +222,6 @@ const Navbar = () => {
             />
           </Box>
 
-          {/* Right controls: Search icon */}
           <Box
             width="100%"
             height="100%"
@@ -213,22 +230,132 @@ const Navbar = () => {
             alignItems="center"
             position="relative"
           >
-            <Tooltip title="Search products">
-              <IconButton
-                onClick={() => setIsSearchOpen(true)}
-                size="small"
-                aria-label="Open search"
-              >
-                <FaSearch
-                  fontSize={30}
-                  color={
-                    navbarTheme === "pink"
-                      ? theme.colors.pink
-                      : theme.colors.beige
-                  }
-                />
-              </IconButton>
-            </Tooltip>
+            <Box position="relative" zIndex={30}>
+              {isSearchOpen ? (
+                <IconButton
+                  onClick={handleSearchToggle}
+                  size="small"
+                  aria-label="Close search"
+                >
+                  <IoClose fontSize={30} color={theme.colors.pink} />
+                </IconButton>
+              ) : (
+                <IconButton
+                  onClick={handleSearchToggle}
+                  size="small"
+                  aria-label="Open search"
+                >
+                  <FaSearch
+                    fontSize={30}
+                    color={
+                      navbarTheme === "pink"
+                        ? theme.colors.pink
+                        : theme.colors.beige
+                    }
+                  />
+                </IconButton>
+              )}
+            </Box>
+
+            {/* Search input stays mounted; GSAP controls width/opacity */}
+            <Box position="absolute" right={0}>
+              <Input
+                inputRef={searchRef}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search products..."
+                disableUnderline
+                aria-label="Search products"
+                sx={{
+                  width: 0,
+                  opacity: 0,
+                  pointerEvents: isSearchOpen ? "auto" : "none",
+                  right: 0,
+                  backgroundColor: theme.colors.beige,
+                  color: theme.colors.pink,
+                  borderRadius: 2,
+                  border: `2px solid ${theme.colors.green}`,
+                  padding: "0 12px",
+                  "&.Mui-focused": { borderColor: theme.colors.pink },
+                }}
+              />
+            </Box>
+
+            {/* Results popover */}
+            <Box
+              role="listbox"
+              aria-label="Search results"
+              maxHeight={200}
+              overflow="auto"
+              position="absolute"
+              top={40}
+              right={0}
+              width={300}
+              borderRadius={2}
+              sx={{
+                border: isSearchOpen
+                  ? `2px solid ${theme.colors.green}`
+                  : "none",
+              }}
+              bgcolor={theme.colors.beige}
+            >
+              {isSearchOpen &&
+                filteredProducts.map((product) => {
+                  const to = goToProductHref(product);
+                  return (
+                    <Box key={product.id || product.handle}>
+                      <Box
+                        component={RouterLink}
+                        to={to}
+                        onClick={() => setIsMenuOpen(false)}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        py={0.5}
+                        role="option"
+                        aria-label={product.title}
+                        sx={{
+                          width: "100%",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          textDecoration: "none",
+                        }}
+                      >
+                        {product.image && (
+                          <Box bgcolor={theme.colors.beige} borderRadius={2}>
+                            <img
+                              src={product.image}
+                              alt={product.title}
+                              width={50}
+                              height={50}
+                              style={{ borderRadius: 4, objectFit: "cover" }}
+                              loading="lazy"
+                            />
+                          </Box>
+                        )}
+                        <Typography
+                          fontSize="12px"
+                          fontFamily={"Stolzl"}
+                          color={theme.colors.pink}
+                          sx={{
+                            transition: "all 0.3s ease",
+                            "&:hover": { letterSpacing: "0.5px" },
+                          }}
+                        >
+                          {product.title}
+                        </Typography>
+                      </Box>
+                      <Divider
+                        sx={{
+                          width: "100%",
+                          border: `1.2px solid ${theme.colors.green}`,
+                          borderRadius: 2,
+                        }}
+                      />
+                    </Box>
+                  );
+                })}
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
