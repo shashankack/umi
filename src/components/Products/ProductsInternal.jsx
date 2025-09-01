@@ -354,24 +354,20 @@ const ProductsInternal = () => {
               ? 0
               : 10
           }
-          px={isMobile ? 4 : 10}
+          px={isMobile ? 1 : 10}
         >
           {/* Image Section */}
           <Stack
             direction={isMobile ? "column" : "row"}
             width="100%"
             gap={isMobile ? 2 : 5}
-            // border={1}
           >
             <Stack
               width={isMobile ? "100%" : "30vw"}
               height="100%"
               justifyContent="center"
               alignItems="center"
-              sx={{
-                opacity: 0,
-              }}
-              border={1}
+              py={{xs: 2, sm: 0}}
             >
               <Box
                 p={2}
@@ -452,6 +448,7 @@ const ProductsInternal = () => {
               color={theme.colors.beige}
               alignItems="start"
               justifyContent={"start"}
+              px={{ xs: 1, sm: 0 }}
               gap={
                 isMobile
                   ? parsedFullDescription
