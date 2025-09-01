@@ -354,7 +354,7 @@ const ProductsInternal = () => {
               ? 0
               : 10
           }
-          px={isMobile ? 1 : 10}
+          px={isMobile ? 2 : 10}
         >
           {/* Image Section */}
           <Stack
@@ -367,7 +367,7 @@ const ProductsInternal = () => {
               height="100%"
               justifyContent="center"
               alignItems="center"
-              py={{xs: 2, sm: 0}}
+              py={{ xs: 2, sm: 0 }}
             >
               <Box
                 p={2}
@@ -386,11 +386,11 @@ const ProductsInternal = () => {
                 }}
               >
                 <Box
-                  height={"70%"}
                   mb={isMobile ? 2 : 0}
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
+                  height={{ xs: 280, sm: "auto" }}
                 >
                   <Box
                     component="img"
