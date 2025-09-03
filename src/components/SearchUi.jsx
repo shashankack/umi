@@ -227,34 +227,49 @@ function FullscreenSearch({
           sx: { bgcolor: theme?.colors?.beige || "background.paper" },
         }}
       >
-        <AppBar elevation={0} color="transparent" position="sticky">
-          <Toolbar sx={{ py: 1, gap: 1 }}>
-            <IconButton
-              edge="start"
-              onClick={close}
-              aria-label="Close search"
-              sx={{ mr: 1, color: theme?.colors?.pink }}
-            >
-              {isSm ? <ArrowBack /> : <CloseIcon />}
-            </IconButton>
-            <SearchInput
-              placeholder={`Search products${
-                minChars > 1 ? ` (min ${minChars} chars)` : ""
-              }…`}
-              autoFocus
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchOutlined />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Toolbar>
-          {loading && <LinearProgress />}
-        </AppBar>
+        <AppBar
+  elevation={0}
+  color="transparent"
+  position="sticky"
+  sx={{ px: 0, background: theme?.colors?.beige || "background.paper" }}
+>
+  {/* Close Icon Top Right */}
+  <Box sx={{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    pt: 1,
+    px: { xs: 1, sm: 2 },
+  }}>
+    <IconButton
+      onClick={close}
+      aria-label="Close search"
+      sx={{
+        color: theme?.colors?.pink,
+      }}
+    >
+      {isSm ? <ArrowBack /> : <CloseIcon />}
+    </IconButton>
+  </Box>
+  {/* Full Width Search Bar Under Icon */}
+  <Box sx={{ width: '100%', px: { xs: 2, sm: 4 }, pb: 1 }}>
+    <SearchInput
+      placeholder={`Search products${minChars > 1 ? ` (min ${minChars} chars)` : ""}…`}
+      autoFocus
+      value={keyword}
+      onChange={(e) => setKeyword(e.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchOutlined />
+          </InputAdornment>
+        ),
+      }}
+    />
+  </Box>
+  {loading && <LinearProgress />}
+</AppBar>
+
 
         <Container maxWidth="lg" sx={{ pt: 3, pb: 6 }}>
           {canSearch && (
