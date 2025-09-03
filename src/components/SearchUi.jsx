@@ -1,63 +1,64 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  AppBar,
+  Avatar,
   Box,
+  Stack,
+  CircularProgress,
+  Container,
   Dialog,
-  DialogTitle,
-  DialogContent,
+  LinearProgress,
+  Grid,
   IconButton,
   InputAdornment,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  ListItemSecondaryAction,
+  Slide,
   TextField,
+  Toolbar,
   Typography,
-  Chip,
-  Tooltip,
   useMediaQuery,
 } from "@mui/material";
-import { useTheme, styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import {
-  Close,
+  Close as CloseIcon,
   SearchOutlined,
+  ArrowBack,
   ShoppingCart,
-  Block,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-// Shopify utils
 import {
   searchProducts,
-  fetchProductByHandle, // <-- used to get productType when missing
+  fetchProductByHandle,
   addToCart as sfAddToCart,
   createCart as sfCreateCart,
-} from "../utils/shopify"; // search + fetch by handle  :contentReference[oaicite:4]{index=4}
-
-import slugify from "../utils/slugify"; // build /shop/:productType/:title  :contentReference[oaicite:5]{index=5}
+} from "../utils/shopify";
+import slugify from "../utils/slugify";
 
 async function ensureCartId(getCartId, setCartId) {
-  let id = getCartId?.();
-  if (id) return id;
+  const existing = getCartId?.();
+  if (existing) return existing;
   const cart = await sfCreateCart();
   setCartId?.(cart.id);
   return cart.id;
 }
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const Root = styled("div")(({ theme }) => ({
   fontFamily: theme?.fonts?.text || "inherit",
 }));
 
-const SearchField = styled(TextField)(({ theme }) => ({
+const SearchInput = styled(TextField)(({ theme }) => ({
+  width: "100%",
   "& .MuiOutlinedInput-root": {
-    backgroundColor: theme?.colors?.beige || theme.palette.background.paper,
-    color: theme?.colors?.pink || theme.palette.text.primary,
-    fontFamily: theme?.fonts?.text,
+    borderRadius: 16,
+    background: theme?.colors?.beige || theme.palette.background.paper,
+    paddingRight: 8,
     "& fieldset": {
-      borderColor: theme?.colors?.green || theme.palette.divider,
       borderWidth: 2,
+      borderColor: theme?.colors?.green || theme.palette.divider,
     },
     "&:hover fieldset": {
       borderColor: theme?.colors?.pink || theme.palette.primary.main,
@@ -68,25 +69,50 @@ const SearchField = styled(TextField)(({ theme }) => ({
   },
   "& .MuiInputBase-input": {
     fontFamily: theme?.fonts?.text,
+    fontSize: 18,
   },
 }));
 
-/**
- * SearchUI (fixed: navigate by product title path, not variant/handle)
- */
-const SearchUI = ({
+const ResultCard = styled(Box)(({ theme }) => ({
+  position: "relative",
+  borderRadius: 16,
+  overflow: "hidden",
+  border: `2px solid ${theme?.colors?.green || theme.palette.divider}`,
+  cursor: "pointer",
+  width: "100%",
+  height: 380,
+  display: "flex",
+  flexDirection: "column",
+  background: theme?.colors?.beige || theme.palette.background.default,
+  transition: "transform .12s ease, box-shadow .12s ease",
+  "&:hover": {
+    transform: "translateY(-1px)",
+    boxShadow: "0 8px 24px rgba(0,0,0,.12)",
+  },
+}));
+
+const ImageWrap = styled(Box)(({ theme }) => ({
+  position: "relative",
+  flex: "1 1 auto",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: theme?.colors?.beige || theme.palette.background.default,
+}));
+
+function FullscreenSearch({
   open,
   onClose,
   minChars = 2,
-  debounceMs = 300,
-  title = "Search Products",
+  debounceMs = 250,
+  title = "Search",
   getCartId,
   setCartId,
   onAddToCart,
   enableQuickAdd = true,
-}) => {
+}) {
   const theme = useTheme();
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
 
   const [keyword, setKeyword] = useState("");
@@ -94,25 +120,22 @@ const SearchUI = ({
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
   const [adding, setAdding] = useState(null);
-
   const [activeIndex, setActiveIndex] = useState(-1);
-  const listRef = useRef(null);
-  const debouncer = useRef(0);
 
   const canSearch = keyword.trim().length >= minChars;
+  const listRef = useRef(null);
+  const debouncer = useRef(0);
 
   useEffect(() => {
     if (!open) {
       setKeyword("");
       setResults([]);
-      setLoading(false);
       setError("");
+      setLoading(false);
       setActiveIndex(-1);
-      setAdding(null);
     }
   }, [open]);
 
-  // Debounced search
   useEffect(() => {
     window.clearTimeout(debouncer.current);
     if (!canSearch) {
@@ -127,10 +150,11 @@ const SearchUI = ({
         setLoading(true);
         setError("");
         const list = await searchProducts(keyword.trim());
-        setResults(Array.isArray(list) ? list : []);
-        if (!list || list.length === 0) setError("No products found.");
+        const arr = Array.isArray(list) ? list : [];
+        setResults(arr);
+        if (arr.length === 0) setError("No products found.");
       } catch (e) {
-        setError("Error searching products. Please try again.");
+        setError("Error searching. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -139,59 +163,21 @@ const SearchUI = ({
     return () => window.clearTimeout(debouncer.current);
   }, [keyword, canSearch, debounceMs]);
 
-  const handleClose = useCallback(() => {
-    onClose?.();
-  }, [onClose]);
+  const close = useCallback(() => onClose?.(), [onClose]);
 
-  /**
-   * Build route: /shop/:productTypeSlug/:productTitleSlug
-   * If search result lacks productType, fetch by handle to resolve it.
-   * Matches your SearchPopup’s routing pattern.  :contentReference[oaicite:6]{index=6}
-   */
-  const navigateByTitle = useCallback(
+  const navigateToPdp = useCallback(
     async (product) => {
       try {
-        let productType = product?.productType;
-        // fetch details if productType missing from search result
-        if (!productType && product?.handle) {
-          const full = await fetchProductByHandle(product.handle);
-          productType = full?.productType || "product";
-        }
         const nameSlug = slugify(product?.title || "");
+        if (!nameSlug) return;
         navigate(`/shop/${nameSlug}`);
       } finally {
-        handleClose();
+        close();
       }
     },
-    [navigate, handleClose]
+    [navigate, close]
   );
 
-  // Keyboard navigation for list
-  const onKeyDown = (e) => {
-    if (!open) return;
-    if (["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key)) {
-      e.preventDefault();
-    }
-    if (e.key === "ArrowDown") {
-      setActiveIndex((i) => Math.min(i + 1, results.length - 1));
-      scrollIntoView(Math.min(activeIndex + 1, results.length - 1));
-    } else if (e.key === "ArrowUp") {
-      setActiveIndex((i) => Math.max(i - 1, 0));
-      scrollIntoView(Math.max(activeIndex - 1, 0));
-    } else if (e.key === "Enter") {
-      const item = results[activeIndex];
-      if (item) navigateByTitle(item); // pass the whole product (title-based route)
-    } else if (e.key === "Escape") {
-      handleClose();
-    }
-  };
-
-  const scrollIntoView = (index) => {
-    const node = listRef.current?.querySelector(`[data-index="${index}"]`);
-    if (node) node.scrollIntoView({ block: "nearest" });
-  };
-
-  // Quick add: first available variant
   const quickAdd = useCallback(
     async (handle) => {
       if (!enableQuickAdd) return;
@@ -201,18 +187,15 @@ const SearchUI = ({
         const variant =
           product?.variants?.edges
             ?.map((e) => e.node)
-            ?.find((v) => v.availableForSale) ||
+            .find((v) => v.availableForSale) ||
           product?.variants?.edges?.[0]?.node;
         const variantId = variant?.id;
         if (!variantId) throw new Error("No variant available.");
-        if (onAddToCart) {
-          await onAddToCart(variantId);
-        } else {
+        if (onAddToCart) await onAddToCart(variantId);
+        else {
           const cartId = await ensureCartId(getCartId, setCartId);
           await sfAddToCart(cartId, variantId, 1);
         }
-      } catch (e) {
-        console.error(e);
       } finally {
         setAdding(null);
       }
@@ -220,186 +203,211 @@ const SearchUI = ({
     [enableQuickAdd, getCartId, onAddToCart, setCartId]
   );
 
-  const PriceChip = ({ children }) => (
-    <Chip
-      size="small"
-      label={children}
-      sx={{
-        borderColor: theme?.colors?.green,
-        color: theme?.colors?.pink,
-        fontFamily: theme?.fonts?.text,
-      }}
-      variant="outlined"
-    />
-  );
+  const onKeyDown = (e) => {
+    if (!open) return;
+    if (["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key))
+      e.preventDefault();
+    if (e.key === "ArrowDown")
+      setActiveIndex((i) => Math.min(i + 1, results.length - 1));
+    else if (e.key === "ArrowUp") setActiveIndex((i) => Math.max(i - 1, 0));
+    else if (e.key === "Enter") {
+      const item = results[activeIndex];
+      if (item) navigateToPdp(item);
+    } else if (e.key === "Escape") close();
+  };
 
   return (
     <Root onKeyDown={onKeyDown}>
       <Dialog
-        fullWidth
-        maxWidth="sm"
+        fullScreen
         open={open}
-        onClose={handleClose}
+        onClose={close}
+        TransitionComponent={Transition}
         PaperProps={{
-          sx: {
-            borderRadius: 3,
-            backgroundColor: theme?.colors?.white || "background.paper",
-            border: `2px solid ${theme?.colors?.green}`,
-          },
+          sx: { bgcolor: theme?.colors?.beige || "background.paper" },
         }}
       >
-        <DialogTitle
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontFamily: theme?.fonts?.heading,
-            color: theme?.colors?.pink,
-            pb: 1,
-          }}
-        >
-          {title}
-          <IconButton onClick={handleClose} aria-label="Close search">
-            <Close />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent sx={{ pt: 1 }}>
-          <SearchField
-            variant="outlined"
-            fullWidth
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder={`Type at least ${minChars} characters…`}
-            autoFocus
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => keyword && setKeyword(keyword)}
-                    disabled={!canSearch || loading}
-                    aria-label="Search"
-                  >
-                    <SearchOutlined />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          {loading && (
-            <Box sx={{ mt: 2 }}>
-              <LinearProgress />
-            </Box>
-          )}
-
-          {!!error && !loading && (
-            <Typography sx={{ mt: 2 }} color="error">
-              {error}
-            </Typography>
-          )}
-
-          {!loading && results.length > 0 && (
-            <List
-              dense
-              ref={listRef}
-              sx={{ mt: 1, maxHeight: isMobile ? 360 : 420, overflowY: "auto" }}
+        <AppBar elevation={0} color="transparent" position="sticky">
+          <Toolbar sx={{ py: 1, gap: 1 }}>
+            <IconButton
+              edge="start"
+              onClick={close}
+              aria-label="Close search"
+              sx={{ mr: 1, color: theme?.colors?.pink }}
             >
-              {results.map((p, idx) => (
-                <ListItem
-                  key={p.handle || p.id}
-                  data-index={idx}
-                  onMouseEnter={() => setActiveIndex(idx)}
-                  onClick={() => navigateByTitle(p)} // <-- click uses product title route
+              {isSm ? <ArrowBack /> : <CloseIcon />}
+            </IconButton>
+            <SearchInput
+              placeholder={`Search products${
+                minChars > 1 ? ` (min ${minChars} chars)` : ""
+              }…`}
+              autoFocus
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchOutlined />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Toolbar>
+          {loading && <LinearProgress />}
+        </AppBar>
+
+        <Container maxWidth="lg" sx={{ pt: 3, pb: 6 }}>
+          {canSearch && (
+            <Box>
+              <Box
+                display="flex"
+                alignItems="baseline"
+                justifyContent="space-between"
+                mb={1}
+              >
+                <Typography
+                  variant="h6"
                   sx={{
-                    cursor: "pointer",
-                    borderRadius: 2,
-                    pr: 8,
-                    ...(activeIndex === idx
-                      ? {
-                          backgroundColor:
-                            (theme?.colors?.beige || "#fff") + "99",
-                          outline: `2px solid ${theme?.colors?.green}`,
-                        }
-                      : {
-                          "&:hover": {
-                            backgroundColor:
-                              (theme?.colors?.beige || "#fff") + "66",
-                          },
-                        }),
+                    fontFamily: theme?.fonts?.heading,
+                    color: theme?.colors?.pink,
                   }}
                 >
-                  <ListItemAvatar>
-                    <Avatar
-                      src={p.image || undefined}
-                      alt={p.title}
-                      variant="rounded"
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        border: `2px solid ${theme?.colors?.green}`,
-                        backgroundColor: theme?.colors?.beige,
-                      }}
-                    />
-                  </ListItemAvatar>
+                  {keyword ? `Results for “${keyword}”` : title}
+                </Typography>
+                {!!results.length && (
+                  <Typography variant="body2" color="text.secondary">
+                    {results.length} found
+                  </Typography>
+                )}
+              </Box>
 
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontFamily: theme?.fonts?.text,
-                          color: theme?.colors?.pink,
-                        }}
-                      >
-                        {p.title}
-                      </Typography>
-                    }
-                    secondary={
-                      <Box display="flex" alignItems="center" gap={1} mt={0.5}>
-                        <PriceChip>View details</PriceChip>
-                      </Box>
-                    }
-                  />
+              {!!error && !loading && (
+                <Typography color="error" sx={{ mt: 1 }}>
+                  {error}
+                </Typography>
+              )}
 
-                  {enableQuickAdd && (
-                    <ListItemSecondaryAction>
-                      <Tooltip title="Quick add (first available variant)">
-                        <span>
-                          <IconButton
-                            edge="end"
-                            aria-label="Add to cart"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              quickAdd(p.handle);
+              <Grid container spacing={2} ref={listRef}>
+                {results.map((p, idx) => (
+                  <Grid
+                    size={{
+                      xs: 12,
+                      sm: 4,
+                    }}
+                    key={p.handle || p.id}
+                  >
+                    <ResultCard
+                      role="button"
+                      aria-label={`View ${p.title}`}
+                      onClick={() => navigateToPdp(p)}
+                      sx={
+                        activeIndex === idx
+                          ? { outline: `2px solid ${theme?.colors?.green}` }
+                          : undefined
+                      }
+                      onMouseEnter={() => setActiveIndex(idx)}
+                    >
+                      <ImageWrap>
+                        {p.image ? (
+                          <img
+                            alt={p.title}
+                            src={p.image}
+                            style={{
+                              width: "80%",
+                              objectFit: "contain",
                             }}
-                            disabled={adding === p.handle}
-                            sx={{
-                              "&:hover": {
-                                backgroundColor: theme?.colors?.pink,
-                                color: theme?.colors?.white,
-                              },
-                              border: `2px solid ${theme?.colors?.green}`,
-                            }}
+                          />
+                        ) : (
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            width="100%"
+                            height="100%"
                           >
-                            {adding === p.handle ? (
-                              <Block fontSize="small" />
-                            ) : (
-                              <ShoppingCart />
-                            )}
-                          </IconButton>
-                        </span>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  )}
-                </ListItem>
-              ))}
-            </List>
+                            <Avatar
+                              variant="rounded"
+                              sx={{ width: 56, height: 56 }}
+                            >
+                              {p.title?.[0]}
+                            </Avatar>
+                          </Box>
+                        )}
+                      </ImageWrap>
+
+                      <Stack
+                        p={2}
+                        width="100%"
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        <Typography
+                          variant="body1"
+                          noWrap
+                          title={p.title}
+                          sx={{ fontWeight: 600 }}
+                          color={theme.colors.pink}
+                          maxWidth="20ch"
+                        >
+                          {p.title}
+                        </Typography>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          gap={1}
+                          mt={0.5}
+                        >
+                          {enableQuickAdd && (
+                            <span>
+                              <IconButton
+                                size="small"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  quickAdd(p.handle);
+                                }}
+                                disabled={adding === p.handle}
+                                sx={{
+                                  color: theme.colors.green,
+                                  border: `1px solid ${theme?.colors?.green}`,
+                                  borderRadius: 2,
+                                  px: 2,
+                                  py: 1,
+                                }}
+                                aria-label={`Quick add ${p.title}`}
+                              >
+                                {adding === p.handle ? (
+                                  <CircularProgress
+                                    size={16}
+                                    thickness={5}
+                                    sx={{ color: theme.colors.green }}
+                                  />
+                                ) : (
+                                  <ShoppingCart fontSize="small" />
+                                )}
+                              </IconButton>
+                            </span>
+                          )}
+                        </Box>
+                      </Stack>
+                    </ResultCard>
+                  </Grid>
+                ))}
+              </Grid>
+
+              {!loading && canSearch && results.length === 0 && !error && (
+                <Box textAlign="center" py={8}>
+                  <Typography variant="body1" color="text.secondary">
+                    Try a different term or browse categories.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           )}
-        </DialogContent>
+        </Container>
       </Dialog>
     </Root>
   );
-};
+}
 
-export default SearchUI;
+export default FullscreenSearch;

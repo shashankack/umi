@@ -18,7 +18,6 @@ import {
   Divider,
   useMediaQuery,
   Link as MUILink,
-  Tooltip,
 } from "@mui/material";
 
 import { FaSearch } from "react-icons/fa";
@@ -213,22 +212,20 @@ const Navbar = () => {
             alignItems="center"
             position="relative"
           >
-            <Tooltip title="Search products">
-              <IconButton
-                onClick={() => setIsSearchOpen(true)}
-                size="small"
-                aria-label="Open search"
-              >
-                <FaSearch
-                  fontSize={30}
-                  color={
-                    navbarTheme === "pink"
-                      ? theme.colors.pink
-                      : theme.colors.beige
-                  }
-                />
-              </IconButton>
-            </Tooltip>
+            <IconButton
+              onClick={() => setIsSearchOpen(true)}
+              size="small"
+              aria-label="Open search"
+            >
+              <FaSearch
+                fontSize={30}
+                color={
+                  navbarTheme === "pink"
+                    ? theme.colors.pink
+                    : theme.colors.beige
+                }
+              />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
