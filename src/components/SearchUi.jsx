@@ -1,428 +1,355 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+// src/components/SearchUi.jsx
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
-  AppBar,
   Avatar,
   Box,
-  Stack,
-  CircularProgress,
-  Container,
-  Dialog,
-  LinearProgress,
-  Grid,
+  Divider,
+  Drawer,
   IconButton,
   InputAdornment,
-  Slide,
+  LinearProgress,
+  List,
+  ListItemButton,
+  ListItemAvatar,
+  ListItemText,
   TextField,
-  Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme, alpha } from "@mui/material/styles";
 import {
   Close as CloseIcon,
   SearchOutlined,
-  ArrowBack,
-  ShoppingCart,
+  Clear as ClearIcon,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { searchProducts } from "../utils/shopify";
+import { th } from "framer-motion/client";
 
-import {
-  searchProducts,
-  fetchProductByHandle,
-  addToCart as sfAddToCart,
-  createCart as sfCreateCart,
-} from "../utils/shopify";
-import slugify from "../utils/slugify";
-
-async function ensureCartId(getCartId, setCartId) {
-  const existing = getCartId?.();
-  if (existing) return existing;
-  const cart = await sfCreateCart();
-  setCartId?.(cart.id);
-  return cart.id;
-}
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Root = styled("div")(({ theme }) => ({
-  fontFamily: theme?.fonts?.text || "inherit",
-}));
-
-const SearchInput = styled(TextField)(({ theme }) => ({
-  width: "100%",
-  "& .MuiOutlinedInput-root": {
-    borderRadius: 16,
-    background: theme?.colors?.beige || theme.palette.background.paper,
-    paddingRight: 8,
-    "& fieldset": {
-      borderWidth: 2,
-      borderColor: theme?.colors?.green || theme.palette.divider,
-    },
-    "&:hover fieldset": {
-      borderColor: theme?.colors?.pink || theme.palette.primary.main,
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: theme?.colors?.pink || theme.palette.primary.main,
-    },
-  },
-  "& .MuiInputBase-input": {
-    fontFamily: theme?.fonts?.text,
-    fontSize: 18,
-  },
-}));
-
-const ResultCard = styled(Box)(({ theme }) => ({
-  position: "relative",
-  borderRadius: 16,
-  overflow: "hidden",
-  border: `2px solid ${theme?.colors?.green || theme.palette.divider}`,
-  cursor: "pointer",
-  width: "100%",
-  height: 380,
-  display: "flex",
-  flexDirection: "column",
-  background: theme?.colors?.beige || theme.palette.background.default,
-  transition: "transform .12s ease, box-shadow .12s ease",
-  "&:hover": {
-    transform: "translateY(-1px)",
-    boxShadow: "0 8px 24px rgba(0,0,0,.12)",
-  },
-}));
-
-const ImageWrap = styled(Box)(({ theme }) => ({
-  position: "relative",
-  flex: "1 1 auto",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  background: theme?.colors?.beige || theme.palette.background.default,
-}));
-
-function FullscreenSearch({
-  open,
-  onClose,
-  minChars = 2,
-  debounceMs = 250,
-  title = "Search",
-  getCartId,
-  setCartId,
-  onAddToCart,
-  enableQuickAdd = true,
-}) {
+export default function SearchUi({ open, onClose }) {
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
+  const { search } = useLocation();
 
-  const [keyword, setKeyword] = useState("");
+  // design tokens w/ palette fallback
+  const pink = theme.colors?.pink ?? theme.palette.primary.main;
+  const green = theme.colors?.green ?? theme.palette.divider;
+  const beige = theme.colors?.beige ?? theme.palette.background.paper;
+  const white = theme.colors?.white ?? theme.palette.background.default;
+
+  // Seed input from current URL (?q=) when opened
+  const initialQ = useMemo(
+    () => new URLSearchParams(search).get("q") || "",
+    [search]
+  );
+  const [q, setQ] = useState(initialQ);
+
+  // Inline results state
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [rows, setRows] = useState([]);
   const [error, setError] = useState("");
-  const [adding, setAdding] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const debounceRef = useRef(0);
 
-  const canSearch = keyword.trim().length >= minChars;
-  const listRef = useRef(null);
-  const debouncer = useRef(0);
-
+  // Reset / re-seed when drawer opens or closes
   useEffect(() => {
-    if (!open) {
-      setKeyword("");
-      setResults([]);
+    if (open) {
+      const current =
+        new URLSearchParams(window.location.search).get("q") || "";
+      setQ(current);
+    } else {
+      setRows([]);
       setError("");
       setLoading(false);
-      setActiveIndex(-1);
+      window.clearTimeout(debounceRef.current);
     }
   }, [open]);
 
+  // Debounced inline search for list rows
   useEffect(() => {
-    window.clearTimeout(debouncer.current);
-    if (!canSearch) {
-      setResults([]);
-      setError(
-        keyword.trim().length ? `Enter at least ${minChars} characters` : ""
-      );
+    window.clearTimeout(debounceRef.current);
+    const keyword = q.trim();
+    if (!open || keyword.length < 2) {
+      setRows([]);
+      setError(keyword.length ? "Enter at least 2 characters" : "");
       return;
     }
-    debouncer.current = window.setTimeout(async () => {
+    debounceRef.current = window.setTimeout(async () => {
       try {
         setLoading(true);
         setError("");
-        const list = await searchProducts(keyword.trim());
-        const arr = Array.isArray(list) ? list : [];
-        setResults(arr);
-        if (arr.length === 0) setError("No products found.");
-      } catch (e) {
-        setError("Error searching. Please try again.");
+        const list = await searchProducts(keyword);
+        const arr = Array.isArray(list) ? list.slice(0, 8) : [];
+        setRows(arr);
+        if (!arr.length) setError("No products found.");
+      } catch {
+        setError("Search failed. Please try again.");
       } finally {
         setLoading(false);
       }
-    }, debounceMs);
+    }, 220);
 
-    return () => window.clearTimeout(debouncer.current);
-  }, [keyword, canSearch, debounceMs]);
+    return () => window.clearTimeout(debounceRef.current);
+  }, [q, open]);
 
   const close = useCallback(() => onClose?.(), [onClose]);
 
-  const navigateToPdp = useCallback(
-    async (product) => {
-      try {
-        const nameSlug = slugify(product?.title || "");
-        if (!nameSlug) return;
-        navigate(`/shop/${nameSlug}`);
-      } finally {
-        close();
-      }
+  const goSearch = useCallback(
+    (term) => {
+      const next = (term ?? q).trim();
+      if (!next) return;
+      navigate(`/search?q=${encodeURIComponent(next)}`);
+      close();
     },
-    [navigate, close]
-  );
-
-  const quickAdd = useCallback(
-    async (handle) => {
-      if (!enableQuickAdd) return;
-      setAdding(handle);
-      try {
-        const product = await fetchProductByHandle(handle);
-        const variant =
-          product?.variants?.edges
-            ?.map((e) => e.node)
-            .find((v) => v.availableForSale) ||
-          product?.variants?.edges?.[0]?.node;
-        const variantId = variant?.id;
-        if (!variantId) throw new Error("No variant available.");
-        if (onAddToCart) await onAddToCart(variantId);
-        else {
-          const cartId = await ensureCartId(getCartId, setCartId);
-          await sfAddToCart(cartId, variantId, 1);
-        }
-      } finally {
-        setAdding(null);
-      }
-    },
-    [enableQuickAdd, getCartId, onAddToCart, setCartId]
+    [q, navigate, close]
   );
 
   const onKeyDown = (e) => {
-    if (!open) return;
-    if (["ArrowDown", "ArrowUp", "Enter", "Escape"].includes(e.key))
+    if (e.key === "Enter") {
       e.preventDefault();
-    if (e.key === "ArrowDown")
-      setActiveIndex((i) => Math.min(i + 1, results.length - 1));
-    else if (e.key === "ArrowUp") setActiveIndex((i) => Math.max(i - 1, 0));
-    else if (e.key === "Enter") {
-      const item = results[activeIndex];
-      if (item) navigateToPdp(item);
-    } else if (e.key === "Escape") close();
+      goSearch();
+    } else if (e.key === "Escape") {
+      close();
+    }
   };
 
+  const clearInput = () => setQ("");
+
   return (
-    <Root onKeyDown={onKeyDown}>
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={close}
-        TransitionComponent={Transition}
-        PaperProps={{
-          sx: { bgcolor: theme?.colors?.beige || "background.paper" },
+    <Drawer
+      anchor="top"
+      open={open}
+      onClose={close}
+      PaperProps={{
+        sx: {
+          // surface
+          borderRadius: 0,
+          bgcolor: beige,
+          backdropFilter: "saturate(140%) blur(6px)",
+          borderBottom: `1px solid ${alpha(green, 0.6)}`,
+          width: "100%",
+          maxHeight: smDown ? "85vh" : "70vh",
+          boxShadow: "0 10px 30px rgba(0,0,0,.20)",
+        },
+      }}
+      ModalProps={{ keepMounted: true }}
+    >
+      {/* Header Row */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr auto",
+          alignItems: "center",
+          gap: 1,
+          px: { xs: 2, sm: 3 },
+          py: { xs: 4, sm: 5 },
         }}
       >
-        <AppBar
-  elevation={0}
-  color="transparent"
-  position="sticky"
-  sx={{ px: 0, background: theme?.colors?.beige || "background.paper" }}
->
-  {/* Close Icon Top Right */}
-  <Box sx={{
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    pt: 1,
-    px: { xs: 1, sm: 2 },
-  }}>
-    <IconButton
-      onClick={close}
-      aria-label="Close search"
-      sx={{
-        color: theme?.colors?.pink,
-      }}
-    >
-      {isSm ? <ArrowBack /> : <CloseIcon />}
-    </IconButton>
-  </Box>
-  {/* Full Width Search Bar Under Icon */}
-  <Box sx={{ width: '100%', px: { xs: 2, sm: 4 }, pb: 1 }}>
-    <SearchInput
-      placeholder={`Search products${minChars > 1 ? ` (min ${minChars} chars)` : ""}…`}
-      autoFocus
-      value={keyword}
-      onChange={(e) => setKeyword(e.target.value)}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchOutlined />
-          </InputAdornment>
-        ),
-      }}
-    />
-  </Box>
-  {loading && <LinearProgress />}
-</AppBar>
-
-
-        <Container maxWidth="lg" sx={{ pt: 3, pb: 6 }}>
-          {canSearch && (
-            <Box>
-              <Box
-                display="flex"
-                alignItems="baseline"
-                justifyContent="space-between"
-                mb={1}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontFamily: theme?.fonts?.heading,
-                    color: theme?.colors?.pink,
-                  }}
-                >
-                  {keyword ? `Results for “${keyword}”` : title}
-                </Typography>
-                {!!results.length && (
-                  <Typography variant="body2" color="text.secondary">
-                    {results.length} found
-                  </Typography>
-                )}
-              </Box>
-
-              {!!error && !loading && (
-                <Typography color="error" sx={{ mt: 1 }}>
-                  {error}
-                </Typography>
-              )}
-
-              <Grid container spacing={2} ref={listRef}>
-                {results.map((p, idx) => (
-                  <Grid
-                    size={{
-                      xs: 12,
-                      sm: 4,
-                    }}
-                    key={p.handle || p.id}
-                  >
-                    <ResultCard
-                      role="button"
-                      aria-label={`View ${p.title}`}
-                      onClick={() => navigateToPdp(p)}
-                      sx={
-                        activeIndex === idx
-                          ? { outline: `2px solid ${theme?.colors?.green}` }
-                          : undefined
-                      }
-                      onMouseEnter={() => setActiveIndex(idx)}
+        <TextField
+          fullWidth
+          autoFocus
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder="Search products…"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={{ mr: 0.5 }}>
+                <SearchOutlined />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end" sx={{ gap: 0.25 }}>
+                {q ? (
+                  <Tooltip title="Clear">
+                    <IconButton
+                      size="small"
+                      onClick={clearInput}
+                      aria-label="Clear search"
+                      sx={{ color: alpha(pink, 0.9) }}
                     >
-                      <ImageWrap>
-                        {p.image ? (
-                          <img
-                            alt={p.title}
-                            src={p.image}
-                            style={{
-                              width: "80%",
-                              objectFit: "contain",
-                            }}
-                          />
-                        ) : (
-                          <Box
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            width="100%"
-                            height="100%"
-                          >
-                            <Avatar
-                              variant="rounded"
-                              sx={{ width: 56, height: 56 }}
-                            >
-                              {p.title?.[0]}
-                            </Avatar>
-                          </Box>
-                        )}
-                      </ImageWrap>
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                ) : null}
+                <Tooltip title="Search">
+                  <IconButton
+                    size="small"
+                    onClick={() => goSearch()}
+                    aria-label="Submit search"
+                    sx={{ color: alpha(pink, 0.9) }}
+                  >
+                    <SearchOutlined fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              height: 48,
+              borderRadius: 12,
+              background: white,
+              transition: "box-shadow .15s ease, border-color .15s ease",
+              "& fieldset": {
+                borderWidth: 2,
+                borderColor: green,
+              },
+              "&:hover fieldset": {
+                borderColor: pink,
+              },
+              "&.Mui-focused": {
+                boxShadow: `0 0 0 3px ${alpha(pink, 0.15)}`,
+                "& fieldset": { borderColor: pink },
+              },
+            },
+            "& input::placeholder": { opacity: 0.8 },
+          }}
+        />
 
-                      <Stack
-                        p={2}
-                        width="100%"
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <Typography
-                          variant="body1"
-                          noWrap
-                          title={p.title}
-                          sx={{ fontWeight: 600 }}
-                          color={theme.colors.pink}
-                          maxWidth="20ch"
-                        >
-                          {p.title}
-                        </Typography>
-                        <Box
-                          display="flex"
-                          alignItems="center"
-                          gap={1}
-                          mt={0.5}
-                        >
-                          {enableQuickAdd && (
-                            <span>
-                              <IconButton
-                                size="small"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  quickAdd(p.handle);
-                                }}
-                                disabled={adding === p.handle}
-                                sx={{
-                                  color: theme.colors.green,
-                                  border: `1px solid ${theme?.colors?.green}`,
-                                  borderRadius: 2,
-                                  px: 2,
-                                  py: 1,
-                                }}
-                                aria-label={`Quick add ${p.title}`}
-                              >
-                                {adding === p.handle ? (
-                                  <CircularProgress
-                                    size={16}
-                                    thickness={5}
-                                    sx={{ color: theme.colors.green }}
-                                  />
-                                ) : (
-                                  <ShoppingCart fontSize="small" />
-                                )}
-                              </IconButton>
-                            </span>
-                          )}
-                        </Box>
-                      </Stack>
-                    </ResultCard>
-                  </Grid>
-                ))}
-              </Grid>
+        <Tooltip title="Close">
+          <IconButton
+            aria-label="Close search"
+            onClick={close}
+            edge="end"
+            sx={{
+              ml: 0.5,
+              color: pink,
+              borderRadius: 10,
+              "&:focus-visible": {
+                outline: `3px solid ${alpha(pink, 0.4)}`,
+                outlineOffset: 2,
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
 
-              {!loading && canSearch && results.length === 0 && !error && (
-                <Box textAlign="center" py={8}>
-                  <Typography variant="body1" color="text.secondary">
-                    Try a different term or browse categories.
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          )}
-        </Container>
-      </Dialog>
-    </Root>
+      {/* Progress bar (brand color) */}
+      {loading && (
+        <LinearProgress
+          sx={{
+            "& .MuiLinearProgress-bar": { backgroundColor: pink },
+            bgcolor: alpha(green, 0.25),
+          }}
+        />
+      )}
+
+      {/* Inline results */}
+      <Box
+        sx={{
+          px: { xs: 2, sm: 3 },
+          pb: { xs: 2, sm: 3 },
+          pt: 1.5,
+          maxHeight: smDown ? "calc(85vh - 110px)" : "calc(70vh - 110px)",
+          overflowY: "auto",
+        }}
+      >
+        {!!error && !loading && (
+          <Typography
+            role="status"
+            color="text.secondary"
+            sx={{ mb: 1, fontStyle: "italic" }}
+          >
+            {error}
+          </Typography>
+        )}
+
+        <List dense disablePadding>
+          {rows.map((r, idx) => (
+            <ListItemButton
+              key={r.id || r.handle || idx}
+              onClick={() => goSearch(r.title)}
+              sx={{
+                borderRadius: 12,
+                mb: 0.75,
+                px: 1,
+                py: 0.75,
+                alignItems: "center",
+                border: `2px solid ${green}`,
+                background: white,
+                transition: "transform .12s ease, background-color .12s ease",
+                "&:hover": {
+                  transform: "translateY(-1px)",
+                  backgroundColor: alpha(pink, 0.03),
+                },
+                "&:focus-visible": {
+                  outline: `3px solid ${alpha(pink, 0.35)}`,
+                  outlineOffset: 2,
+                },
+              }}
+            >
+              <ListItemAvatar sx={{ minWidth: 52 }}>
+                {r.image ? (
+                  <Avatar
+                    src={r.image}
+                    alt={r.title}
+                    variant="rounded"
+                    className="thumb"
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 10,
+
+                      transition: "transform .12s ease",
+                      ".MuiListItemButton-root:hover &": {
+                        transform: "scale(1.03)",
+                      },
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    variant="rounded"
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 10,
+                      bgcolor: alpha(pink, 0.12),
+                      color: alpha(pink, 0.9),
+                      fontWeight: 700,
+                    }}
+                  >
+                    {r.title?.[0] || "?"}
+                  </Avatar>
+                )}
+              </ListItemAvatar>
+
+              <ListItemText
+                primary={r.title}
+                secondary={r.handle}
+                slotProps={{
+                  primary: {
+                    variant: "body1",
+                    noWrap: true,
+                    sx: { fontWeight: 600, color: theme.colors.pink },
+                  },
+                  secondary: {
+                    variant: "caption",
+                    noWrap: true,
+                    sx: { color: theme.colors.green },
+                    fontWeight: 500,
+                  },
+                }}
+              />
+            </ListItemButton>
+          ))}
+        </List>
+
+        {rows.length > 0 && (
+          <Typography variant="caption" color="text.secondary">
+            Press Enter or tap the search icon to view full results.
+          </Typography>
+        )}
+      </Box>
+    </Drawer>
   );
 }
-
-export default FullscreenSearch;

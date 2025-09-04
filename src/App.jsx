@@ -10,6 +10,7 @@ const Contact = lazy(() => import("./pages/Contact/Contact"));
 const Shop = lazy(() => import("./pages/Shop/Shop"));
 const FAQ = lazy(() => import("./pages/FAQ.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
+const SearchPage = lazy(() => import("./pages/SearchPage.jsx"));
 
 import AboutMatcha from "./pages/AboutMatcha.jsx";
 import Navbar from "./components/Navbar";
@@ -69,6 +70,7 @@ const AppContent = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shop/:productName" element={<ProductsInternal />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/our-matcha" element={<AboutMatcha />} />
         <Route path="/how-to-make-matcha-at-home" element={<Brewing />} />
         <Route path="/blogs" element={<Blogs />} />
