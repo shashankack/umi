@@ -310,7 +310,7 @@ const SearchPage = () => {
                   {/* Subtle affordance arrow */}
                   <FiArrowUpRight
                     fontSize={26}
-                    color={theme.colors.pink}
+                    color={theme.colors.green}
                     className="arrow-icon"
                   />
                 </CardContent>
