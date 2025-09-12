@@ -1,6 +1,6 @@
 // src/features/search/SearchPage.jsx
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams, Link as RouterLink } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -10,18 +10,17 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Tooltip,
   LinearProgress,
   IconButton,
   useTheme,
 } from "@mui/material";
 import { Helmet } from "react-helmet-async";
-// Adjust this path if your utils folder is elsewhere:
 import { searchProducts } from "../utils/shopify";
 import slugify from "../utils/slugify";
 import { alpha } from "@mui/material/styles";
 
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { FiArrowUpRight } from "react-icons/fi";
+
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "";
@@ -29,13 +28,14 @@ const BRAND = import.meta.env.VITE_BRAND_NAME || "Brand";
 
 const SearchPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const q = (params.get("q") || "").trim();
 
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
-  const [visible, setVisible] = useState(24); // client-side "Load more"
+  const [visible, setVisible] = useState(24);
 
   // Build related search terms: full phrase, tokens, simple singular/plural
   const searchTerms = useMemo(() => {
@@ -170,13 +170,31 @@ const SearchPage = () => {
                 transition: "transform .15s ease, box-shadow .15s ease",
                 "&:hover": {
                   transform: "translateY(-2px)",
-                  boxShadow: "0 12px 24px rgba(0,0,0,.14)",
+                  borderColor: theme.colors.pink,
+                  boxShadow: `2px 2px 0px ${theme.colors.pink}`,
+                },
+
+                "& .arrow-icon": {
+                  transition: "transform .3s ease",
+                },
+                "&:hover .arrow-icon": {
+                  transform: "translate(4px, -4px)",
                 },
               }}
             >
               <CardActionArea
-                component={RouterLink}
-                to={`/shop/${slugify(p.title)}`}
+                component="div"
+                role="link"
+                tabIndex={0}
+                aria-label={`Open ${p.title}`}
+                onClick={() => navigate(`/shop/${slugify(p.title)}`)}
+                disableRipple
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(`/shop/${slugify(p.title)}`);
+                  }
+                }}
                 sx={{
                   display: "block",
                   "&:focus-visible": {
@@ -222,34 +240,46 @@ const SearchPage = () => {
                   )}
 
                   {/* Quick add (appears on hover) */}
-                  <Tooltip title="Add to cart">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        // TODO: quick add to cart here
-                      }}
-                      aria-label={`Add ${p.title} to cart`}
-                      sx={{
-                        position: "absolute",
-                        top: 8,
-                        right: 8,
-                        color: theme.colors.pink,
-                        border: `1px solid ${theme.colors.pink}`,
-                        borderRadius: 2,
-                        opacity: 0,
-                        transform: "translateY(-6px)",
-                        transition: "opacity .2s ease, transform .2s ease",
-                        ".MuiCard-root:hover &": {
+
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // TODO: quick add to cart here
+                    }}
+                    aria-label={`Add ${p.title} to cart`}
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      color: theme.colors.pink,
+                      border: `1px solid ${theme.colors.pink}`,
+                      borderRadius: 2,
+                      opacity: 0,
+                      transform: "translateY(-6px)",
+                      transition: "opacity .2s ease, transform .2s ease",
+                      ".MuiCard-root:hover &": {
+                        opacity: 1,
+                        transform: "translateY(0)",
+                      },
+                      // Touch devices (no hover): keep it visible
+                      "@media (hover: none)": {
+                        opacity: 1,
+                        transform: "none",
+                        padding: "6px",
+                        backdropFilter: "blur(4px)",
+                      },
+                      // Keyboard accessibility: show when card is focused
+                      ".MuiCardActionArea-root:focus-visible & , .MuiCardActionArea-root:focus-within &":
+                        {
                           opacity: 1,
                           transform: "translateY(0)",
                         },
-                      }}
-                    >
-                      <ShoppingCartIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
+                    }}
+                  >
+                    <ShoppingCartIcon fontSize="small" />
+                  </IconButton>
                 </Box>
 
                 {/* Content */}
@@ -278,9 +308,10 @@ const SearchPage = () => {
                   </Typography>
 
                   {/* Subtle affordance arrow */}
-                  <ArrowForwardIosIcon
-                    fontSize="small"
-                    sx={{ color: alpha(theme.colors.pink, 0.9) }}
+                  <FiArrowUpRight
+                    fontSize={26}
+                    color={theme.colors.pink}
+                    className="arrow-icon"
                   />
                 </CardContent>
               </CardActionArea>

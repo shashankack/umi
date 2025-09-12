@@ -25,7 +25,7 @@ const TutorialSection = () => {
     },
     {
       image: step2,
-      text: "Add 30ml of warm <br />water and whisk <br />until smooth.",
+      text: "Add 60ml of warm <br />water and whisk <br />until smooth.",
     },
     {
       image: step3,
