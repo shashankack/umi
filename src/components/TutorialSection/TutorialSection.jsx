@@ -49,7 +49,7 @@ const TutorialSection = () => {
     >
       <Typography
         fontFamily={theme.fonts.title}
-        variant="h2"
+        variant="h1"
         color={theme.colors.beige}
         fontSize={isMobile ? "8vw" : "4vw"}
         mt={10}
