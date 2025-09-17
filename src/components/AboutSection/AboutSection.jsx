@@ -35,11 +35,11 @@ const AboutSection = () => {
   ];
 
   return (
-    <Box bgcolor={theme.colors.beige} position="relative" >
+    <Box bgcolor={theme.colors.beige} position="relative">
       <Box
         width="100%"
         position="absolute"
-        top={{ xs: "-17.3%", sm: "-3%", md: "-6%", lg: -100, xl: -160 }}
+        top={{ xs: "-16%", sm: "-3%", md: "-6%", lg: -100, xl: -160 }}
         zIndex={5}
       >
         <CurvedMarquee />
@@ -79,9 +79,9 @@ const AboutSection = () => {
         <br />
         Umi is a premium matcha brand made from the finest, single-origin,
         single-cultivar tea leaves. Our matcha is harvested during the spring
-        1st flush from Japan’s most renowned matcha regions. Grown with care,
-        it’s 100% organic, free from pesticides and synthetic additives, and
-        retains its natural purity and vibrant green color. Each batch is
+        1st flush from Japan’s most renowned matcha growing regions. Grown with
+        care, it’s 100% organic, free from pesticides and synthetic additives,
+        and retains its natural purity and vibrant green color. Each batch is
         crafted for a smooth, umami-rich taste and silky texture, making it
         perfect for both traditional ceremonies and modern culinary use. Our
         matcha represents a symbolic change within the matcha community. We hope
@@ -176,23 +176,30 @@ const AboutSection = () => {
             color={theme.colors.beige}
             textAlign="justify"
           >
-            In the quiet hills of Wazuka, Japan where morning mists cling gently
-            to the tea fields - we stood among rows of vibrant green leaves at
-            the farm. This wasn’t just a visit; it was a pilgrimage to the
-            source of purity.
+            At Umi, we take our matcha seriously, like hillside farms in Kyoto
+            seriously. We partner up exclusively with certified organic farms in
+            Japan, where matcha is cultivated with care, free from pesticides
+            and harmful additives. Our organic matcha comes from a 300+ year old
+            farm in Wazuka , a tiny region where the fog off the river keeps the
+            leaves shaded and the soil just moist enough. The result? smooth,
+            milky, buttery matcha with no bitterness. single cultivar, all
+            organic.
             <br />
             <br />
             Our farm is rooted in integrity, where matcha is grown without
             herbicides, pesticides, or synthetic fertilizers. Every leaf is
-            nurtured by hand, tana shaded with care, and stone-milled to
-            preserve its rich umami and vivid hue. From the soils of Wazuka to
-            the matcha bowls of India, this journey is a tribute to the beauty
-            of intention. It’s about honouring tradition while embracing a
-            global vision - where every sip carries the story of a farm, a
-            philosophy, and a promise.
+            nurtured in harmony with nature, picked by hand, tana shaded with
+            care, and stone-milled to preserve its rich umami and vivid hue.
             <br />
             <br />
-            This is farm to foam and it's only the beginning.
+            In these quiet hills of Wazuka, Japan where morning mists cling
+            gently to the tea fields - we stood among rows of vibrant green
+            leaves at the farm. This wasn’t just a visit; it was a pilgrimage to
+            the source of purity. From the soils of Wazuka to the matcha bowls
+            of India, this journey is a tribute to the beauty of intention. It’s
+            about honouring tradition while embracing a global vision - where
+            every sip carries the story of a farm, a philosophy, and a promise
+            of a brand.
           </Typography>
         </Box>
       </Stack>

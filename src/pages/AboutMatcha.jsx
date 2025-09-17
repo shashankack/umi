@@ -91,7 +91,7 @@ const AboutMatcha = () => {
           <br />
           Umi is a premium matcha brand made from the finest, single-origin,
           single-cultivar tea leaves. Our matcha is harvested during the spring
-          1st flush from Japan’s most renowned matcha regions. Grown with care,
+          1st flush from Japan’s most renowned matcha growing regions. Grown with care,
           it’s 100% organic, free from pesticides and synthetic additives, and
           retains its natural purity and vibrant green color. Each batch is
           crafted for a smooth, umami-rich taste and silky texture, making it
