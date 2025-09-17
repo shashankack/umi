@@ -64,24 +64,26 @@ const AppContent = () => {
 
       <Navbar />
       <CartUI />
-      <Routes>
-        <Route path="/" element={<Intro NextComponent={Home} />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/shop/:productName" element={<ProductsInternal />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/our-matcha" element={<AboutMatcha />} />
-        <Route path="/how-to-make-matcha-at-home" element={<Brewing />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blogs/:blogId" element={<BlogPost />} />
-        <Route path="/terms-of-service" element={<Policies />} />
-        <Route path="/privacy-policy" element={<Policies />} />
-        <Route path="/refund-policy" element={<Policies />} />
-        <Route path="/shipping-policy" element={<Policies />} />
-        <Route path="/faq" element={<FAQ data={faqData} />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<Intro NextComponent={Home} />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/shop/:productName" element={<ProductsInternal />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/our-matcha" element={<AboutMatcha />} />
+          <Route path="/how-to-make-matcha-at-home" element={<Brewing />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:blogId" element={<BlogPost />} />
+          <Route path="/terms-of-service" element={<Policies />} />
+          <Route path="/privacy-policy" element={<Policies />} />
+          <Route path="/refund-policy" element={<Policies />} />
+          <Route path="/shipping-policy" element={<Policies />} />
+          <Route path="/faq" element={<FAQ data={faqData} />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };
@@ -94,9 +96,7 @@ const App = () => {
           <ProductProvider>
             <CartProvider>
               <Router basename="/">
-                <Suspense fallback={<Loader />}>
-                  <AppContent />
-                </Suspense>
+                <AppContent />
               </Router>
             </CartProvider>
           </ProductProvider>
