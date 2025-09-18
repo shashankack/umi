@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
 import { useHydration } from "../hooks/useHydration";
-import blogsData from "../data/blogsData.json";
+import { fetchShopifyBlogArticles } from "../utils/shopify";
 import { FiClock, FiUser, FiCalendar } from "react-icons/fi";
 import Footer from "../components/Footer";
 
@@ -33,11 +33,26 @@ const Blogs = () => {
 
   useEffect(() => {
     setNavbarTheme("beige");
-    if (isHydrated) setBlogs(blogsData);
+    
+    if (isHydrated) {
+      const fetchBlogs = async () => {
+        try {
+          const articles = await fetchShopifyBlogArticles();
+          setBlogs(articles);
+        } catch (error) {
+          console.error("Error fetching blog articles:", error);
+          setBlogs([]);
+        }
+      };
+
+      fetchBlogs();
+    }
   }, [setNavbarTheme, isHydrated]);
 
   const categories = useMemo(() => {
-    const set = new Set(blogs.map((b) => b.category).filter(Boolean));
+    // Since Shopify articles don't have a category field by default, 
+    // we'll use the blog title or handle as category
+    const set = new Set(blogs.map((b) => b.blog?.handle || "general").filter(Boolean));
     return ["All", ...Array.from(set)];
   }, [blogs]);
 
@@ -45,12 +60,12 @@ const Blogs = () => {
     () =>
       activeCategory === "All"
         ? blogs
-        : blogs.filter((b) => b.category === activeCategory),
+        : blogs.filter((b) => (b.blog?.handle || "general") === activeCategory),
     [blogs, activeCategory]
   );
 
-  const handleBlogClick = (blogId) => {
-    navigate(`/blogs/${blogId}`);
+  const handleBlogClick = (blogHandle) => {
+    navigate(`/blogs/${blogHandle}`);
     window.scrollTo(0, 0);
   };
 
@@ -210,7 +225,7 @@ const Blogs = () => {
             {!isMobile && featured && (
               <Box sx={{ flex: { xs: 1, lg: 3 }, minWidth: 0 }}>
                 <Card
-                  onClick={() => handleBlogClick(featured.id)}
+                  onClick={() => handleBlogClick(featured.handle)}
                   sx={{
                     position: "relative",
                     height: 700,
@@ -229,8 +244,8 @@ const Blogs = () => {
                 >
                   <CardMedia
                     component="img"
-                    image={featured.image}
-                    alt={featured.title}
+                    image={featured.image?.url || featured.image}
+                    alt={featured.image?.altText || featured.title}
                     loading="lazy"
                     sx={{
                       height: "100%",
@@ -253,7 +268,7 @@ const Blogs = () => {
                   />
                   {/* Category chip */}
                   <Chip
-                    label={featured.category}
+                    label={featured.blog?.handle || "blog"}
                     sx={{
                       position: "absolute",
                       top: 16,
@@ -331,7 +346,7 @@ const Blogs = () => {
                         >
                           <FiUser size={16} color={theme.colors.beige} />
                           <Typography sx={{ fontFamily: theme.fonts.text }}>
-                            {featured.author}
+                            {featured.author?.name || featured.author}
                           </Typography>
                         </Box>
                         <Box
@@ -343,7 +358,7 @@ const Blogs = () => {
                         >
                           <FiCalendar size={16} color={theme.colors.beige} />
                           <Typography sx={{ fontFamily: theme.fonts.text }}>
-                            {formatDate(featured.date)}
+                            {formatDate(featured.publishedAt || featured.date)}
                           </Typography>
                         </Box>
                       </Box>
@@ -352,7 +367,7 @@ const Blogs = () => {
                       >
                         <FiClock size={16} color={theme.colors.beige} />
                         <Typography sx={{ fontFamily: theme.fonts.text }}>
-                          {featured.readTime}
+                          {featured.readTime || "5 min read"}
                         </Typography>
                       </Box>
                     </Box>
@@ -388,8 +403,8 @@ const Blogs = () => {
                 >
                   {list.map((blog) => (
                     <Card
-                      key={blog.id}
-                      onClick={() => handleBlogClick(blog.id)}
+                      key={blog.id || blog.handle}
+                      onClick={() => handleBlogClick(blog.handle)}
                       sx={{
                         backgroundColor: theme.colors.beige,
                         borderRadius: 3,
@@ -411,8 +426,8 @@ const Blogs = () => {
                       <CardMedia
                         component="img"
                         loading="lazy"
-                        image={blog.image}
-                        alt={blog.title}
+                        image={blog.image?.url || blog.image}
+                        alt={blog.image?.altText || blog.title}
                         sx={{
                           width: { xs: "100%", sm: 180 },
                           height: { xs: 160, sm: "100%" },
@@ -439,7 +454,7 @@ const Blogs = () => {
                           }}
                         >
                           <Chip
-                            label={blog.category}
+                            label={blog.blog?.handle || "blog"}
                             size="small"
                             sx={{
                               backgroundColor: theme.colors.green,
@@ -456,7 +471,7 @@ const Blogs = () => {
                               color: theme.colors.pink,
                             }}
                           >
-                            {formatDate(blog.date)} • {blog.readTime}
+                            {formatDate(blog.publishedAt || blog.date)} • {blog.readTime || "5 min read"}
                           </Typography>
                         </Box>
 
@@ -507,7 +522,7 @@ const Blogs = () => {
                               color: theme.colors.pink,
                             }}
                           >
-                            {blog.author}
+                            {blog.author?.name || blog.author}
                           </Typography>
                           <Button
                             size="small"

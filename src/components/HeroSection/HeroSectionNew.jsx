@@ -6,13 +6,14 @@ import {
   useTheme,
   IconButton,
   Grid,
+  Link,
 } from "@mui/material";
 import { useProducts } from "../../context/ProductContext";
 import { useHydration } from "../../hooks/useHydration";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import slugify from "../../utils/slugify";
 
 // Safari detection
@@ -160,7 +161,7 @@ const HeroSectionNew = () => {
     {
       // Flipped leaf (desktop only) - index 1
       from: {
-        xs: { x: 0, y: 0 }, // Not used on mobile
+        xs: { x: 0, y: 0 },
         sm: { x: -200, y: 300 },
       },
     },
@@ -174,7 +175,7 @@ const HeroSectionNew = () => {
     {
       // Leaf3 (center-top, desktop only) - index 3
       from: {
-        xs: { x: 0, y: 0 }, // Not used on mobile
+        xs: { x: 0, y: 0 },
         sm: { x: 0, y: -200 },
       },
     },
@@ -560,6 +561,172 @@ const HeroSectionNew = () => {
       minHeight="100vh"
       pb={{ xs: 10, sm: 0 }}
     >
+      {/* Internal Navigation Links for SEO */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: { xs: 30, sm: 100 },
+          left: { xs: 20, sm: "10%" },
+          right: { xs: 20, sm: "10%" },
+          zIndex: 30,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: { xs: 1, sm: 2 },
+          justifyContent: "center",
+          opacity: 0.8,
+        }}
+      >
+        <Link
+          component={RouterLink}
+          to="/shop"
+          sx={{
+            color: theme.colors.beige,
+            textDecoration: "none",
+            fontSize: { xs: "0.8rem", sm: "0.9rem" },
+            fontFamily: theme.fonts.text,
+            px: 2,
+            py: 1,
+            borderRadius: "20px",
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.2)`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.colors.green,
+              transform: "translateY(-2px)",
+              color: theme.colors.beige,
+            },
+          }}
+        >
+          Shop Matcha
+        </Link>
+
+        <Link
+          component={RouterLink}
+          to="/about"
+          sx={{
+            color: theme.colors.beige,
+            textDecoration: "none",
+            fontSize: { xs: "0.8rem", sm: "0.9rem" },
+            fontFamily: theme.fonts.text,
+            px: 2,
+            py: 1,
+            borderRadius: "20px",
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.2)`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.colors.green,
+              transform: "translateY(-2px)",
+              color: theme.colors.beige,
+            },
+          }}
+        >
+          About Us
+        </Link>
+
+        <Link
+          component={RouterLink}
+          to="/how-to-make-matcha-at-home"
+          sx={{
+            color: theme.colors.beige,
+            textDecoration: "none",
+            fontSize: { xs: "0.8rem", sm: "0.9rem" },
+            fontFamily: theme.fonts.text,
+            px: 2,
+            py: 1,
+            borderRadius: "20px",
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.2)`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.colors.green,
+              transform: "translateY(-2px)",
+              color: theme.colors.beige,
+            },
+          }}
+        >
+          Brewing Guide
+        </Link>
+
+        <Link
+          component={RouterLink}
+          to="/our-matcha"
+          sx={{
+            color: theme.colors.beige,
+            textDecoration: "none",
+            fontSize: { xs: "0.8rem", sm: "0.9rem" },
+            fontFamily: theme.fonts.text,
+            px: 2,
+            py: 1,
+            borderRadius: "20px",
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.2)`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.colors.green,
+              transform: "translateY(-2px)",
+              color: theme.colors.beige,
+            },
+          }}
+        >
+          Our Matcha
+        </Link>
+
+        <Link
+          component={RouterLink}
+          to="/blogs"
+          sx={{
+            color: theme.colors.beige,
+            textDecoration: "none",
+            fontSize: { xs: "0.8rem", sm: "0.9rem" },
+            fontFamily: theme.fonts.text,
+            px: 2,
+            py: 1,
+            borderRadius: "20px",
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.2)`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.colors.green,
+              transform: "translateY(-2px)",
+              color: theme.colors.beige,
+            },
+          }}
+        >
+          Blog
+        </Link>
+
+        <Link
+          component={RouterLink}
+          to="/contact"
+          sx={{
+            color: theme.colors.beige,
+            textDecoration: "none",
+            fontSize: { xs: "0.8rem", sm: "0.9rem" },
+            fontFamily: theme.fonts.text,
+            px: 2,
+            py: 1,
+            borderRadius: "20px",
+            backgroundColor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.2)`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.colors.green,
+              transform: "translateY(-2px)",
+              color: theme.colors.beige,
+            },
+          }}
+        >
+          Contact
+        </Link>
+      </Box>
+
       {/* Vectors */}
       <Box
         ref={(el) => addToVectorRef(el)}
@@ -686,7 +853,7 @@ const HeroSectionNew = () => {
         {/* Left Section */}
         <Stack
           flex={{ xs: 1, sm: 2 }}
-          pt={{ xs: "15%", sm: "13%" }}
+          pt={{ xs: "30%", sm: "13%" }}
           pl={{ xs: 0, sm: "10%" }}
           position="relative"
           mb={{ xs: "10%", sm: 0 }}

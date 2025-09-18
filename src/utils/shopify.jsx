@@ -1,22 +1,13 @@
 // utils/shopify.jsx
-// Vite-friendly Storefront client (JS + JSDoc types)
-// Requires env in .env:
-//   VITE_SHOPIFY_DOMAIN=xxxx.myshopify.com
-//   VITE_STOREFRONT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-//
-// NOTE: Storefront tokens are public, but do not commit secrets to repo history.
-
 import { withCache } from "./cache.js";
 
 const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_DOMAIN;
 const STOREFRONT_TOKEN = import.meta.env.VITE_STOREFRONT_TOKEN;
 
-// Keep this aligned with your store's supported version.
 const API_VERSION = "2024-07";
 const endpoint = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
 
 if (!SHOPIFY_DOMAIN || !STOREFRONT_TOKEN) {
-  // Fail fast in dev; in prod you might want a softer fallback.
   console.warn(
     "[shopify] Missing VITE_SHOPIFY_DOMAIN or VITE_STOREFRONT_TOKEN. " +
       "Set them in .env (Vite) before using the client."
@@ -121,9 +112,132 @@ export const fetchShopifyProducts = withCache(
 );
 
 /**
- * Fetch a single product by Shopify handle (for PDP)
- * @param {string} handle
+
+/* =====================
+ * BLOGS & BLOG POSTS
+ * =================== */
+
+/**
+ * Fetch list of blogs (Shopify Blog objects, not posts)
+ * @returns {Promise<Array<{id: string, handle: string, title: string, seo: object}>>}
  */
+export async function fetchShopifyBlogs() {
+  const query = /* GraphQL */ `
+    query Blogs {
+      blogs(first: 10) {
+        edges {
+          node {
+            id
+            handle
+            title
+            seo {
+              title
+              description
+            }
+          }
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query);
+  return data.blogs.edges.map((e) => e.node);
+}
+
+/**
+ * Fetch a single blog post by handle (and blog handle)
+ * @param {string} blogHandle
+ * @param {string} postHandle
+ * @returns {Promise<object|null>}
+ */
+export async function fetchShopifyBlogPost(blogHandle, postHandle) {
+  const query = /* GraphQL */ `
+    query BlogPost($blogHandle: String!, $postHandle: String!) {
+      blog(handle: $blogHandle) {
+        id
+        handle
+        title
+        articleByHandle(handle: $postHandle) {
+          id
+          handle
+          title
+          contentHtml
+          excerpt
+          publishedAt
+          seo {
+            title
+            descriptionHtml
+          }
+          image {
+            url
+            altText
+          }
+          author {
+            name
+          }
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query, { blogHandle, postHandle });
+  return data.blog?.articleByHandle || null;
+}
+
+/**
+ * Fetch all blog articles from all blogs (for blog listing)
+ * @returns {Promise<Array<object>>}
+ */
+export async function fetchShopifyBlogArticles() {
+  const query = /* GraphQL */ `
+    query BlogArticles {
+      blogs(first: 10) {
+        edges {
+          node {
+            id
+            handle
+            title
+            articles(first: 50) {
+              edges {
+                node {
+                  id
+                  handle
+                  title
+                  excerpt
+                  contentHtml
+                  publishedAt
+                  seo {
+                    title
+                    description
+                  }
+                  image {
+                    url
+                    altText
+                  }
+                  author {
+                    name
+                  }
+                  blog {
+                    handle
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch(query);
+  
+  // Flatten all articles from all blogs
+  const articles = [];
+  data.blogs.edges.forEach(blogEdge => {
+    blogEdge.node.articles.edges.forEach(articleEdge => {
+      articles.push(articleEdge.node);
+    });
+  });
+  
+  return articles;
+}
 export async function fetchProductByHandle(handle) {
   const query = /* GraphQL */ `
     query ProductByHandle($handle: String!) {
@@ -520,3 +634,6 @@ export const searchProducts = withCache(
   "search_products",
   5 * 60 * 1000
 );
+
+
+
