@@ -39,7 +39,7 @@ const AboutSection = () => {
       <Box
         width="100%"
         position="absolute"
-        top={{ xs: "-16%", sm: "-3%", md: "-6%", lg: -100, xl: -160 }}
+        top={{ xs: -210, sm: -306, md: "-6%", lg: -100, xl: -160 }}
         zIndex={5}
       >
         <CurvedMarquee />
@@ -172,7 +172,7 @@ const AboutSection = () => {
         >
           <Typography
             fontFamily={theme.fonts.text}
-            fontSize={isMobile ? "2.8vw" : "1.2vw"}
+            fontSize={isMobile ? "2.8vw" : "1.1vw"}
             color={theme.colors.beige}
             textAlign="justify"
           >
@@ -180,7 +180,7 @@ const AboutSection = () => {
             seriously. We partner up exclusively with certified organic farms in
             Japan, where matcha is cultivated with care, free from pesticides
             and harmful additives. Our organic matcha comes from a 300+ year old
-            farm in Wazuka , a tiny region where the fog off the river keeps the
+            farm in Wazuka, a tiny region where the fog off the river keeps the
             leaves shaded and the soil just moist enough. The result? smooth,
             milky, buttery matcha with no bitterness. single cultivar, all
             organic.
@@ -200,6 +200,9 @@ const AboutSection = () => {
             about honouring tradition while embracing a global vision - where
             every sip carries the story of a farm, a philosophy, and a promise
             of a brand.
+            <br />
+            <br />
+            This is farm to foam and it's only the beginning.
           </Typography>
         </Box>
       </Stack>
