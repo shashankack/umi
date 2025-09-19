@@ -39,7 +39,7 @@ const AboutSection = () => {
       <Box
         width="100%"
         position="absolute"
-        top={{ xs: -210, sm: -306, md: "-6%", lg: -100, xl: -160 }}
+        top={{ xs: -200, sm: -306, md: "-6%", lg: -100, xl: -160 }}
         zIndex={5}
       >
         <CurvedMarquee />

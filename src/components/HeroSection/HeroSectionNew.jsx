@@ -31,6 +31,15 @@ const HeroSectionNew = () => {
   const [products, setProducts] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const navLinks = [
+    { label: "Shop Matcha", path: "/shop" },
+    { label: "About Us", path: "/about" },
+    { label: "Brewing Guide", path: "/how-to-make-matcha-at-home" },
+    { label: "Our Matcha", path: "/our-matcha" },
+    { label: "Blog", path: "/blogs" },
+    { label: "Contact", path: "/contact" },
+  ];
+
   //   Refs
   const titleRefs = useRef([]);
   const vectorRefs = useRef([]);
@@ -562,170 +571,54 @@ const HeroSectionNew = () => {
       pb={{ xs: 10, sm: 0 }}
     >
       {/* Internal Navigation Links for SEO */}
-      <Box
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
         sx={{
+          overflowX: { xs: "auto", sm: "visible" },
+          whiteSpace: { xs: "nowrap", sm: "normal" },
           position: "absolute",
           top: { xs: 30, sm: 100 },
           left: { xs: 20, sm: "10%" },
           right: { xs: 20, sm: "10%" },
           zIndex: 30,
-          display: "flex",
-          flexWrap: "wrap",
           gap: { xs: 1, sm: 2 },
-          justifyContent: "center",
           opacity: 0.8,
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE/Edge
+          "&::-webkit-scrollbar": {
+            display: "none", // Chrome/Safari
+          },
         }}
       >
-        <Link
-          component={RouterLink}
-          to="/shop"
-          sx={{
-            color: theme.colors.beige,
-            textDecoration: "none",
-            fontSize: { xs: "0.8rem", sm: "0.9rem" },
-            fontFamily: theme.fonts.text,
-            px: 2,
-            py: 1,
-            borderRadius: "20px",
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            border: `1px solid rgba(255,255,255,0.2)`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: theme.colors.green,
-              transform: "translateY(-2px)",
+        {navLinks.map((link, index) => (
+          <Link
+            key={index}
+            component={RouterLink}
+            to={link.path}
+            sx={{
               color: theme.colors.beige,
-            },
-          }}
-        >
-          Shop Matcha
-        </Link>
-
-        <Link
-          component={RouterLink}
-          to="/about"
-          sx={{
-            color: theme.colors.beige,
-            textDecoration: "none",
-            fontSize: { xs: "0.8rem", sm: "0.9rem" },
-            fontFamily: theme.fonts.text,
-            px: 2,
-            py: 1,
-            borderRadius: "20px",
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            border: `1px solid rgba(255,255,255,0.2)`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: theme.colors.green,
-              transform: "translateY(-2px)",
-              color: theme.colors.beige,
-            },
-          }}
-        >
-          About Us
-        </Link>
-
-        <Link
-          component={RouterLink}
-          to="/how-to-make-matcha-at-home"
-          sx={{
-            color: theme.colors.beige,
-            textDecoration: "none",
-            fontSize: { xs: "0.8rem", sm: "0.9rem" },
-            fontFamily: theme.fonts.text,
-            px: 2,
-            py: 1,
-            borderRadius: "20px",
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            border: `1px solid rgba(255,255,255,0.2)`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: theme.colors.green,
-              transform: "translateY(-2px)",
-              color: theme.colors.beige,
-            },
-          }}
-        >
-          Brewing Guide
-        </Link>
-
-        <Link
-          component={RouterLink}
-          to="/our-matcha"
-          sx={{
-            color: theme.colors.beige,
-            textDecoration: "none",
-            fontSize: { xs: "0.8rem", sm: "0.9rem" },
-            fontFamily: theme.fonts.text,
-            px: 2,
-            py: 1,
-            borderRadius: "20px",
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            border: `1px solid rgba(255,255,255,0.2)`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: theme.colors.green,
-              transform: "translateY(-2px)",
-              color: theme.colors.beige,
-            },
-          }}
-        >
-          Our Matcha
-        </Link>
-
-        <Link
-          component={RouterLink}
-          to="/blogs"
-          sx={{
-            color: theme.colors.beige,
-            textDecoration: "none",
-            fontSize: { xs: "0.8rem", sm: "0.9rem" },
-            fontFamily: theme.fonts.text,
-            px: 2,
-            py: 1,
-            borderRadius: "20px",
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            border: `1px solid rgba(255,255,255,0.2)`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: theme.colors.green,
-              transform: "translateY(-2px)",
-              color: theme.colors.beige,
-            },
-          }}
-        >
-          Blog
-        </Link>
-
-        <Link
-          component={RouterLink}
-          to="/contact"
-          sx={{
-            color: theme.colors.beige,
-            textDecoration: "none",
-            fontSize: { xs: "0.8rem", sm: "0.9rem" },
-            fontFamily: theme.fonts.text,
-            px: 2,
-            py: 1,
-            borderRadius: "20px",
-            backgroundColor: "rgba(255,255,255,0.1)",
-            backdropFilter: "blur(10px)",
-            border: `1px solid rgba(255,255,255,0.2)`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: theme.colors.green,
-              transform: "translateY(-2px)",
-              color: theme.colors.beige,
-            },
-          }}
-        >
-          Contact
-        </Link>
-      </Box>
+              textDecoration: "none",
+              fontSize: { xs: "0.8rem", sm: "0.9rem" },
+              fontFamily: theme.fonts.text,
+              px: 2,
+              py: 1,
+              borderRadius: "20px",
+              backgroundColor: "rgba(255,255,255,0.1)",
+              backdropFilter: "blur(10px)",
+              border: `1px solid rgba(255,255,255,0.2)`,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: theme.colors.green,
+                transform: "translateY(-2px)",
+                color: theme.colors.beige,
+              },
+            }}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </Stack>
 
       {/* Vectors */}
       <Box
