@@ -289,14 +289,13 @@ const BlogPost = () => {
           sx={{
             fontFamily: theme.fonts.text,
             color: theme.colors.green,
-            fontSize: "1.125rem",
             lineHeight: 1.9,
             mb: 6,
-            // Hide Table of Contents from content (we have it in sidebar)
+
             "& nav[aria-label='Table of Contents']": {
               display: "none",
             },
-            // Headings
+
             "& h2": {
               fontFamily: theme.fonts.heading,
               color: theme.colors.pink,
@@ -311,10 +310,23 @@ const BlogPost = () => {
             },
             "& p": {
               textAlign: "justify",
-              marginBottom: "1.25rem",
-              paddingLeft: 2,
+              marginBottom: "1rem",
+              paddingLeft: { xs: 0, md: 2 },
               fontSize: { xs: "3.6vw", md: "1vw" },
             },
+            "& ul": {
+              fontSize: { xs: "3.2vw", md: ".8vw" },
+              color: theme.colors.pink,
+              margin: "1.5rem 0",
+              paddingLeft: { xs: 3, md: "3rem" },
+
+              "& li": {
+                fontSize: { xs: "3.2vw", md: ".8vw" },
+                marginBottom: "0.7rem",
+                lineHeight: 1.7,
+              },
+            },
+
             "& img": {
               maxWidth: "100%",
               width: "100%",
@@ -345,14 +357,7 @@ const BlogPost = () => {
                 color: theme.colors.green,
               },
             },
-            "& ul": {
-              margin: "1.5rem 0",
-              paddingLeft: "3rem",
-            },
-            "& li": {
-              marginBottom: "0.7rem",
-              lineHeight: 1.7,
-            },
+
             "& .cta-section": {
               bgcolor: theme.colors.green,
               borderRadius: 3,
@@ -368,9 +373,11 @@ const BlogPost = () => {
               },
               "& ul": {
                 margin: "1.5rem 0",
-                paddingLeft: "1.5rem",
+                paddingLeft: { xs: 3, md: "3rem" },
+                fontSize: { xs: "3.6vw", md: "1vw" },
               },
               "& li": {
+                fontSize: { xs: "3.6vw", md: "1vw" },
                 marginBottom: "0.7rem",
                 lineHeight: 1.7,
               },
@@ -405,6 +412,7 @@ const BlogPost = () => {
                 display: "none",
               },
               "& h2": {
+                fontSize: { xs: "6vw", sm: "1.8vw" },
                 fontFamily: theme.fonts.heading,
                 color: theme.colors.pink,
                 marginTop: "2.5rem",
@@ -413,6 +421,7 @@ const BlogPost = () => {
                 scrollMarginTop: "100px",
               },
               "& h3": {
+                fontSize: { xs: "5vw", sm: "1.4vw" },
                 fontFamily: theme.fonts.heading,
                 color: theme.colors.pink,
                 fontWeight: 600,
@@ -421,7 +430,7 @@ const BlogPost = () => {
               "& p": {
                 textAlign: "justify",
                 marginBottom: "1.25rem",
-                paddingLeft: 2,
+                paddingLeft: { xs: 0, sm: 2 },
                 fontSize: { xs: "3.6vw", md: "1vw" },
               },
               "& img": {
@@ -455,10 +464,12 @@ const BlogPost = () => {
                 },
               },
               "& ul": {
+                fontSize: { xs: "3.2vw", md: ".8vw" },
                 margin: "1.5rem 0",
-                paddingLeft: "3rem",
+                paddingLeft: { xs: 3, md: "3rem" },
               },
               "& li": {
+                fontSize: { xs: "3.2vw", md: ".8vw" },
                 marginBottom: "0.7rem",
                 lineHeight: 1.7,
               },
@@ -653,7 +664,7 @@ const BlogPost = () => {
             "& p": {
               textAlign: "justify",
               marginBottom: "1.25rem",
-              paddingLeft: 2,
+              paddingLeft: { xs: 0, sm: 2 },
               fontSize: { xs: "3.6vw", md: "1vw" },
             },
             "& img": {
@@ -687,10 +698,12 @@ const BlogPost = () => {
               },
             },
             "& ul": {
+              fontSize: { xs: "3.6vw", md: "1vw" },
               margin: "1.5rem 0",
-              paddingLeft: "3rem",
+              paddingLeft: { xs: 3, md: "3rem" },
             },
             "& li": {
+              fontSize: { xs: "3.6vw", md: "1vw" },
               marginBottom: "0.7rem",
               lineHeight: 1.7,
             },
@@ -746,7 +759,7 @@ const BlogPost = () => {
             fontSize: isMobile ? "0.8rem" : "0.85rem",
             fontFamily: theme.fonts.text,
             opacity: 0.9,
-            pl: 4, // Extra padding for sub-items
+            pl: 4,
           },
         },
       }}
