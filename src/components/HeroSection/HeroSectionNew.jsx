@@ -6,14 +6,13 @@ import {
   useTheme,
   IconButton,
   Grid,
-  Link,
 } from "@mui/material";
 import { useProducts } from "../../context/ProductContext";
 import { useHydration } from "../../hooks/useHydration";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import slugify from "../../utils/slugify";
 
 // Safari detection
@@ -592,31 +591,35 @@ const HeroSectionNew = () => {
         }}
       >
         {navLinks.map((link, index) => (
-          <Link
+          <a
             key={index}
-            component={RouterLink}
-            to={link.path}
-            sx={{
+            href={link.path}
+            style={{
               color: theme.colors.beige,
               textDecoration: "none",
-              fontSize: { xs: "0.8rem", sm: "0.9rem" },
+              fontSize: window.innerWidth < 600 ? "0.8rem" : "0.9rem",
               fontFamily: theme.fonts.text,
-              px: 2,
-              py: 1,
+              padding: "8px 16px",
               borderRadius: "20px",
               backgroundColor: "rgba(255,255,255,0.1)",
               backdropFilter: "blur(10px)",
               border: `1px solid rgba(255,255,255,0.2)`,
               transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: theme.colors.green,
-                transform: "translateY(-2px)",
-                color: theme.colors.beige,
-              },
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = theme.colors.green;
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.color = theme.colors.beige;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "rgba(255,255,255,0.1)";
+              e.target.style.transform = "translateY(0px)";
+              e.target.style.color = theme.colors.beige;
             }}
           >
             {link.label}
-          </Link>
+          </a>
         ))}
       </Stack>
 
