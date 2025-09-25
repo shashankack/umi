@@ -1,13 +1,9 @@
 {
-  "routes": [
-    { "handle": "filesystem" },
-    
-    { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
-    { "src": "/robots.txt", "dest": "/robots.txt" },
-    
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/(.*\\.(js|jsx|ts|tsx|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|mp4|webm|json))$", "dest": "/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    {
+      "source": "/((?!api|_next|_static|_vercel|[\\w-]+\\.\\w+).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
