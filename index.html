@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script
-      src="https://analytics.ahrefs.com/analytics.js"
-      data-key="7GY2gIjIol5lwSdV7UlFkA"
-      async
-    />
+    <!-- Ahrefs Analytics with Error Handling -->
+    <script>
+      (function() {
+        var script = document.createElement('script');
+        script.src = 'https://analytics.ahrefs.com/analytics.js';
+        script.setAttribute('data-key', '7GY2gIjIol5lwSdV7UlFkA');
+        script.async = true;
+        
+        script.onerror = function() {
+          console.warn('Ahrefs analytics failed to load');
+        };
+        
+        script.onload = function() {
+          console.log('Ahrefs analytics loaded successfully');
+        };
+        
+        document.head.appendChild(script);
+      })();
+    </script>
 
     <!-- Google Tag Manager with Error Handling -->
     <script>
