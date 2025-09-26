@@ -58,6 +58,41 @@
       content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
     />
     <title>Umi Matcha - Best Organic Matcha from Japan in India</title>
+    
+    <!-- JSON-LD Structured Data for better crawling -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Umi Matcha",
+      "url": "https://umimatchashop.com",
+      "logo": "https://umimatchashop.com/favicon.png",
+      "description": "Premium organic matcha from Japan, available in India. Traditional matcha tea, accessories, and brewing guides.",
+      "sameAs": [
+        "https://www.instagram.com/umi.matcha",
+        "https://www.facebook.com/umimatcha"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "url": "https://umimatchashop.com/contact"
+      }
+    }
+    </script>
+    
+    <!-- Navigation breadcrumbs for crawlers -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://umimatchashop.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://umimatchashop.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -71,6 +106,35 @@
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
+    
+    <!-- Static navigation for crawlers (hidden from users) -->
+    <nav style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/shop">Shop</a>
+      <a href="/our-matcha">Our Matcha</a>
+      <a href="/how-to-make-matcha-at-home">Brewing Guide</a>
+      <a href="/blogs">Blogs</a>
+      <a href="/terms-of-service">Terms of Service</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/refund-policy">Refund Policy</a>
+      <a href="/shipping-policy">Shipping Policy</a>
+      <a href="/faq">FAQ</a>
+      <!-- Product links -->
+      <a href="/shop/nakai-first-harvest">Nakai First Harvest</a>
+      <a href="/shop/mixcha-instant-premix">Mixcha Instant Premix</a>
+      <a href="/shop/umi-bowl-chawan">Umi Bowl Chawan</a>
+      <a href="/shop/umi-whisk-chasen">Umi Whisk Chasen</a>
+      <a href="/shop/umi-scoop-chashaku">Umi Scoop Chashaku</a>
+      <a href="/shop/umi-whisk-holder-kusenaoshi">Umi Whisk Holder</a>
+      <a href="/shop/umi-matcha-essential-kit">Umi Matcha Essential Kit</a>
+      <a href="/shop/sereni-tea-set">Sereni Tea Set</a>
+      <a href="/shop/whisk-me-away-set">Whisk Me Away Set</a>
+      <a href="/shop/scoop-me-up-set">Scoop Me Up Set</a>
+      <a href="/shop/haru-first-harvest">Haru First Harvest</a>
+    </nav>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
