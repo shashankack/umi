@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback, useRef, useState, useEffect } from 'react';
 
 // Higher-order component for memoization with custom comparison
 export const withMemo = (Component, compareProps) => {
