@@ -33,7 +33,7 @@
       ]
     },
     {
-      "source": "/assets/(.*\\.(png|jpg|jpeg|gif|svg|webp))$",
+      "source": "/assets/(.*\\\\.(png|jpg|jpeg|gif|svg|webp))$",
       "headers": [
         {
           "key": "Cache-Control",
@@ -42,7 +42,7 @@
       ]
     },
     {
-      "source": "/assets/(.*\\.(woff|woff2|ttf|eot))$",
+      "source": "/assets/(.*\\\\.(woff|woff2|ttf|eot))$",
       "headers": [
         {
           "key": "Cache-Control",
@@ -51,7 +51,7 @@
       ]
     },
     {
-      "source": "/assets/(.*\\.(mp4|webm|gif))$",
+      "source": "/assets/(.*\\\\.(mp4|webm|gif))$",
       "headers": [
         {
           "key": "Cache-Control",
