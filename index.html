@@ -59,6 +59,21 @@
     />
     <title>Umi Matcha - Best Organic Matcha from Japan in India</title>
     
+    <!-- SEO-friendly styles for hidden navigation -->
+    <style>
+      .seo-nav {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
+    </style>
+    
     <!-- JSON-LD Structured Data for better crawling -->
     <script type="application/ld+json">
     {
@@ -107,32 +122,37 @@
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     
-    <!-- Static navigation for crawlers (hidden from users) -->
-    <nav style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
-      <a href="/shop">Shop</a>
-      <a href="/our-matcha">Our Matcha</a>
-      <a href="/how-to-make-matcha-at-home">Brewing Guide</a>
-      <a href="/blogs">Blogs</a>
-      <a href="/terms-of-service">Terms of Service</a>
-      <a href="/privacy-policy">Privacy Policy</a>
-      <a href="/refund-policy">Refund Policy</a>
-      <a href="/shipping-policy">Shipping Policy</a>
-      <a href="/faq">FAQ</a>
-      <!-- Product links -->
-      <a href="/shop/nakai-first-harvest">Nakai First Harvest</a>
-      <a href="/shop/mixcha-instant-premix">Mixcha Instant Premix</a>
-      <a href="/shop/umi-bowl-chawan">Umi Bowl Chawan</a>
-      <a href="/shop/umi-whisk-chasen">Umi Whisk Chasen</a>
-      <a href="/shop/umi-scoop-chashaku">Umi Scoop Chashaku</a>
-      <a href="/shop/umi-whisk-holder-kusenaoshi">Umi Whisk Holder</a>
-      <a href="/shop/umi-matcha-essential-kit">Umi Matcha Essential Kit</a>
-      <a href="/shop/sereni-tea-set">Sereni Tea Set</a>
-      <a href="/shop/whisk-me-away-set">Whisk Me Away Set</a>
-      <a href="/shop/scoop-me-up-set">Scoop Me Up Set</a>
-      <a href="/shop/haru-first-harvest">Haru First Harvest</a>
+    <!-- SEO navigation for crawlers (visually hidden, accessible to search engines) -->
+    <nav class="seo-nav" aria-label="Site Navigation">
+      <h2>Site Navigation</h2>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/shop">Shop</a></li>
+        <li><a href="/our-matcha">Our Matcha</a></li>
+        <li><a href="/how-to-make-matcha-at-home">Brewing Guide</a></li>
+        <li><a href="/blogs">Blogs</a></li>
+        <li><a href="/terms-of-service">Terms of Service</a></li>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/refund-policy">Refund Policy</a></li>
+        <li><a href="/shipping-policy">Shipping Policy</a></li>
+        <li><a href="/faq">FAQ</a></li>
+      </ul>
+      <h3>Products</h3>
+      <ul>
+        <li><a href="/shop/nakai-first-harvest">Nakai First Harvest Matcha</a></li>
+        <li><a href="/shop/mixcha-instant-premix">Mixcha Instant Premix</a></li>
+        <li><a href="/shop/umi-bowl-chawan">Umi Bowl Chawan</a></li>
+        <li><a href="/shop/umi-whisk-chasen">Umi Whisk Chasen</a></li>
+        <li><a href="/shop/umi-scoop-chashaku">Umi Scoop Chashaku</a></li>
+        <li><a href="/shop/umi-whisk-holder-kusenaoshi">Umi Whisk Holder</a></li>
+        <li><a href="/shop/umi-matcha-essential-kit">Umi Matcha Essential Kit</a></li>
+        <li><a href="/shop/sereni-tea-set">Sereni Tea Set</a></li>
+        <li><a href="/shop/whisk-me-away-set">Whisk Me Away Set</a></li>
+        <li><a href="/shop/scoop-me-up-set">Scoop Me Up Set</a></li>
+        <li><a href="/shop/haru-first-harvest">Haru First Harvest Matcha</a></li>
+      </ul>
     </nav>
     
     <script type="module" src="/src/main.jsx"></script>
