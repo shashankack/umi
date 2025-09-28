@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node src/scripts/build-sitemap.mjs",
+    "build": "npm install --legacy-peer-deps && vite build && node src/scripts/build-sitemap.mjs",
     "sitemap": "node src/scripts/build-sitemap.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
