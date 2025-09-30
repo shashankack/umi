@@ -13,18 +13,29 @@ import neko from "../assets/images/vectors/neko/faq.png";
 import { useEffect } from "react";
 import { useNavbarTheme } from "../context/NavbarThemeContext";
 import Footer from "../components/Footer";
+import { SEO, useSEO } from "../components/SEO";
 
 const FAQRenderer = ({ data }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { setNavbarTheme } = useNavbarTheme();
+  
+  // Get SEO data for FAQ page
+  const seoData = useSEO("/faq");
+  
   useEffect(() => {
-    document.title = "FAQ - Umi Matcha Shop";
     setNavbarTheme("beige");
   }, []);
 
   return (
     <>
+      <SEO 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={seoData.canonical}
+        type={seoData.type}
+      />
       <Box
         sx={{
           backgroundColor: theme.colors.green,
@@ -48,6 +59,22 @@ const FAQRenderer = ({ data }) => {
             }}
           />
         </Box>
+        
+        {/* SEO H1 - visually hidden but accessible */}
+        <Typography
+          component="h1"
+          sx={{
+            position: 'absolute',
+            left: '-10000px',
+            top: 'auto',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden'
+          }}
+        >
+          {seoData.h1}
+        </Typography>
+        
         {data.map((topic, index) => (
           <Accordion
             key={index}

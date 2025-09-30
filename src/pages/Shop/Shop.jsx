@@ -11,12 +11,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useTheme } from "@mui/material/styles";
 import gsap from "gsap";
 
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
+import { SEO, useSEO } from "../../components/SEO";
 
 import helloNeko from "../../assets/images/vectors/neko/hello.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -45,14 +45,16 @@ const Shop = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { addItem, updateQuantity, lineItems, removeItem } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const location = useLocation();
-
   const categoryRefs = useRef({});
   const marqueeRef = useRef(null);
+
+  // Get SEO data for shop page
+  const seoData = useSEO("/shop");
 
   const features = [feature1, feature2, feature3, feature4, feature5, feature6];
 
@@ -252,18 +254,29 @@ const Shop = () => {
 
   return (
     <>
+      <SEO 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={seoData.canonical}
+        type={seoData.type}
+      />
       <Box sx={{ backgroundColor: theme.colors.beige }} overflow="hidden">
-        <Helmet prioritizeSeoTags>
-          <title>Matcha Online Shop: Buy Organic Matcha Powder</title>
-          <meta
-            name="description"
-            content="Shop premium matcha online at Umi. Buy organic matcha powder, whisks, bowls, and more. Fresh, authentic, and delivered to your door."
-          />
-          <meta
-            name="keywords"
-            content="matcha online shop,  buy matcha powder online, buy organic matcha powder, buy matcha green tea, organic matcha tea online"
-          />
-        </Helmet>
+        {/* SEO H1 - visually hidden but accessible to screen readers and search engines */}
+        <Box
+          component="h1"
+          sx={{
+            position: 'absolute',
+            left: '-10000px',
+            top: 'auto',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden'
+          }}
+        >
+          {seoData.h1}
+        </Box>
+        
         <Box position="relative">
           {isMobile ? (
             <Box

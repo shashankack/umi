@@ -2,6 +2,7 @@ import founder from "../../assets/images/vectors/about/founder.png";
 import badge from "../../assets/images/vectors/about/badge.png";
 
 import { Helmet } from "react-helmet-async";
+import { SEO, useSEO } from "../../components/SEO";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -18,6 +19,7 @@ const About = () => {
   const badgeRef = useRef(null);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [showMore, setShowMore] = useState(false);
+  const seoData = useSEO("/about");
 
   useEffect(() => {
     // Ensure ref exists before setting up animation
@@ -41,19 +43,16 @@ const About = () => {
 
   return (
     <>
-      <Helmet prioritizeSeoTags>
-        <title>Japanese Matcha | Umi – Authentic Matcha Powder in India</title>
-        <meta
-          name="description"
-          content=" Discover Umi’s story of bringing authentic Japanese matcha to India. Premium, single-origin matcha powder for purity, taste & wellness."
-        />
-        <meta
-          name="keywords"
-          content="Japanese Matcha, Umi, Authentic Matcha Powder, Best Matcha Powder in India, Umi Matcha"
-        />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={seoData.canonical}
+        type={seoData.type}
+      />
       <Stack bgcolor={theme.colors.green} minHeight="100vh" pb={5}>
         <Typography
+          component="h1"
           mt={isMobile ? 14 : 18}
           fontFamily={"Genty"}
           fontSize={isMobile ? "12vw" : "4vw"}

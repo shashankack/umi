@@ -1,23 +1,47 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { SITE_CONFIG, getCanonicalUrl, getPageSEO, generateProductSEO, generateBlogSEO } from '../utils/seoConfig';
 
-// Lightweight SEO component without external dependencies
+// Comprehensive SEO component for managing all page metadata
 export const SEO = ({ 
-  title = "UMI Matcha Club | Premium Japanese Matcha",
-  description = "Discover premium Japanese matcha for kinder rituals that fill your cup. 100% organic, single origin matcha from Japan's finest tea gardens.",
-  keywords = "matcha, japanese tea, organic matcha, premium matcha, tea ceremony, green tea, wellness, mindfulness",
-  image = "/assets/images/about_matcha_banner.png",
-  url = window.location.href,
-  type = "website"
+  title,
+  description,
+  keywords,
+  image,
+  canonical,
+  type = "website",
+  h1,
+  // Product specific
+  price,
+  availability,
+  // Article specific
+  publishedTime,
+  modifiedTime,
+  author,
+  // Custom overrides
+  robots = "index, follow",
+  customMeta = {}
 }) => {
+  const location = useLocation();
+  
   useEffect(() => {
-    const siteTitle = "UMI Matcha Club";
-    const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+    // Use provided values or fallback to defaults
+    const pageTitle = title || SITE_CONFIG.defaultTitle;
+    const pageDescription = description || SITE_CONFIG.defaultDescription;
+    const pageKeywords = keywords || SITE_CONFIG.defaultKeywords;
+    const pageImage = image || SITE_CONFIG.defaultImage;
+    const pageCanonical = canonical ? getCanonicalUrl(canonical) : getCanonicalUrl(location.pathname);
+    
+    // Ensure image has full URL
+    const fullImageUrl = pageImage.startsWith('http') ? pageImage : `${SITE_CONFIG.domain}${pageImage}`;
 
     // Update document title
-    document.title = fullTitle;
+    document.title = pageTitle;
 
-    // Update or create meta tags
+    // Helper function to update or create meta tags
     const updateMetaTag = (name, content, property = false) => {
+      if (!content) return;
+      
       const attr = property ? 'property' : 'name';
       let meta = document.querySelector(`meta[${attr}="${name}"]`);
       if (!meta) {
@@ -29,115 +53,172 @@ export const SEO = ({
     };
 
     // Basic meta tags
-    updateMetaTag('description', description);
-    updateMetaTag('keywords', keywords);
-    updateMetaTag('author', 'UMI Matcha Club');
+    updateMetaTag('description', pageDescription);
+    updateMetaTag('keywords', pageKeywords);
+    updateMetaTag('author', author || SITE_CONFIG.author);
+    updateMetaTag('robots', robots);
+    updateMetaTag('googlebot', robots);
+    updateMetaTag('viewport', 'width=device-width, initial-scale=1.0');
 
     // Open Graph tags
     updateMetaTag('og:type', type, true);
-    updateMetaTag('og:url', url, true);
-    updateMetaTag('og:title', fullTitle, true);
-    updateMetaTag('og:description', description, true);
-    updateMetaTag('og:image', image, true);
-    updateMetaTag('og:site_name', siteTitle, true);
+    updateMetaTag('og:url', pageCanonical, true);
+    updateMetaTag('og:title', pageTitle, true);
+    updateMetaTag('og:description', pageDescription, true);
+    updateMetaTag('og:image', fullImageUrl, true);
+    updateMetaTag('og:image:width', '1200', true);
+    updateMetaTag('og:image:height', '630', true);
+    updateMetaTag('og:site_name', SITE_CONFIG.name, true);
+    updateMetaTag('og:locale', 'en_IN', true);
 
     // Twitter tags
-    updateMetaTag('twitter:card', 'summary_large_image', true);
-    updateMetaTag('twitter:url', url, true);
-    updateMetaTag('twitter:title', fullTitle, true);
-    updateMetaTag('twitter:description', description, true);
-    updateMetaTag('twitter:image', image, true);
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:site', SITE_CONFIG.twitterHandle);
+    updateMetaTag('twitter:creator', SITE_CONFIG.twitterHandle);
+    updateMetaTag('twitter:url', pageCanonical);
+    updateMetaTag('twitter:title', pageTitle);
+    updateMetaTag('twitter:description', pageDescription);
+    updateMetaTag('twitter:image', fullImageUrl);
 
-    // Additional SEO
-    updateMetaTag('robots', 'index, follow');
-    updateMetaTag('googlebot', 'index, follow');
+    // Article specific meta tags
+    if (type === 'article') {
+      updateMetaTag('article:published_time', publishedTime, true);
+      updateMetaTag('article:modified_time', modifiedTime, true);
+      updateMetaTag('article:author', author || SITE_CONFIG.author, true);
+      updateMetaTag('article:section', 'Matcha & Tea Culture', true);
+    }
+
+    // Product specific meta tags
+    if (type === 'product') {
+      updateMetaTag('product:price:amount', price, true);
+      updateMetaTag('product:price:currency', 'INR', true);
+      updateMetaTag('product:availability', availability, true);
+    }
+
+    // Custom meta tags
+    Object.entries(customMeta).forEach(([name, content]) => {
+      updateMetaTag(name, content);
+    });
 
     // Update canonical link
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
+    let canonicalElement = document.querySelector('link[rel="canonical"]');
+    if (!canonicalElement) {
+      canonicalElement = document.createElement('link');
+      canonicalElement.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalElement);
     }
-    canonical.setAttribute('href', url);
+    canonicalElement.setAttribute('href', pageCanonical);
+
+    // Add alternate language links if needed
+    let alternateLang = document.querySelector('link[rel="alternate"][hreflang="en-IN"]');
+    if (!alternateLang) {
+      alternateLang = document.createElement('link');
+      alternateLang.setAttribute('rel', 'alternate');
+      alternateLang.setAttribute('hreflang', 'en-IN');
+      document.head.appendChild(alternateLang);
+    }
+    alternateLang.setAttribute('href', pageCanonical);
 
     // Add structured data
     const addStructuredData = (data) => {
-      let script = document.querySelector('script[type="application/ld+json"]');
-      if (!script) {
-        script = document.createElement('script');
-        script.type = 'application/ld+json';
-        document.head.appendChild(script);
+      // Remove existing structured data
+      const existingScript = document.querySelector('script[type="application/ld+json"]');
+      if (existingScript) {
+        existingScript.remove();
       }
+      
+      // Add new structured data
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
       script.textContent = JSON.stringify(data);
+      document.head.appendChild(script);
     };
 
+    // Generate structured data based on type
     if (type === 'product') {
       addStructuredData({
         "@context": "https://schema.org/",
         "@type": "Product",
-        "name": title,
-        "description": description,
-        "image": image,
+        "name": pageTitle,
+        "description": pageDescription,
+        "image": fullImageUrl,
         "brand": {
           "@type": "Brand",
-          "name": "UMI Matcha Club"
+          "name": SITE_CONFIG.name
         },
         "offers": {
           "@type": "Offer",
-          "url": url,
+          "url": pageCanonical,
           "priceCurrency": "INR",
-          "availability": "https://schema.org/InStock"
+          "price": price,
+          "availability": availability === 'in_stock' ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          "seller": {
+            "@type": "Organization",
+            "name": SITE_CONFIG.name
+          }
         }
       });
-    } else if (type === 'website') {
+    } else if (type === 'article') {
+      addStructuredData({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": pageTitle,
+        "description": pageDescription,
+        "image": fullImageUrl,
+        "author": {
+          "@type": "Person",
+          "name": author || SITE_CONFIG.author
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": SITE_CONFIG.name,
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${SITE_CONFIG.domain}${SITE_CONFIG.logo}`
+          }
+        },
+        "datePublished": publishedTime,
+        "dateModified": modifiedTime || publishedTime,
+        "mainEntityOfPage": pageCanonical
+      });
+    } else {
+      // Default organization schema
       addStructuredData({
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "UMI Matcha Club",
-        "description": "Premium Japanese matcha for mindful living",
-        "url": "https://umimatcha.com",
-        "logo": "/assets/images/icons/pink_logo.png",
+        "name": SITE_CONFIG.name,
+        "description": pageDescription,
+        "url": SITE_CONFIG.domain,
+        "logo": `${SITE_CONFIG.domain}${SITE_CONFIG.logo}`,
         "sameAs": [
-          "https://www.instagram.com/umimatchaclub",
-          "https://pin.it/5YQInpBIg"
-        ]
+          `https://www.instagram.com/${SITE_CONFIG.instagramHandle}`,
+          `https://www.facebook.com/${SITE_CONFIG.facebookPage}`
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "availableLanguage": "English"
+        }
       });
     }
-  }, [title, description, keywords, image, url, type]);
+
+  }, [title, description, keywords, image, canonical, type, h1, price, availability, publishedTime, modifiedTime, author, robots, customMeta, location.pathname]);
 
   return null; // This component doesn't render anything
 };
 
-// Page-specific SEO data
-export const SEO_DATA = {
-  home: {
-    title: "UMI Matcha Club | Premium Japanese Matcha",
-    description: "Discover premium Japanese matcha for kinder rituals that fill your cup. 100% organic, single origin matcha from Japan's finest tea gardens.",
-    keywords: "matcha, japanese tea, organic matcha, premium matcha, tea ceremony"
-  },
-  
-  shop: {
-    title: "Shop Premium Matcha | UMI Matcha Club",
-    description: "Browse our collection of premium Japanese matcha products. From ceremonial grade to everyday blends, find your perfect matcha.",
-    keywords: "buy matcha, matcha products, japanese matcha, organic tea, premium tea"
-  },
-  
-  about: {
-    title: "About Us | UMI Matcha Club",
-    description: "Learn about our journey bringing authentic Japanese matcha culture to mindful tea lovers worldwide.",
-    keywords: "matcha story, japanese tea culture, organic farming, tea ceremony"
-  },
-  
-  contact: {
-    title: "Contact Us | UMI Matcha Club", 
-    description: "Get in touch with UMI Matcha Club. We're here to help with your matcha journey.",
-    keywords: "contact, customer service, matcha help, tea questions"
-  },
-  
-  faq: {
-    title: "FAQ | UMI Matcha Club",
-    description: "Find answers to frequently asked questions about matcha, our products, shipping, and more.",
-    keywords: "matcha faq, tea questions, shipping info, product help"
+// Hook for easier SEO management
+export const useSEO = (pathname, product = null, blog = null, customSEO = {}) => {
+  if (product) {
+    const productSEO = generateProductSEO(product);
+    return { ...productSEO, ...customSEO };
   }
+  
+  if (blog) {
+    const blogSEO = generateBlogSEO(blog);
+    return { ...blogSEO, ...customSEO };
+  }
+  
+  const pageSEO = getPageSEO(pathname);
+  return { ...pageSEO, ...customSEO };
 };

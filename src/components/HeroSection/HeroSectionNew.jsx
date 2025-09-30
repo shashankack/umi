@@ -756,7 +756,7 @@ const HeroSectionNew = () => {
           zIndex={20}
         >
           <Box overflow="hidden">
-            <Typography ref={(el) => addToTitleRef(el)} sx={styles.titleStyles}>
+            <Typography component="h1" ref={(el) => addToTitleRef(el)} sx={styles.titleStyles}>
               Umi is
             </Typography>
           </Box>

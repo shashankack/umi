@@ -8,6 +8,7 @@ import {
 } from "../assets/policies";
 
 import Footer from "../components/Footer";
+import { SEO, useSEO } from "../components/SEO";
 
 // Centralized policy map – scalable and clean
 const policyMap = {
@@ -24,9 +25,19 @@ const LegalPolicy = () => {
 
   const path = location.pathname.split("/").pop();
   const policyData = policyMap[path] || privacyPolicy;
+  
+  // Get SEO data for the specific policy page
+  const seoData = useSEO(location.pathname);
 
   return (
     <>
+      <SEO 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={seoData.canonical}
+        type={seoData.type}
+      />
       <Stack
         bgcolor={theme.colors.beige}
         pt={isMobile ? 14 : 20}
@@ -36,6 +47,7 @@ const LegalPolicy = () => {
         alignItems="center"
       >
         <Typography
+          component="h1"
           sx={{
             fontFamily: theme.fonts.text,
             color: theme.colors.pink,

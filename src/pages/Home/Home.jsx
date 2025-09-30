@@ -6,8 +6,8 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
-import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { SEO, useSEO } from "../../components/SEO";
 
 import AboutSection from "../../components/AboutSection/AboutSection";
 import TutorialSection from "../../components/TutorialSection/TutorialSection";
@@ -26,9 +26,9 @@ const Home = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isHydrated = useHydration();
+  const location = useLocation();
 
   const { setNavbarTheme } = useNavbarTheme();
-  const location = useLocation();
   const videoContainerRef = useRef(null);
   const introVideoRef = useRef(null);
   const heroRef = useRef(null);
@@ -41,6 +41,9 @@ const Home = () => {
   const [introCompleted, setIntroCompleted] = useState(
     sessionStorage.getItem("hasPlayed") === "true"
   );
+
+  // Get SEO data for home page
+  const seoData = useSEO("/");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -308,17 +311,13 @@ const Home = () => {
 
   return (
     <>
-      <Helmet prioritizeSeoTags>
-        <title>Umi Matcha - Best Organic Matcha from Japan in India</title>
-        <meta
-          name="description"
-          content="Experience Umi Matcha, the best organic matcha in India. Premium, ceremonial-grade green tea crafted for wellness, focus, and mindful living."
-        />
-        <meta
-          name="keywords"
-          content="Umi Matcha, best organic matcha, organic matcha powder, best matcha brand india"
-        />
-      </Helmet>
+      <SEO 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={seoData.canonical}
+        type={seoData.type}
+      />
       <Box
         bgcolor={theme.colors.pink}
         height="100vh"

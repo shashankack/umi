@@ -12,6 +12,7 @@ import {
 
 import Footer from "../../components/Footer";
 import { Helmet } from "react-helmet-async";
+import { SEO, useSEO } from "../../components/SEO";
 
 const Contact = () => {
   const theme = useTheme();
@@ -19,22 +20,17 @@ const Contact = () => {
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isSmallDesktop = useMediaQuery(theme.breakpoints.between("md", "lg"));
   const isMac = window.innerHeight <= 850;
+  const seoData = useSEO("/contact");
 
   return (
     <>
-      <Helmet>
-        <title>
-          Reach Out to UMI Matcha Club - Your Matcha Moments Matter to Us
-        </title>
-        <meta
-          name="description"
-          content="Get in touch with us for premium organic matcha online. Ask questions, share feedback, or place your order today"
-        />
-        <meta
-          name="keywords"
-          content="Contact, UMI Matcha, Organic Matcha, Customer Support, organic matcha online"
-        />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={seoData.canonical}
+        type={seoData.type}
+      />
       <Box
         width="100%"
         height="100vh"
@@ -47,6 +43,7 @@ const Contact = () => {
         flexDirection="column"
       >
         <Typography
+          component="h1"
           color={theme.colors.beige}
           fontFamily={"Genty"}
           fontSize={isMobile ? "12vw" : "4.6vw"}

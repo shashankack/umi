@@ -67,14 +67,7 @@ const AppContent = () => {
       <CartUI />
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route 
-            path="/" 
-            element={
-              <Suspense fallback={<Loader />}>
-                <Intro NextComponent={Home} />
-              </Suspense>
-            } 
-          />
+          <Route path="/" element={<Intro NextComponent={Home} />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/shop" element={<Shop />} />

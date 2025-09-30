@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchShopifyProducts } from "../../utils/shopify";
 import { useNavbarTheme } from "../../context/NavbarThemeContext";
-import { Helmet } from "react-helmet-async";
+import { SEO, useSEO } from "../SEO";
 
 import { useCart } from "../../context/CartContext";
 
@@ -91,6 +91,13 @@ const ProductsInternal = () => {
     if (!keywordsElement) return null;
 
     return keywordsElement.textContent;
+  }, [product?.descriptionHtml]);
+
+  // Get SEO data for product page
+  const seoData = useSEO(`/shop/${productName}`, product, null, {
+    title: parsedPageTitle,
+    description: parsedPageDescription,
+    keywords: parsedPageKeywords
   });
 
   const parsedTagline = useMemo(() => {
@@ -329,11 +336,16 @@ const ProductsInternal = () => {
         height="100%"
         pt={isMobile ? 4 : 16}
       >
-        <Helmet prioritizeSeoTags>
-          <title>{parsedPageTitle}</title>
-          <meta name="description" content={parsedPageDescription} />
-          <meta name="keywords" content={parsedPageKeywords} />
-        </Helmet>
+        <SEO 
+          title={seoData.title}
+          description={seoData.description}
+          keywords={seoData.keywords}
+          canonical={seoData.canonical}
+          type={seoData.type}
+          image={seoData.image}
+          price={seoData.price}
+          availability={seoData.availability}
+        />
         {/* Top */}
         <Stack
           width="100%"
@@ -461,6 +473,7 @@ const ProductsInternal = () => {
               }
             >
               <Typography
+                component="h1"
                 mt={isMobile ? 0 : 0}
                 mb={isMobile ? -4 : -2}
                 fontSize={isMobile ? "8vw" : "2.6vw"}
