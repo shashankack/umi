@@ -29,7 +29,7 @@ import slugify from "../../utils/slugify";
 
 import "swiper/css";
 import "swiper/css/scrollbar";
-import Loading from "../Loading/Loading";
+import Loader from "../Loader";
 
 const ProductsInternal = () => {
   const theme = useTheme();
@@ -319,7 +319,7 @@ const ProductsInternal = () => {
     }
   };
 
-  if (!product) return <Loading />;
+  if (!product) return <Loader />;
 
   return (
     <>

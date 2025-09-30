@@ -36,7 +36,7 @@ const Loader = () => {
       />
       <Typography
         textAlign="center"
-        fontFamily={theme.fonts.primary}
+        fontFamily={theme.fonts.text}
         color={theme.colors.beige}
         fontSize={32}
         textTransform="lowercase"

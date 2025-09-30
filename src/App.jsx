@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
+// Lazy load all page components for consistent loading experience
 const Home = lazy(() => import("./pages/Home/Home"));
 const About = lazy(() => import("./pages/About/About"));
 const ProductsInternal = lazy(() =>
@@ -11,8 +12,13 @@ const Shop = lazy(() => import("./pages/Shop/Shop"));
 const FAQ = lazy(() => import("./pages/FAQ.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
 const SearchPage = lazy(() => import("./pages/SearchPage.jsx"));
+const AboutMatcha = lazy(() => import("./pages/AboutMatcha.jsx"));
+const Policies = lazy(() => import("./pages/Policies"));
+const Intro = lazy(() => import("./components/Intro.jsx"));
+const Blogs = lazy(() => import("./pages/Blogs.jsx"));
+const Brewing = lazy(() => import("./pages/Brewing.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
-import AboutMatcha from "./pages/AboutMatcha.jsx";
 import Navbar from "./components/Navbar";
 import { NavbarThemeProvider } from "./context/NavbarThemeContext";
 import { CartProvider } from "./context/CartContext";
@@ -24,16 +30,11 @@ import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 import { createTheme, ThemeProvider } from "@mui/material";
 import { faqData } from "./assets/faqData.jsx";
-import Policies from "./pages/Policies";
-import Intro from "./components/Intro.jsx";
-import Blogs from "./pages/Blogs.jsx";
-import Brewing from "./pages/Brewing.jsx";
 
 import navbarBg from "./assets/images/navbar_bg.png";
 import founder from "./assets/images/vectors/about/founder.png";
 import desktopThumbnail from "./assets/images/desktop_thumbnail.png";
 import mobileThumbnail from "./assets/images/mobile_thumbnail.png";
-import NotFound from "./pages/NotFound.jsx";
 
 const theme = createTheme({
   colors: {
@@ -66,7 +67,14 @@ const AppContent = () => {
       <CartUI />
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Intro NextComponent={Home} />} />
+          <Route 
+            path="/" 
+            element={
+              <Suspense fallback={<Loader />}>
+                <Intro NextComponent={Home} />
+              </Suspense>
+            } 
+          />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/shop" element={<Shop />} />
